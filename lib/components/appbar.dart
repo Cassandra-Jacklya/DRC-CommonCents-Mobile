@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
-  const CustomAppBar({Key? key});
+  final String title;
+
+  const CustomAppBar({Key? key, required this.title});
 
   @override
   Widget build(BuildContext context) {
@@ -9,29 +11,46 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       decoration: BoxDecoration(
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.3),
+            color: Colors.black.withOpacity(0.3),
             spreadRadius: 1,
-            blurRadius: 5,
-            offset: const Offset(0, 2),
+            // offset: const Offset(0, 2),
           ),
         ],
       ),
       child: ClipRRect(
         child: AppBar(
           title: Container(
-            margin: const EdgeInsets.only(top: 15),
-            child: const Text(
-              'COMMONCENTS',
-              style: TextStyle(
-                fontFamily: 'Raleway',
-                fontSize: 35,
-                fontWeight: FontWeight.bold,
-                color: const Color(0xFF1956FC),
+            margin: const EdgeInsets.only(
+              top: 15,
+            ),
+            child: RichText(
+              text: TextSpan(
+                children: [
+                  TextSpan(
+                    text: title,
+                    style: const TextStyle(
+                      fontFamily: 'Raleway',
+                      fontSize: 35,
+                      // fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
-          centerTitle: true,
-          backgroundColor: const Color(0xFFF0F8FF),
+          actions: [
+            IconButton(
+              color: Colors.black,
+              padding: const EdgeInsets.only(top: 10),
+              iconSize: 45,
+              icon: Icon(Icons.notifications_outlined),
+              onPressed: () {
+                // Add your bell icon onPressed logic here
+              },
+            ),
+          ],
+          backgroundColor: Colors.grey[300],
           elevation: 0,
         ),
       ),
@@ -41,5 +60,3 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Size get preferredSize => const Size.fromHeight(70);
 }
-
-
