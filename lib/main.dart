@@ -78,7 +78,7 @@ class _MainAppState extends State<MainApp> {
     case 2:
     return const SimulationPage();
     case 3:
-    return const ForumPage();
+    return ForumPage();
     case 4:
     return const ProfilePage();
     default:

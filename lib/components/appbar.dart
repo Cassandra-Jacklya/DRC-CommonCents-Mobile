@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
 
-  const CustomAppBar({Key? key, required this.title});
+  const CustomAppBar({super.key,required this.title});
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +44,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
               color: Colors.black,
               padding: const EdgeInsets.only(top: 10),
               iconSize: 45,
-              icon: Icon(Icons.notifications_outlined),
+              icon: const Icon(Icons.notifications_outlined),
               onPressed: () {
                 // Add your bell icon onPressed logic here
               },

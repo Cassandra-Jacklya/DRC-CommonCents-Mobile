@@ -87,7 +87,7 @@ class NewsPage extends StatelessWidget {
             const SizedBox(height: 30),
             Container( margin: const EdgeInsets.all(10),
               color: Colors.grey[400],
-              height: 300,
+              height: 500,
             )
           ],
         ),
