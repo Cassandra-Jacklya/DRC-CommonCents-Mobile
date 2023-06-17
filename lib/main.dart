@@ -56,7 +56,7 @@ class _MainAppState extends State<MainApp> {
       theme: theme,
       home: BlocBuilder<BottomNavBarCubit, int>(
         builder: (context, selectedIndex){
-          List<String> barTitle = ["CommonCents", "Trading News", "Trading", "Forum", "User Profile"];
+          List<String> barTitle = ["CommonCents", "Trading News", "Trading Simulation", "Forum", "User Profile"];
           return Scaffold(
             backgroundColor: Colors.white,
             appBar: CustomAppBar(title: barTitle[selectedIndex],),
