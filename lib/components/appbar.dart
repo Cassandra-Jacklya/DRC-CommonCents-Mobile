@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import '../pages/notifications.dart';
+import 'package:iconsax/iconsax.dart';
+
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
 
-  const CustomAppBar({super.key,required this.title});
+  const CustomAppBar({super.key, required this.title});
 
   @override
   Widget build(BuildContext context) {
@@ -27,14 +30,8 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
               text: TextSpan(
                 children: [
                   TextSpan(
-                    text: title,
-                    style: const TextStyle(
-                      fontFamily: 'Raleway',
-                      fontSize: 35,
-                      // fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                    ),
-                  ),
+                      text: title,
+                      style: Theme.of(context).textTheme.displayLarge),
                 ],
               ),
             ),
@@ -44,9 +41,12 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
               color: Colors.black,
               padding: const EdgeInsets.only(top: 10),
               iconSize: 45,
-              icon: const Icon(Icons.notifications_outlined),
+              icon: const Icon(Iconsax.notification),
               onPressed: () {
-                // Add your bell icon onPressed logic here
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const NotificationPage()),
+                );
               },
             ),
           ],

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:iconsax/iconsax.dart';
 import '../cubit/navbar_cubit.dart';
 
 class BottomNavBar extends StatefulWidget {
@@ -46,18 +47,24 @@ class _BottomNavBarState extends State<BottomNavBar> {
                         child: Column(
                           children: [
                             Icon(
-                              Icons.home_outlined,
+                              Iconsax.home_2,
                               size: 40,
                               color: state == 0
                                   ? Theme.of(context).primaryColor
                                   : Colors.grey,
                             ),
-                            Text(
-                              "Home",
-                              style: TextStyle(
-                                  color: state == 0
-                                      ? Theme.of(context).primaryColor
-                                      : Colors.grey),
+                            RichText(
+                              text: TextSpan(
+                                text: "Home",
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .displaySmall
+                                    ?.copyWith(
+                                      color: state == 0
+                                          ? Theme.of(context).primaryColor
+                                          : Colors.black,
+                                    ),
+                              ),
                             ),
                           ],
                         ),
@@ -81,18 +88,24 @@ class _BottomNavBarState extends State<BottomNavBar> {
                         child: Column(
                           children: [
                             Icon(
-                              Icons.search,
+                              Iconsax.search_normal_1,
                               size: 40,
                               color: state == 1
                                   ? Theme.of(context).primaryColor
                                   : Colors.grey,
                             ),
-                            Text(
-                              "News",
-                              style: TextStyle(
-                                  color: state == 1
-                                      ? Theme.of(context).primaryColor
-                                      : Colors.grey),
+                            RichText(
+                              text: TextSpan(
+                                text: "News",
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .displaySmall
+                                    ?.copyWith(
+                                      color: state == 1
+                                          ? Theme.of(context).primaryColor
+                                          : Colors.black,
+                                    ),
+                              ),
                             ),
                           ],
                         ),
@@ -114,18 +127,24 @@ class _BottomNavBarState extends State<BottomNavBar> {
                         child: Column(
                           children: [
                             Icon(
-                              Icons.forum,
+                              Iconsax.messages_2,
                               size: 40,
                               color: state == 3
                                   ? Theme.of(context).primaryColor
                                   : Colors.grey,
                             ),
-                            Text(
-                              "Forum",
-                              style: TextStyle(
-                                  color: state == 3
-                                      ? Theme.of(context).primaryColor
-                                      : Colors.grey),
+                            RichText(
+                              text: TextSpan(
+                                text: "Forum",
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .displaySmall
+                                    ?.copyWith(
+                                      color: state == 3
+                                          ? Theme.of(context).primaryColor
+                                          : Colors.black,
+                                    ),
+                              ),
                             ),
                           ],
                         ),
@@ -149,18 +168,24 @@ class _BottomNavBarState extends State<BottomNavBar> {
                         child: Column(
                           children: [
                             Icon(
-                              Icons.person,
+                              Iconsax.profile_circle,
                               size: 40,
                               color: state == 4
                                   ? Theme.of(context).primaryColor
                                   : Colors.grey,
                             ),
-                            Text(
-                              "Profile",
-                              style: TextStyle(
-                                  color: state == 4
-                                      ? Theme.of(context).primaryColor
-                                      : Colors.grey),
+                            RichText(
+                              text: TextSpan(
+                                text: "Profile",
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .displaySmall
+                                    ?.copyWith(
+                                      color: state == 4
+                                          ? Theme.of(context).primaryColor
+                                          : Colors.black,
+                                    ),
+                              ),
                             ),
                           ],
                         ),
@@ -184,23 +209,28 @@ class _BottomNavBarState extends State<BottomNavBar> {
                 width: 100,
                 height: 100,
                 decoration: BoxDecoration(
-                  border:
-                      Border.all(color: const Color(0xFFA4D8EF), width: 6.0),
+                  border: Border.all(
+                      color: Theme.of(context).primaryColorLight, width: 6.0),
                   shape: BoxShape.circle,
-                  color: const Color(0xFF1956FC),
+                  color: Theme.of(context).primaryColor,
                 ),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: const [
-                    Icon(
-                      Icons.trolley,
+                  children:  [
+                    const Icon(
+                      Iconsax.status_up,
                       size: 40,
                       color: Colors.white,
                     ),
-                    Text(
-                      "Trade",
-                      style: TextStyle(color: Colors.white),
-                    )
+                    RichText(
+                      text: TextSpan(
+                        text: "Trade",
+                        style:
+                            Theme.of(context).textTheme.displaySmall?.copyWith(
+                                  color: Colors.white,
+                                ),
+                      ),
+                    ),
                   ],
                 ),
               ),

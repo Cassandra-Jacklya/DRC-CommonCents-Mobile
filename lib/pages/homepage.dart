@@ -79,7 +79,7 @@ class HomePage extends StatelessWidget {
                           width: 10,
                         ),
                         Expanded(
-                            child: Container(color: const Color(0xFF1956FC)))
+                            child: Container(color: Theme.of(context).primaryColor))
                       ]),
                     ),
                   ),
@@ -99,7 +99,7 @@ class HomePage extends StatelessWidget {
                           width: 10,
                         ),
                         Expanded(
-                            child: Container(color: const Color(0xFF1956FC)))
+                            child: Container(color: Theme.of(context).primaryColor))
                       ]),
                     ),
                   ),
@@ -119,7 +119,7 @@ class HomePage extends StatelessWidget {
                           width: 10,
                         ),
                         Expanded(
-                            child: Container(color: const Color(0xFF1956FC)))
+                            child: Container(color: Theme.of(context).primaryColor))
                       ]),
                     ),
                   ),
@@ -139,7 +139,7 @@ class HomePage extends StatelessWidget {
                           width: 10,
                         ),
                         Expanded(
-                            child: Container(color: const Color(0xFF1956FC)))
+                            child: Container(color: Theme.of(context).primaryColor))
                       ]),
                     ),
                   ),
@@ -159,7 +159,7 @@ class HomePage extends StatelessWidget {
                           width: 10,
                         ),
                         Expanded(
-                            child: Container(color: const Color(0xFF1956FC)))
+                            child: Container(color: Theme.of(context).primaryColor))
                       ]),
                     ),
                   ),
