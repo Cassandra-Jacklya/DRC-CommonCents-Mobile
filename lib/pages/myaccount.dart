@@ -45,6 +45,7 @@ class _MyAccountState extends State<MyAccount> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        shadowColor: Colors.transparent,
         toolbarHeight: 60,
         backgroundColor: Colors.grey[300],
         title: const Text("My Account"),

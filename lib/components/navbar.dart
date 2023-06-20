@@ -14,7 +14,7 @@ class BottomNavBar extends StatefulWidget {
 class _BottomNavBarState extends State<BottomNavBar> {
   @override
   Widget build(BuildContext context) {
-    final bottomNavBarCubit = context.watch<BottomNavBarCubit>();
+    // final bottomNavBarCubit = context.watch<BottomNavBarCubit>();
     final Size size = MediaQuery.of(context).size;
 
     return Container(

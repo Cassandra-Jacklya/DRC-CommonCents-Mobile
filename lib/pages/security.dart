@@ -10,6 +10,7 @@ class Security extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        shadowColor: Colors.transparent,
         toolbarHeight: 60,
         backgroundColor: Colors.grey[300],
         title: const Text("Security"),
