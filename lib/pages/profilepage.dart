@@ -1,3 +1,8 @@
+import 'package:commoncents/pages/myaccount.dart';
+import 'package:commoncents/pages/security.dart';
+import 'package:commoncents/pages/leaderboard.dart';
+import 'package:commoncents/pages/recentTrades.dart';
+import 'package:commoncents/pages/help_support.dart';
 import 'package:flutter/material.dart';
 
 class ProfilePage extends StatelessWidget {
@@ -103,7 +108,10 @@ class ProfilePage extends StatelessWidget {
                           color: Colors.white,
                         ),
                         onPressed: () {
-                          print("My Account");
+                          Navigator.push(
+                            context, 
+                            MaterialPageRoute(builder: (context) => MyAccount())
+                          );
                         },
                       ),
                       buildContainer(
@@ -112,7 +120,10 @@ class ProfilePage extends StatelessWidget {
                           color: Colors.white,
                         ),
                         onPressed: () {
-                          print("Security");
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => Security())
+                          );
                         },
                       ),
                       buildContainer(
@@ -121,7 +132,7 @@ class ProfilePage extends StatelessWidget {
                           color: Colors.white,
                         ),
                         onPressed: () {
-                          print("leaderboard");
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => Leaderboard()));
                         },
                       ),
                       buildContainer(
@@ -130,7 +141,7 @@ class ProfilePage extends StatelessWidget {
                           color: Colors.white,
                         ),
                         onPressed: () {
-                          print("Recent Trades");
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => RecentTrades()));
                         },
                       ),
                       buildContainer(
@@ -139,7 +150,7 @@ class ProfilePage extends StatelessWidget {
                           color: Colors.white,
                         ),
                         onPressed: () {
-                          print("Help and Support");
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => HelpSupport()));
                         },
                         showBottomBorder: false,
                       ),

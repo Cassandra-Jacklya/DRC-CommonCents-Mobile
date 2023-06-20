@@ -232,6 +232,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.6.5"
+  kumi_popup_window:
+    dependency: "direct main"
+    description:
+      name: kumi_popup_window
+      sha256: "3159a2ee307850ab3520cfb162efc1e330aac2e560569e20227bf2ac93ec06d5"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.1"
   lints:
     dependency: transitive
     description:
@@ -525,6 +533,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.4"
+  webkul_textfield_with_label:
+    dependency: "direct main"
+    description:
+      name: webkul_textfield_with_label
+      sha256: cbbd0e19fc337b1cd1ca7e754df98fb7eb633ea8002a4d082590d3e1db46e322
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.4"
   win32:
     dependency: transitive
     description:

@@ -18,6 +18,8 @@ dependencies:
   toggle_switch: ^2.1.0
   numberpicker: ^2.1.2
   iconsax: ^0.0.8
+  webkul_textfield_with_label: ^0.0.4
+  kumi_popup_window: ^2.0.1
 
 flutter_native_splash:
   color: "#ffffff"

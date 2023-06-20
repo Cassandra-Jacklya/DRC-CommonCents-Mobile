@@ -5,7 +5,6 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
@@ -30,12 +29,13 @@ class HomePage extends StatelessWidget {
               color: Colors.grey[300],
               height: 160,
               child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: 8,
-                  itemBuilder: (context, index) {
-                    return Container(
-                      margin: const EdgeInsets.all(10),
-                      child: Column(children: [
+                scrollDirection: Axis.horizontal,
+                itemCount: 8,
+                itemBuilder: (context, index) {
+                  return Container(
+                    margin: const EdgeInsets.all(10),
+                    child: Column(
+                      children: [
                         Container(
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(50),
@@ -46,9 +46,11 @@ class HomePage extends StatelessWidget {
                         ),
                         const SizedBox(height: 15),
                         const Text("Stock price"),
-                      ]),
-                    );
-                  }),
+                      ],
+                    ),
+                  );
+                },
+              ),
             ),
             const SizedBox(height: 30),
             Container(
@@ -64,113 +66,31 @@ class HomePage extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 10),
-            Column(children: [
-              Row(
-                children: [
-                  Expanded(
-                    child: Container(
-                      margin: const EdgeInsets.all(10),
-                      height: 100,
-                      color: Colors.grey[300],
-                      padding: const EdgeInsets.all(10),
-                      child: Row(children: [
-                        Container(color: Colors.white, height: 80, width: 80),
-                        const SizedBox(
-                          width: 10,
-                        ),
-                        Expanded(
-                            child: Container(color: Theme.of(context).primaryColor))
-                      ]),
-                    ),
+            ListView.builder(
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
+              itemCount: 5,
+              itemBuilder: (context, index) {
+                return Container(
+                  margin: const EdgeInsets.all(10),
+                  height: 100,
+                  color: Colors.grey[300],
+                  padding: const EdgeInsets.all(10),
+                  child: Row(
+                    children: [
+                      Container(color: Colors.white, height: 80, width: 80),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: Container(color: Theme.of(context).primaryColor),
+                      ),
+                    ],
                   ),
-                ],
-              ),
-              Row(
-                children: [
-                  Expanded(
-                    child: Container(
-                      margin: const EdgeInsets.all(10),
-                      height: 100,
-                      color: Colors.grey[300],
-                      padding: const EdgeInsets.all(10),
-                      child: Row(children: [
-                        Container(color: Colors.white, height: 80, width: 80),
-                        const SizedBox(
-                          width: 10,
-                        ),
-                        Expanded(
-                            child: Container(color: Theme.of(context).primaryColor))
-                      ]),
-                    ),
-                  ),
-                ],
-              ),
-              Row(
-                children: [
-                  Expanded(
-                    child: Container(
-                      margin: const EdgeInsets.all(10),
-                      height: 100,
-                      color: Colors.grey[300],
-                      padding: const EdgeInsets.all(10),
-                      child: Row(children: [
-                        Container(color: Colors.white, height: 80, width: 80),
-                        const SizedBox(
-                          width: 10,
-                        ),
-                        Expanded(
-                            child: Container(color: Theme.of(context).primaryColor))
-                      ]),
-                    ),
-                  ),
-                ],
-              ),
-              Row(
-                children: [
-                  Expanded(
-                    child: Container(
-                      margin: const EdgeInsets.all(10),
-                      height: 100,
-                      color: Colors.grey[300],
-                      padding: const EdgeInsets.all(10),
-                      child: Row(children: [
-                        Container(color: Colors.white, height: 80, width: 80),
-                        const SizedBox(
-                          width: 10,
-                        ),
-                        Expanded(
-                            child: Container(color: Theme.of(context).primaryColor))
-                      ]),
-                    ),
-                  ),
-                ],
-              ),
-              Row(
-                children: [
-                  Expanded(
-                    child: Container(
-                      margin: const EdgeInsets.all(10),
-                      height: 100,
-                      color: Colors.grey[300],
-                      padding: const EdgeInsets.all(10),
-                      child: Row(children: [
-                        Container(color: Colors.white, height: 80, width: 80),
-                        const SizedBox(
-                          width: 10,
-                        ),
-                        Expanded(
-                            child: Container(color: Theme.of(context).primaryColor))
-                      ]),
-                    ),
-                  ),
-                ],
-              ),
-            ])
+                );
+              },
+            ),
           ],
         ),
       ),
     );
-    
   }
-  
 }
