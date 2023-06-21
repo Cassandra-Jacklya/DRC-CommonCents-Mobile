@@ -46,9 +46,9 @@ class _SimulationPageState extends State<SimulationPage> {
                 ),
               ),
               Container(
-                margin: const EdgeInsets.symmetric(horizontal: 10),
+                margin: const EdgeInsets.only(left: 6),
                 height: 60,
-                width: 120,
+                width: 110,
                 color: Colors.grey[300],
                 child: Row(
                   children: [

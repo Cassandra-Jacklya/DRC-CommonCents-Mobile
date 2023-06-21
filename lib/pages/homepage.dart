@@ -33,7 +33,7 @@ class HomePage extends StatelessWidget {
                 itemCount: 8,
                 itemBuilder: (context, index) {
                   return Container(
-                    margin: const EdgeInsets.all(10),
+                    margin: const EdgeInsets.all(8),
                     child: Column(
                       children: [
                         Container(
@@ -68,7 +68,7 @@ class HomePage extends StatelessWidget {
             const SizedBox(height: 10),
             ListView.builder(
               shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(),
+              physics: const NeverScrollableScrollPhysics(),
               itemCount: 5,
               itemBuilder: (context, index) {
                 return Container(

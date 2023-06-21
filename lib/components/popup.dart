@@ -270,3 +270,132 @@ class Password extends StatelessWidget {
     );
   }
 }
+
+class TradeDetails extends StatelessWidget {
+  const TradeDetails({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10),
+      ),
+      titlePadding: EdgeInsets.zero,
+      title: Container(
+        height: 60,
+        decoration: BoxDecoration(
+            color: Colors.grey[400],
+            borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(10), topRight: Radius.circular(10))),
+        padding: const EdgeInsets.all(10),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              'Trade Details',
+              style: Theme.of(context).textTheme.displayLarge!.merge(
+                    const TextStyle(
+                      fontSize: 18,
+                      color: Colors.black,
+                    ),
+                  ),
+            ),
+          ],
+        ),
+      ),
+      content: Container( 
+          padding: const EdgeInsets.only(top: 10),
+          child: SizedBox(
+            height: MediaQuery.of(context).size.height * 0.28,
+            child: Column(
+              children: [
+                Container(
+                  child: Column(
+                    children: [
+                      const SizedBox(height: 10),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: const [
+                          Text("Stake"),
+                          Flexible(
+                            child: Text(
+                              "......................",
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                          Text("10.00 USD"),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: const [
+                          Text("Payout"),
+                          Flexible(
+                            child: Text(
+                              "......................",
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                          Text("N/A"),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: const [
+                          Text("Ticks"),
+                          Flexible(
+                            child: Text(
+                              "......................",
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                          Text("6"),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 30),
+                Container(
+                  child: Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment
+                            .start, // Aligns "Strategy" text to the left
+                        children: const [
+                          Text("Strategy"),
+                          Spacer(), // Adds flexible space between elements
+                          Text("......................"),
+                          Text("Higher"),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: const [
+                          Text("Total profit/loss"),
+                          Text("......................"),
+                          Text("-10.00"),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 30),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                  child: Container(
+                    height: 50,
+                    width: 100,
+                    color: Colors.grey[300],
+                    child: const Center(child: Text("Close")),
+                  ),
+                )
+              ],
+            ),
+          )),
+    );
+  }
+}
