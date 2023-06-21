@@ -23,6 +23,7 @@ dependencies:
   passwordfield: ^0.2.0
   flutter_switch: ^0.3.2
   flutter_animated_button: ^2.0.3
+  candlesticks: ^2.1.0
 
 flutter_native_splash:
   color: "#ffffff"
