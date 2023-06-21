@@ -40,7 +40,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
             IconButton(
               color: Colors.black,
               padding: const EdgeInsets.only(top: 10),
-              iconSize: 45,
+              iconSize: 40,
               icon: const Icon(Iconsax.notification),
               onPressed: () {
                 Navigator.push(

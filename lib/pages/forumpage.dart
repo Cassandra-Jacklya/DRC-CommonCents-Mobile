@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class ForumPage extends StatefulWidget {
+  const ForumPage({super.key});
+
   @override
   _ForumPageState createState() => _ForumPageState();
 }
