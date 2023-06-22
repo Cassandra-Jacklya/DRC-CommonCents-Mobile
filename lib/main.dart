@@ -1,4 +1,5 @@
 import 'package:commoncents/components/appbar.dart';
+import 'package:commoncents/components/chart.dart';
 import 'package:commoncents/components/navbar.dart';
 import 'package:flutter/material.dart';
 import 'package:commoncents/cubit/navbar_cubit.dart';
@@ -104,9 +105,9 @@ class _MainAppState extends State<MainApp> {
       case 1:
         return NewsPage();
       case 2:
-        return SimulationPage();
+        return CandleStickChart();
       case 3:
-        return ForumPage();
+        return const ForumPage();
       case 4:
         return const ProfilePage();
       default:

@@ -1,3 +1,4 @@
+//my news API key = 2W7M76O2TLJVJQCQ
 import 'package:flutter/material.dart';
 
 class NewsPage extends StatelessWidget {
