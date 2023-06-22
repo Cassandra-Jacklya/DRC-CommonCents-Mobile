@@ -101,7 +101,7 @@ class _MainAppState extends State<MainApp> {
   Widget _getPage(int index) {
     switch (index) {
       case 0:
-        return const HomePage();
+        return HomePage();
       case 1:
         return NewsPage();
       case 2:

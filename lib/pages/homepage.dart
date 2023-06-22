@@ -1,7 +1,22 @@
 import 'package:flutter/material.dart';
+import '../apistore/news.dart';
+import '../components/newscontainer.dart';
 
-class HomePage extends StatelessWidget {
-  const HomePage({Key? key}) : super(key: key);
+class HomePage extends StatefulWidget {
+  const HomePage({super.key});
+
+  @override
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  Future<List<dynamic>>? _newsFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _newsFuture = getNews();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -66,26 +81,19 @@ class HomePage extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 10),
-            ListView.builder(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              itemCount: 5,
-              itemBuilder: (context, index) {
-                return Container(
-                  margin: const EdgeInsets.all(10),
-                  height: 100,
-                  color: Colors.grey[300],
-                  padding: const EdgeInsets.all(10),
-                  child: Row(
-                    children: [
-                      Container(color: Colors.white, height: 80, width: 80),
-                      const SizedBox(width: 10),
-                      Expanded(
-                        child: Container(color: Theme.of(context).primaryColor),
-                      ),
-                    ],
-                  ),
-                );
+            FutureBuilder<List<dynamic>>(
+              future: _newsFuture,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const CircularProgressIndicator();
+                } else if (snapshot.hasError) {
+                  return Text('Error: ${snapshot.error}');
+                } else if (snapshot.hasData) {
+                  final newsList = snapshot.data;
+                  return NewsContainer(feeds: newsList);
+                } else {
+                  return const Text('No news available.');
+                }
               },
             ),
           ],

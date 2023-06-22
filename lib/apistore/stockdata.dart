@@ -26,6 +26,15 @@ Future<void> connectToWebSocket() async {
   });
 }
 
+void subscribeToStream(String streamName) {
+  final subscribeRequest = {
+    'subscribe': streamName,
+  };
+
+  socket?.sink.add(jsonEncode(subscribeRequest));
+}
+
+
 
 void requestTicksHistory() {
   socket?.sink.add(jsonEncode(TicksHistoryRequest));
