@@ -1,21 +1,24 @@
+import 'dart:async';
 import 'dart:convert';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
 WebSocketChannel? socket;
-const String appId = '1089'; 
-final Uri url = Uri.parse('wss://ws.binaryws.com/websockets/v3?app_id=$appId&l=EN&brand=deriv');
+const String appId = '1089';
+final Uri url = Uri.parse(
+    'wss://ws.binaryws.com/websockets/v3?app_id=$appId&l=EN&brand=deriv');
+
+StreamSubscription<dynamic>? subscription;
 
 List<dynamic> history = [];
 
 Future<void> connectToWebSocket() async {
   print("Connecting to ws....");
-  socket = await WebSocketChannel.connect(url);
+  socket = WebSocketChannel.connect(url);
   print("Connected!");
 
   socket?.stream.listen((dynamic message) {
     try {
-      final decodedData = jsonDecode(message);
-      handleResponse(decodedData);
+      handleResponse(message);
     } catch (e) {
       handleError(e);
     }
@@ -26,19 +29,16 @@ Future<void> connectToWebSocket() async {
   });
 }
 
-void subscribeToStream(String streamName) {
-  final subscribeRequest = {
-    'subscribe': streamName,
-  };
 
-  socket?.sink.add(jsonEncode(subscribeRequest));
+Future<void> subscribeTicks() async {
+  socket?.sink.add(jsonEncode(tickStream));
 }
 
-
-
-void requestTicksHistory() {
+Future<void> requestTicksHistory() async {
   socket?.sink.add(jsonEncode(TicksHistoryRequest));
 }
+
+final tickStream = {"ticks": "R_50", "subscribe": 1};
 
 final TicksHistoryRequest = {
   'ticks_history': 'R_50',
@@ -50,9 +50,7 @@ final TicksHistoryRequest = {
 };
 
 void handleResponse(dynamic data) {
-  history = data['candles'];
-  print(history.length);
-  print(history);
+  print("Handling response: $data");
 }
 
 void handleError(dynamic error) {
@@ -61,9 +59,4 @@ void handleError(dynamic error) {
 
 void handleConnectionClosed() {
   print("Connection closed");
-}
-
-void main() {
-  connectToWebSocket();
-  requestTicksHistory();
 }

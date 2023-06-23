@@ -25,7 +25,7 @@ class _CandleStickChartState extends State<CandleStickChart> {
       child: Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
         GestureDetector(
           onTap: () {
-            // testing.Subscribe();
+            subscribeTicks();
           },
           child: Container(
             height: 50,
