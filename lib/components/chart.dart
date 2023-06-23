@@ -23,20 +23,20 @@ class _CandleStickChartState extends State<CandleStickChart> {
     return Scaffold(
         body: Center(
       child: Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
+        // GestureDetector(
+        //   onTap: () {
+        //     subscribeTicks();
+        //   },
+        //   child: Container(
+        //     height: 50,
+        //     width: 100,
+        //     color: Colors.grey[300],
+        //     child: const Center(child: Text("Subscribe Ticks")),
+        //   ),
+        // ),
         GestureDetector(
           onTap: () {
-            subscribeTicks();
-          },
-          child: Container(
-            height: 50,
-            width: 100,
-            color: Colors.grey[300],
-            child: const Center(child: Text("Subscribe Ticks")),
-          ),
-        ),
-        GestureDetector(
-          onTap: () {
-            // testing.Unsubscribe();
+            closeWebSocket();
           },
           child: Container(
             height: 50,
@@ -45,17 +45,17 @@ class _CandleStickChartState extends State<CandleStickChart> {
             child: const Center(child: Text("Unsubscribe Ticks")),
           ),
         ),
-        GestureDetector(
-          onTap: () {
-            requestTicksHistory();
-          },
-          child: Container(
-            height: 50,
-            width: 100,
-            color: Colors.grey[300],
-            child: const Center(child: Text("Get Ticks History")),
-          ),
-        ),
+        // GestureDetector(
+        //   onTap: () {
+        //     requestTicksHistory();
+        //   },
+        //   child: Container(
+        //     height: 50,
+        //     width: 100,
+        //     color: Colors.grey[300],
+        //     child: const Center(child: Text("Get Ticks History")),
+        //   ),
+        // ),
       ]),
     ));
   }
