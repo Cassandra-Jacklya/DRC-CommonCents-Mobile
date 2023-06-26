@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:toggle_switch/toggle_switch.dart';
 import '../components/numberPIcker.dart';
+import 'package:syncfusion_flutter_gauges/gauges.dart';
 
 class SimulationPage extends StatefulWidget {
   @override
@@ -71,6 +72,17 @@ class _SimulationPageState extends State<SimulationPage> {
               child: Text("Area chart graph"),
             ),
           ),
+          SfLinearGauge(
+              minimum: 0.0,
+              maximum: 100.0,
+              orientation: LinearGaugeOrientation.horizontal,
+              majorTickStyle: LinearTickStyle(length: 10),
+              axisLabelStyle: TextStyle(fontSize: 12.0, color: Colors.black),
+              axisTrackStyle: LinearAxisTrackStyle(
+                  color: Colors.cyan,
+                  edgeStyle: LinearEdgeStyle.endCurve,
+                  thickness: 15.0,
+                  borderColor: Colors.grey)),
           ToggleSwitch(
             minWidth: 90.0,
             initialLabelIndex: 1,
@@ -80,7 +92,7 @@ class _SimulationPageState extends State<SimulationPage> {
             inactiveFgColor: Colors.white,
             totalSwitches: 2,
             labels: const ['Stake', 'Payout'],
-            activeBgColors: [
+            activeBgColors: const [
               [Colors.blue],
               [Colors.pink]
             ],
@@ -94,27 +106,29 @@ class _SimulationPageState extends State<SimulationPage> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              Container( padding: const EdgeInsets.only(right: 10),
+              Container(
+                padding: const EdgeInsets.only(right: 10),
                 decoration: BoxDecoration(
                     color: Colors.green,
                     borderRadius: BorderRadius.circular(10)),
                 height: 45,
                 width: 140,
-                child: Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [ 
-                  Icon(Icons.arrow_upward),
-                  const Text("Higher")
-                ]),
+                child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: const [Icon(Icons.arrow_upward), Text("Higher")]),
               ),
-              Container( padding: const EdgeInsets.only(right: 10),
+              Container(
+                padding: const EdgeInsets.only(right: 10),
                 decoration: BoxDecoration(
-                    color: Colors.red,
-                    borderRadius: BorderRadius.circular(10)),
+                    color: Colors.red, borderRadius: BorderRadius.circular(10)),
                 height: 45,
                 width: 140,
-                child: Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: const [ 
-                  Icon(Icons.arrow_downward),
-                  Text("Lower")
-                ]),
+                child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: const [
+                      Icon(Icons.arrow_downward),
+                      Text("Lower")
+                    ]),
               ),
             ],
           )

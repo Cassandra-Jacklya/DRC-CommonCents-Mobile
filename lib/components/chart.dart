@@ -1,5 +1,8 @@
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
+import '../cubit/stock_data_cubit.dart';
 import '../apistore/stockdata.dart';
+// import 'stock_candlestick_painter.dart';
 
 class CandleStickChart extends StatefulWidget {
   const CandleStickChart({Key? key}) : super(key: key);
@@ -9,96 +12,75 @@ class CandleStickChart extends StatefulWidget {
 }
 
 class _CandleStickChartState extends State<CandleStickChart> {
-  // late StockData stockData;
+  late StockDataCubit stockDataCubit;
 
   @override
-  void initState(){
+  void initState() {
     super.initState();
-    connectToWebSocket();
+    stockDataCubit = StockDataCubit();
+    connectToWebSocket(context);
   }
 
+  @override
+  void dispose() {
+    closeWebSocket();
+    stockDataCubit.close();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Center(
-      child: Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
-        // GestureDetector(
-        //   onTap: () {
-        //     subscribeTicks();
-        //   },
-        //   child: Container(
-        //     height: 50,
-        //     width: 100,
-        //     color: Colors.grey[300],
-        //     child: const Center(child: Text("Subscribe Ticks")),
-        //   ),
-        // ),
-        GestureDetector(
-          onTap: () {
-            closeWebSocket();
-          },
-          child: Container(
-            height: 50,
-            width: 100,
-            color: Colors.grey[300],
-            child: const Center(child: Text("Unsubscribe Ticks")),
-          ),
+      body: Center(
+        child: Column(
+          children: [
+            GestureDetector(
+              onTap: () {
+                closeWebSocket();
+              },
+              child: Container(
+                height: 50,
+                width: 100,
+                color: Colors.grey[300],
+                child: const Center(child: Text("Unsubscribe Ticks")),
+              ),
+            ),
+            SizedBox(
+              height: MediaQuery.of(context).size.height * 0.3,
+              width: MediaQuery.of(context).size.width,
+              child: BlocBuilder<StockDataCubit, List<Map<String, dynamic>>>(
+                builder: (context, stockData) {
+                  if (stockData.isEmpty) {
+                    return const CircularProgressIndicator();
+                  } else {
+                    print("I am from chart page: $stockData");
+                    return Container();
+                  }
+
+                  // return CustomPaint(
+                  //   size: Size.infinite,
+                  //   painter: StockCandleStickPainter(
+                  //     stockData: stockData,
+                  //   ),
+                  // );
+                },
+              ),
+            ),
+          ],
         ),
-        // GestureDetector(
-        //   onTap: () {
-        //     requestTicksHistory();
-        //   },
-        //   child: Container(
-        //     height: 50,
-        //     width: 100,
-        //     color: Colors.grey[300],
-        //     child: const Center(child: Text("Get Ticks History")),
-        //   ),
-        // ),
-      ]),
-    ));
+      ),
+    );
   }
 }
 
-// import 'package:flutter/material.dart';
-// import 'package:http/http.dart' as http;
 
-// class CandleStickChart extends StatefulWidget {
-//   const CandleStickChart({Key? key}) : super(key: key);
 
-//   @override
-//   _CandleStickChartState createState() => _CandleStickChartState();
-// }
-
-// class _CandleStickChartState extends State<CandleStickChart> {
-
-//   Future<dynamic> fetchData()async{
-//     String Url=""
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//         body: Center(
-//       child: SizedBox(
-//         height: MediaQuery.of(context).size.height * 0.3,
-//         width: MediaQuery.of(context).size.width,
-//         child: CustomPaint(
-//             size: Size.infinite,
-//             painter: StockCandleStickPainter(
-//               stockData: stockData,
-//             )),
-//       ),
-//     ));
-//   }
-// }
 
 // class StockCandleStickPainter extends CustomPainter {
 
 //   StockCandleStickPainter({
 //     this.stockData,
-//   }) : _wickPaint Paint()..color = Colors.grey,
+//   }) : _wickPaint = Paint()..color = Colors.grey,
 //   _gainPaint = Paint()..color = Colors.green,
 //   _lossPaint = Paint()..color = Colors.red;
 
@@ -151,7 +133,7 @@ class _CandleStickChartState extends State<CandleStickChart> {
 //     final pixelsPerDollar = availableSpace.height / (stockData.high - stockData.low);
 
 //     final List<CandleStick> candlesticks = [];
-//     for(int i = 0; i< stockData.timeWindows.length; ++i){
+//     for(int i = 0; i< stockData.timeWindows.length; i++){
 //       final StockTimeWindow window = stockData.timeWindows[i];
 
 //       candlesticks.add(
@@ -164,8 +146,8 @@ class _CandleStickChartState extends State<CandleStickChart> {
 //         candlePaint: window.isGain ? _gainPaint : _lossPaint
 //         )
 //       );
-//       return candlesticks;
 //     }
+//     return candlesticks;
 //   }
 
 //   @override

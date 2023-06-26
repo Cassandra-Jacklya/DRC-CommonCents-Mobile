@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class NewsContainer extends StatelessWidget {
   NewsContainer({super.key, required this.feeds});
@@ -19,15 +20,22 @@ class NewsContainer extends StatelessWidget {
           padding: const EdgeInsets.all(10),
           child: Row(
             children: [
-              Container(
-                color: Colors.white,
-                height: 80,
-                width: 80,
-                child: Image.network(
-                  news['banner_image'] != ""
-                      ? news['banner_image']
-                      : 'https://static.vecteezy.com/system/resources/previews/000/440/213/original/question-mark-vector-icon.jpg',
-                  fit: BoxFit.cover,
+              GestureDetector(
+                onTap: () async {
+                  print(news['url']);
+                  Uri url = Uri.parse(news['url']);
+                  launchUrl(url);
+                },
+                child: Container(
+                  color: Colors.white,
+                  height: 80,
+                  width: 80,
+                  child: Image.network(
+                    news['banner_image'] != ""
+                        ? news['banner_image']
+                        : 'https://static.vecteezy.com/system/resources/previews/000/440/213/original/question-mark-vector-icon.jpg',
+                    fit: BoxFit.cover,
+                  ),
                 ),
               ),
               const SizedBox(width: 10),

@@ -1,6 +1,8 @@
 import 'package:commoncents/components/appbar.dart';
 import 'package:commoncents/components/chart.dart';
+import 'package:commoncents/components/linechart.dart';
 import 'package:commoncents/components/navbar.dart';
+import 'package:commoncents/cubit/stock_data_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:commoncents/cubit/navbar_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -60,7 +62,7 @@ class _MainAppState extends State<MainApp> {
           color: Colors.black,
         ),
         // Set the font for numbers
-        bodyMedium : const TextStyle(
+        bodyMedium: const TextStyle(
           fontFamily: 'Gilroy',
           fontSize: 16,
           color: Colors.black,
@@ -73,6 +75,9 @@ class _MainAppState extends State<MainApp> {
           BlocProvider<BottomNavBarCubit>(
             create: (context) => BottomNavBarCubit(),
           ),
+          BlocProvider<StockDataCubit>(
+            create: (context) => StockDataCubit(),
+          )
         ],
         child: MaterialApp(
           theme: theme,
@@ -105,7 +110,7 @@ class _MainAppState extends State<MainApp> {
       case 1:
         return NewsPage();
       case 2:
-        return CandleStickChart();
+        return MyLineChart();
       case 3:
         return const ForumPage();
       case 4:
