@@ -36,7 +36,7 @@ class _MainAppState extends State<MainApp> {
 
   void initialize() async {
     await Future.delayed(const Duration(seconds: 2));
-    FlutterNativeSplash.remove();
+    FlutterNativeSplash.remove(); 
   }
 
   @override
@@ -106,7 +106,7 @@ class _MainAppState extends State<MainApp> {
   Widget _getPage(int index) {
     switch (index) {
       case 0:
-        return HomePage();
+        return const HomePage();
       case 1:
         return NewsPage();
       case 2:

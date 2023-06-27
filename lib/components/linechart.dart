@@ -23,36 +23,14 @@ class _LineChartState extends State<MyLineChart> {
       fontFamily: 'Digital',
       fontSize: 18 * chartWidth / 500,
     );
-    String text;
-    switch (value.toInt()) {
-      case 0:
-        text = '00:00';
-        break;
-      case 1:
-        text = '04:00';
-        break;
-      case 2:
-        text = '08:00';
-        break;
-      case 3:
-        text = '12:00';
-        break;
-      case 4:
-        text = '16:00';
-        break;
-      case 5:
-        text = '20:00';
-        break;
-      case 6:
-        text = '23:59';
-        break;
-      default:
-        return Container();
-    }
+    DateTime dateTime =
+        DateTime.fromMillisecondsSinceEpoch(value.toInt() * 1000, isUtc: true);
+    String timeString =
+        '${dateTime.hour.toString().padLeft(2, '0')}:${dateTime.minute.toString().padLeft(2, '0')}';
 
     return SideTitleWidget(
       axisSide: meta.axisSide,
-      child: Text(text, style: style),
+      child: Text(timeString, style: style),
     );
   }
 
@@ -98,7 +76,6 @@ class _LineChartState extends State<MyLineChart> {
                     spots.clear();
                     for (var entry in stockData) {
                       double x = entry['epoch'];
-
                       double y = entry['close'];
                       spots.add(FlSpot(x, y));
                     }
@@ -109,8 +86,9 @@ class _LineChartState extends State<MyLineChart> {
                         .map((entry) => entry['close'])
                         .reduce((a, b) => a < b ? a : b);
                     double maxY = stockData
-                        .map((entry) => entry['close'])
-                        .reduce((a, b) => a > b ? a : b);
+                            .map((entry) => entry['close'])
+                            .reduce((a, b) => a > b ? a : b) +
+                        0.1;
 
                     return LineChart(
                       LineChartData(
@@ -138,20 +116,15 @@ class _LineChartState extends State<MyLineChart> {
                             ),
                           ),
                           bottomTitles: AxisTitles(
-                            axisNameWidget: const Text('time'),
+                            // axisNameWidget: const Text('time'),
                             sideTitles: SideTitles(
-                              showTitles: true,
-                              interval: 1,
-                              getTitlesWidget: (value, meta) {
-                                return bottomTitleWidgets(
-                                  value,
-                                  meta,
-                                  5.00,
-                                );
-                              },
-                              reservedSize: 30,
-                            ),
+                                showTitles: true,
+                                reservedSize: 30,
+                                // getTitlesWidget: (value, meta) {
+                                //   return bottomTitleWidgets(value, meta, 10.00);
+                                // }),
                           ),
+                        ),
                         ),
                         gridData: FlGridData(
                             show: true,
@@ -193,4 +166,3 @@ class _LineChartState extends State<MyLineChart> {
     );
   }
 }
-
