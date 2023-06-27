@@ -110,7 +110,7 @@ class _MainAppState extends State<MainApp> {
       case 1:
         return NewsPage();
       case 2:
-        return MyLineChart();
+        return SimulationPage();
       case 3:
         return const ForumPage();
       case 4:
