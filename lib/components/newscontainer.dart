@@ -31,7 +31,7 @@ class NewsContainer extends StatelessWidget {
                   height: 80,
                   width: 80,
                   child: Image.network(
-                    news['banner_image'] != ""
+                    (news['banner_image'] != null && news['banner_image'] != "")
                         ? news['banner_image']
                         : 'https://static.vecteezy.com/system/resources/previews/000/440/213/original/question-mark-vector-icon.jpg',
                     fit: BoxFit.cover,

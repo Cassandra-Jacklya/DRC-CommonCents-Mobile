@@ -1,6 +1,4 @@
 import 'package:commoncents/components/appbar.dart';
-import 'package:commoncents/components/chart.dart';
-import 'package:commoncents/components/linechart.dart';
 import 'package:commoncents/components/navbar.dart';
 import 'package:commoncents/cubit/stock_data_cubit.dart';
 import 'package:flutter/material.dart';
