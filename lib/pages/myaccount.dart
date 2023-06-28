@@ -50,22 +50,6 @@ class _MyAccountState extends State<MyAccount> {
         backgroundColor: Colors.grey[300],
         title: const Text("My Account"),
         foregroundColor: Colors.black,
-        actions: [
-          GestureDetector(
-            onTap: () {
-              showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return const LogOut();
-                },
-              );
-            },
-            child: Container(
-              margin: const EdgeInsets.symmetric(horizontal: 20),
-              child: const Icon(Iconsax.logout),
-            ),
-          ),
-        ],
       ),
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,

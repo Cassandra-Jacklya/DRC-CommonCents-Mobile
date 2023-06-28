@@ -2,7 +2,11 @@ import 'package:commoncents/components/appbar.dart';
 import 'package:commoncents/components/chart.dart';
 import 'package:commoncents/components/linechart.dart';
 import 'package:commoncents/components/navbar.dart';
+import 'package:commoncents/cubit/register_cubit.dart';
 import 'package:commoncents/cubit/stock_data_cubit.dart';
+import 'package:commoncents/pages/auth_pages/login.dart';
+import 'package:commoncents/pages/auth_pages/register.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:commoncents/cubit/navbar_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -13,6 +17,9 @@ import 'package:commoncents/pages/simulationpage.dart';
 import 'package:commoncents/pages/forumpage.dart';
 import 'package:commoncents/pages/profilepage.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'cubit/login_cubit.dart';
+import 'firebase_options.dart';
 
 void main() {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
@@ -21,7 +28,7 @@ void main() {
 }
 
 class MainApp extends StatefulWidget {
-  const MainApp({super.key});
+  const MainApp({Key? key}) : super(key: key);
 
   @override
   State<MainApp> createState() => _MainAppState();
@@ -77,28 +84,43 @@ class _MainAppState extends State<MainApp> {
           ),
           BlocProvider<StockDataCubit>(
             create: (context) => StockDataCubit(),
-          )
+          ),
+          BlocProvider<LoginStateBloc>(
+            create: (context) => LoginStateBloc(),
+          ),
+          BlocProvider<SignUpStateBloc>(
+            create: (context) => SignUpStateBloc()
+          ),
         ],
-        child: MaterialApp(
-          theme: theme,
-          home: BlocBuilder<BottomNavBarCubit, int>(
-            builder: (context, selectedIndex) {
-              List<String> barTitle = [
-                "CommonCents",
-                "Trading News",
-                "Trading Simulation",
-                "Forum",
-                "User Profile"
-              ];
-              return Scaffold(
-                backgroundColor: Colors.white,
-                appBar: CustomAppBar(
-                  title: barTitle[selectedIndex],
-                ),
-                body: _getPage(selectedIndex),
-                bottomNavigationBar: const BottomNavBar(),
-              );
-            },
+        child: GestureDetector(
+          onTap: () {
+            FocusScopeNode currentFocus = FocusScope.of(context);
+
+            if (!currentFocus.hasPrimaryFocus) {
+              currentFocus.unfocus();
+            }
+          },
+          child: MaterialApp(
+            theme: theme,
+            home: BlocBuilder<BottomNavBarCubit, int>(
+              builder: (context, selectedIndex) {
+                List<String> barTitle = [
+                  "CommonCents",
+                  "Trading News",
+                  "Trading Simulation",
+                  "Forum",
+                  "User Profile"
+                ];
+                return Scaffold(
+                  backgroundColor: Colors.white,
+                  appBar: CustomAppBar(
+                    title: barTitle[selectedIndex],
+                  ),
+                  body:  _getPage(selectedIndex),
+                  bottomNavigationBar: const BottomNavBar(),
+                );
+              },
+            ),
           ),
         ));
   }
@@ -112,9 +134,9 @@ class _MainAppState extends State<MainApp> {
       case 2:
         return MyLineChart();
       case 3:
-        return const ForumPage();
+        return ForumPage();
       case 4:
-        return const ProfilePage();
+        return ProfilePage();
       default:
         return Container(color: Colors.red);
     }

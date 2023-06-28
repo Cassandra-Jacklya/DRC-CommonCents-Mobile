@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "860551647147",
+    "project_id": "drc-project-99da9",
+    "storage_bucket": "drc-project-99da9.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:860551647147:android:1f1df83dec479088718cee",
+        "android_client_info": {
+          "package_name": "com.example.commoncents"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "860551647147-hjmk50tfnqnagl0vvna2u8kr2ujchav6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAazSEKlllGbElUFPUrsdvpwjf93CMahPA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "860551647147-bl7jtohb01u3eo3kfen9u9n2ebmru62j.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "860551647147-hshrp9q3c46ndh0so08ma1ran0pftgmj.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.commoncents"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

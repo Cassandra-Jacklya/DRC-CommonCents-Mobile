@@ -1,9 +1,11 @@
+import 'package:commoncents/components/popup.dart';
 import 'package:commoncents/pages/myaccount.dart';
 import 'package:commoncents/pages/security.dart';
 import 'package:commoncents/pages/leaderboard.dart';
 import 'package:commoncents/pages/recentTrades.dart';
 import 'package:commoncents/pages/help_support.dart';
 import 'package:flutter/material.dart';
+import 'package:iconsax/iconsax.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({Key? key}) : super(key: key);
@@ -37,7 +39,7 @@ class ProfilePage extends StatelessWidget {
               margin: const EdgeInsets.only(right: 20),
               height: 50,
               width: 50,
-              color: Colors.white,
+              color: Colors.transparent,
               child: icon,
             ),
             Expanded(
@@ -151,6 +153,19 @@ class ProfilePage extends StatelessWidget {
                         ),
                         onPressed: () {
                           Navigator.push(context, MaterialPageRoute(builder: (context) => HelpSupport()));
+                        },
+                        showBottomBorder: false,
+                      ),
+                      buildContainer(
+                        title: "Logout",
+                        icon: const Icon(Iconsax.logout),
+                        onPressed: () {
+                          showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return const LogOut();
+                              },
+                          );
                         },
                         showBottomBorder: false,
                       ),

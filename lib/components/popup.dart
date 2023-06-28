@@ -1,3 +1,5 @@
+import 'package:commoncents/main.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:commoncents/pages/changePassword.dart';
 
@@ -150,8 +152,15 @@ class LogOut extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: GestureDetector(
-            onTap: () {
-              Navigator.of(context).pop();
+            onTap: () async {
+              await FirebaseAuth.instance.signOut();
+                if (context.mounted) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const MainApp(),
+                  ));
+                }
             },
             child: Container(
               height: 50,
