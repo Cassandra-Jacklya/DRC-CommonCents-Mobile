@@ -1,5 +1,6 @@
 import 'package:commoncents/components/appbar.dart';
 import 'package:commoncents/components/navbar.dart';
+import 'package:commoncents/cubit/news_tabbar_cubit.dart';
 import 'package:commoncents/cubit/register_cubit.dart';
 import 'package:commoncents/cubit/stock_data_cubit.dart';
 import 'package:commoncents/pages/auth_pages/login.dart';
@@ -41,7 +42,7 @@ class _MainAppState extends State<MainApp> {
 
   void initialize() async {
     await Future.delayed(const Duration(seconds: 2));
-    FlutterNativeSplash.remove(); 
+    FlutterNativeSplash.remove();
   }
 
   @override
@@ -86,9 +87,8 @@ class _MainAppState extends State<MainApp> {
           BlocProvider<LoginStateBloc>(
             create: (context) => LoginStateBloc(),
           ),
-          BlocProvider<SignUpStateBloc>(
-            create: (context) => SignUpStateBloc()
-          ),
+          BlocProvider<SignUpStateBloc>(create: (context) => SignUpStateBloc()),
+          BlocProvider<NewsTabBarCubit>(create: (context) => NewsTabBarCubit())
         ],
         child: GestureDetector(
           onTap: () {
@@ -114,7 +114,7 @@ class _MainAppState extends State<MainApp> {
                   appBar: CustomAppBar(
                     title: barTitle[selectedIndex],
                   ),
-                  body:  _getPage(selectedIndex),
+                  body: _getPage(selectedIndex),
                   bottomNavigationBar: const BottomNavBar(),
                 );
               },

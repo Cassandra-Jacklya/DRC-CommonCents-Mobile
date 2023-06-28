@@ -1,5 +1,6 @@
 import 'package:commoncents/apistore/news_lazyLoading.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import '../components/news_tabbar.dart';
 import '../cubit/news_tabbar_cubit.dart';
 import '../components/newscontainer.dart';
@@ -12,46 +13,54 @@ class NewsPage extends StatefulWidget {
 }
 
 class _NewsPageState extends State<NewsPage> {
+  Future<List<dynamic>>? _lazyFuture;
   final TextEditingController _textEditingController = TextEditingController();
   List<dynamic> _newsList = [];
-  int _currentPage = 2;
-  ScrollController _scrollController = ScrollController();
+
+  String formatTopicForAPI(String topic) {
+    switch (topic) {
+      case 'All':
+        return 'All';
+      case 'Blockchain':
+        return 'blockchain';
+      case 'Earnings':
+        return 'earnings';
+      case 'IPO':
+        return 'ipo';
+      case 'Mergers & Acquisition':
+        return 'mergers_and_acquisition';
+      case 'Financial Markets':
+        return 'financial_markets';
+      case 'Econ - Fiscal Policy':
+        return 'economy_fiscal';
+      case 'Econ - Monetary Policy':
+        return 'economy_monetary';
+      case 'Econ - Macro/Overall':
+        return 'economy_macro';
+      case 'Finance':
+        return 'finance';
+      case 'Retail & Wholesale':
+        return 'retail_wholesale';
+      case 'Technology':
+        return 'technology';
+      default:
+        return topic.toLowerCase().replaceAll(' ', '_');
+    }
+  }
+
+  void _handleTopicChanged(String topic) {
+    final formattedTopic = formatTopicForAPI(topic); // Format the topic
+    setState(() {
+      _lazyFuture = getLazyNews(formattedTopic);
+    });
+  }
 
   @override
   void initState() {
     super.initState();
-    _fetchNews(); // Call the initial fetch function
-    _scrollController.addListener(_scrollListener); // Add scroll listener
-  }
-
-  @override
-  void dispose() {
-    _scrollController.removeListener(_scrollListener); // Remove scroll listener
-    _scrollController.dispose();
-    super.dispose();
-  }
-
-  void _scrollListener() {
-    if (_scrollController.position.pixels ==
-        _scrollController.position.maxScrollExtent) {
-      // Reached the bottom of the scroll view
-      setState(() {
-        _currentPage++; // Increment the current page
-      });
-      _fetchNews(); // Fetch more news
-    }
-  }
-
-  Future<void> _fetchNews() async {
-    try {
-      final news =
-          await getNews(_currentPage); // Fetch news for the current page
-      setState(() {
-        _newsList.addAll(news); // Add fetched news to the list
-      });
-    } catch (e) {
-      // Handle error if necessary
-    }
+    final newsTabBarCubit = context.read<NewsTabBarCubit>();
+    final selectedTopic = newsTabBarCubit.state;
+    _lazyFuture = getLazyNews(selectedTopic);
   }
 
   @override
@@ -104,20 +113,21 @@ class _NewsPageState extends State<NewsPage> {
                 ),
               ],
             ),
-            NewsTabBar(),
+            NewsTabBar(onTopicChanged: _handleTopicChanged),
             const SizedBox(height: 30),
-            ListView.builder(
-              shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(),
-              itemCount: _newsList.length + 1, // Add 1 for loading indicator
-              itemBuilder: (context, index) {
-                if (index < _newsList.length) {
-                  final newsItem = _newsList[index];
-                  return NewsContainer(feeds: [newsItem]);
-                } else if (index == _newsList.length) {
+            FutureBuilder<List<dynamic>>(
+              future: _lazyFuture,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
                   return const CircularProgressIndicator();
+                } else if (snapshot.hasError) {
+                  return Text('Error: ${snapshot.error}');
+                } else if (snapshot.hasData) {
+                  final newsList = snapshot.data;
+                  print(newsList?.length);
+                  return NewsContainer(feeds: newsList);
                 } else {
-                  return null; // Return null for indices beyond the news list length
+                  return const Text('No news available.');
                 }
               },
             ),

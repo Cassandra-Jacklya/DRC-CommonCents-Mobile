@@ -1,12 +1,19 @@
 import 'package:commoncents/cubit/news_tabbar_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../pages/newspage.dart';
+import '../apistore/news_lazyLoading.dart';
 
 class NewsTabBar extends StatefulWidget {
+  final Function(String) onTopicChanged; // Add this line
+
+  NewsTabBar({required this.onTopicChanged}); // Add this line
+
   _NewsTabBarState createState() => _NewsTabBarState();
 }
 
-class _NewsTabBarState extends State<NewsTabBar> with SingleTickerProviderStateMixin {
+class _NewsTabBarState extends State<NewsTabBar>
+    with SingleTickerProviderStateMixin {
   List<dynamic> topics = [
     'All',
     'Blockchain',
@@ -21,6 +28,37 @@ class _NewsTabBarState extends State<NewsTabBar> with SingleTickerProviderStateM
     'Retail & Wholesale',
     'Technology'
   ];
+
+  String formatTopicForAPI(String topic) {
+    switch (topic) {
+      case 'All':
+        return 'All';
+      case 'Blockchain':
+        return 'blockchain';
+      case 'Earnings':
+        return 'earnings';
+      case 'IPO':
+        return 'ipo';
+      case 'Mergers & Acquisition':
+        return 'mergers_and_acquisition';
+      case 'Financial Markets':
+        return 'financial_markets';
+      case 'Econ - Fiscal Policy':
+        return 'economy_fiscal';
+      case 'Econ - Monetary Policy':
+        return 'economy_monetary';
+      case 'Econ - Macro/Overall':
+        return 'economy_macro';
+      case 'Finance':
+        return 'finance';
+      case 'Retail & Wholesale':
+        return 'retail_wholesale';
+      case 'Technology':
+        return 'technology';
+      default:
+        return topic.toLowerCase().replaceAll(' ', '_');
+    }
+  }
 
   String selectedTopic = 'All'; // Default selected topic
 
@@ -50,9 +88,12 @@ class _NewsTabBarState extends State<NewsTabBar> with SingleTickerProviderStateM
 
   @override
   Widget build(BuildContext context) {
+    final newsTabBarCubit = context.read<NewsTabBarCubit>();
+
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
-      child: Container(margin: const EdgeInsets.symmetric(horizontal: 10),
+      child: Container(
+        margin: const EdgeInsets.symmetric(horizontal: 10),
         child: Wrap(
           spacing: 0,
           children: topics.map((topic) {
@@ -61,10 +102,14 @@ class _NewsTabBarState extends State<NewsTabBar> with SingleTickerProviderStateM
               onTap: () {
                 setState(() {
                   selectedTopic = topic;
+                  newsTabBarCubit.updateTopic(formatTopicForAPI(topic));
                 });
                 if (_animationController.status != AnimationStatus.forward) {
                   _animationController.forward(from: 0.0);
                 }
+
+                final chosenTopic = formatTopicForAPI(topic);
+                widget.onTopicChanged(selectedTopic);
               },
               child: AnimatedContainer(
                 padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -73,11 +118,11 @@ class _NewsTabBarState extends State<NewsTabBar> with SingleTickerProviderStateM
                     bottom: BorderSide(
                       color: isSelected ? Colors.black : Colors.grey,
                       style: BorderStyle.solid,
-                      width: isSelected ? 3 + 5 * _animation.value : 1 // Adjust the width as needed
+                      width: isSelected ? 3 + 5 * _animation.value : 1,
                     ),
                   ),
                 ),
-                height: 40, // Adjust the height as needed
+                height: 40,
                 duration: const Duration(milliseconds: 300),
                 child: Center(
                   child: Text(
@@ -95,4 +140,3 @@ class _NewsTabBarState extends State<NewsTabBar> with SingleTickerProviderStateM
     );
   }
 }
-

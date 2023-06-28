@@ -22,7 +22,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    _newsFuture = getNews(1);
+    _newsFuture = getNews();
   }
 
   @override
@@ -115,22 +115,22 @@ class _HomePageState extends State<HomePage> {
                         ],
                       ),
                     ),
-                    // const SizedBox(height: 10),
-                    // FutureBuilder<List<dynamic>>(
-                    //   future: _newsFuture,
-                    //   builder: (context, snapshot) {
-                    //     if (snapshot.connectionState == ConnectionState.waiting) {
-                    //       return const CircularProgressIndicator();
-                    //     } else if (snapshot.hasError) {
-                    //       return Text('Error: ${snapshot.error}');
-                    //     } else if (snapshot.hasData) {
-                    //       final newsList = snapshot.data;
-                    //       return NewsContainer(feeds: newsList);
-                    //     } else {
-                    //       return const Text('No news available.');
-                    //     }
-                    //   },
-                    // ),
+                    const SizedBox(height: 10),
+                    FutureBuilder<List<dynamic>>(
+                      future: _newsFuture,
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState == ConnectionState.waiting) {
+                          return const CircularProgressIndicator();
+                        } else if (snapshot.hasError) {
+                          return Text('Error: ${snapshot.error}');
+                        } else if (snapshot.hasData) {
+                          final newsList = snapshot.data;
+                          return NewsContainer(feeds: newsList);
+                        } else {
+                          return const Text('No news available.');
+                        }
+                      },
+                    ),
                   ],
                 ),
               );
@@ -151,15 +151,6 @@ class _HomePageState extends State<HomePage> {
                             "MARKET OVERVIEW",
                             style: TextStyle(fontSize: 20, fontFamily: 'Roboto'),
                           ),
-                          // FutureBuilder<String>(
-                          //   future: _userBalance,
-                          //   builder: (context, snapshot) {
-                          //     if (snapshot.connectionState == ConnectionState.done) {
-                          //       return Text(_userBalance.toString());
-                          //     }
-                          //     return const CircularProgressIndicator();
-                          //   }
-                          // ),
                           BlocBuilder<LoginStateBloc, LoginState>(
                             builder: ((context, state) {
                               if (state is AppStateInitial) {}
@@ -217,22 +208,22 @@ class _HomePageState extends State<HomePage> {
                         ],
                       ),
                     ),
-                    // const SizedBox(height: 10),
-                    // FutureBuilder<List<dynamic>>(
-                    //   future: _newsFuture,
-                    //   builder: (context, snapshot) {
-                    //     if (snapshot.connectionState == ConnectionState.waiting) {
-                    //       return const CircularProgressIndicator();
-                    //     } else if (snapshot.hasError) {
-                    //       return Text('Error: ${snapshot.error}');
-                    //     } else if (snapshot.hasData) {
-                    //       final newsList = snapshot.data;
-                    //       return NewsContainer(feeds: newsList);
-                    //     } else {
-                    //       return const Text('No news available.');
-                    //     }
-                    //   },
-                    // ),
+                    const SizedBox(height: 10),
+                    FutureBuilder<List<dynamic>>(
+                      future: _newsFuture,
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState == ConnectionState.waiting) {
+                          return const CircularProgressIndicator();
+                        } else if (snapshot.hasError) {
+                          return Text('Error: ${snapshot.error}');
+                        } else if (snapshot.hasData) {
+                          final newsList = snapshot.data;
+                          return NewsContainer(feeds: newsList);
+                        } else {
+                          return const Text('No news available.');
+                        }
+                      },
+                    ),
                   ],
                 ),
               );
@@ -317,22 +308,22 @@ class _HomePageState extends State<HomePage> {
                         ],
                       ),
                     ),
-                    // const SizedBox(height: 10),
-                    // FutureBuilder<List<dynamic>>(
-                    //   future: _newsFuture,
-                    //   builder: (context, snapshot) {
-                    //     if (snapshot.connectionState == ConnectionState.waiting) {
-                    //       return const CircularProgressIndicator();
-                    //     } else if (snapshot.hasError) {
-                    //       return Text('Error: ${snapshot.error}');
-                    //     } else if (snapshot.hasData) {
-                    //       final newsList = snapshot.data;
-                    //       return NewsContainer(feeds: newsList);
-                    //     } else {
-                    //       return const Text('No news available.');
-                    //     }
-                    //   },
-                    // ),
+                    const SizedBox(height: 10),
+                    FutureBuilder<List<dynamic>>(
+                      future: _newsFuture,
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState == ConnectionState.waiting) {
+                          return const CircularProgressIndicator();
+                        } else if (snapshot.hasError) {
+                          return Text('Error: ${snapshot.error}');
+                        } else if (snapshot.hasData) {
+                          final newsList = snapshot.data;
+                          return NewsContainer(feeds: newsList);
+                        } else {
+                          return const Text('No news available.');
+                        }
+                      },
+                    ),
                   ],
                 ),
               );
