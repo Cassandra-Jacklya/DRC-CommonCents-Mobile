@@ -1,6 +1,4 @@
 import 'package:commoncents/components/appbar.dart';
-import 'package:commoncents/components/chart.dart';
-import 'package:commoncents/components/linechart.dart';
 import 'package:commoncents/components/navbar.dart';
 import 'package:commoncents/cubit/register_cubit.dart';
 import 'package:commoncents/cubit/stock_data_cubit.dart';
@@ -43,7 +41,7 @@ class _MainAppState extends State<MainApp> {
 
   void initialize() async {
     await Future.delayed(const Duration(seconds: 2));
-    FlutterNativeSplash.remove();
+    FlutterNativeSplash.remove(); 
   }
 
   @override
@@ -128,11 +126,11 @@ class _MainAppState extends State<MainApp> {
   Widget _getPage(int index) {
     switch (index) {
       case 0:
-        return HomePage();
+        return const HomePage();
       case 1:
         return NewsPage();
       case 2:
-        return MyLineChart();
+        return SimulationPage();
       case 3:
         return ForumPage();
       case 4:

@@ -12,20 +12,19 @@ Future<List<dynamic>> getNews(int page) async {
   var data;
 
   if (response.statusCode == 200) {
+    data = jsonDecode(response.body);
+    final feed = data['feed'];
     if (page == 1) {
-      data = jsonDecode(response.body);
-      final feed = data['feed'];
       news = feed.sublist(0, 8);
-      return news;
     } else if (page == 2) {
-      data = jsonDecode(response.body);
-      final feed = data['feed'];
-      news = feed.sublist(8);
-      return news;
-    }
+      final startIndex = (page - 1) * 8;
+      final endIndex = startIndex + 8;
+      if (startIndex < feed.length) {
+        news = feed.sublist(startIndex, endIndex);
+      }
+    } 
+    return news;
   } else {
     throw Exception('Failed to load data');
   }
-
-  return news;
 }
