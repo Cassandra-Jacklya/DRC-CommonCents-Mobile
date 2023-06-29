@@ -5,7 +5,6 @@ class NewsTabBarCubit extends Cubit<String>{
 
   void updateTopic(String topic){
     emit(topic);
-    print(topic);
   }
 
 }

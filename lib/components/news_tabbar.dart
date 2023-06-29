@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../pages/newspage.dart';
 import '../apistore/news_lazyLoading.dart';
+import '../components/formatString.dart';
 
 class NewsTabBar extends StatefulWidget {
   final Function(String) onTopicChanged; // Add this line
@@ -28,37 +29,6 @@ class _NewsTabBarState extends State<NewsTabBar>
     'Retail & Wholesale',
     'Technology'
   ];
-
-  String formatTopicForAPI(String topic) {
-    switch (topic) {
-      case 'All':
-        return 'All';
-      case 'Blockchain':
-        return 'blockchain';
-      case 'Earnings':
-        return 'earnings';
-      case 'IPO':
-        return 'ipo';
-      case 'Mergers & Acquisition':
-        return 'mergers_and_acquisition';
-      case 'Financial Markets':
-        return 'financial_markets';
-      case 'Econ - Fiscal Policy':
-        return 'economy_fiscal';
-      case 'Econ - Monetary Policy':
-        return 'economy_monetary';
-      case 'Econ - Macro/Overall':
-        return 'economy_macro';
-      case 'Finance':
-        return 'finance';
-      case 'Retail & Wholesale':
-        return 'retail_wholesale';
-      case 'Technology':
-        return 'technology';
-      default:
-        return topic.toLowerCase().replaceAll(' ', '_');
-    }
-  }
 
   String selectedTopic = 'All'; // Default selected topic
 
