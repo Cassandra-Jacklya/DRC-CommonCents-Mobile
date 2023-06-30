@@ -63,19 +63,26 @@ Future<void> requestTicksHistory() async {
   socket?.sink.add(jsonEncode(TicksHistoryRequest));
 }
 
-void handleResponse(dynamic data, BuildContext context) {
+Future<void> handleResponse(dynamic data, BuildContext context) async {
   final decodedData = jsonDecode(data);
   final List<Map<String, dynamic>> tickHistory = [];
 
   if(decodedData['msg_type'] == 'proposal'){
+    late double buyingPrice;
+    late double sellingPrice;
     final Map<String, dynamic> proposal = decodedData['proposal'];
-    // print('yay: $proposal');
     FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
     User? user = FirebaseAuth.instance.currentUser;
     CollectionReference collectionReference = firebaseFirestore.collection('users');
     collectionReference.doc(user!.uid).update(
       { 'balance': 100 }
     );
+    buyingPrice = ticks.last['close']; 
+    await Future.delayed(const Duration(seconds: 3));
+    sellingPrice = ticks.last['close'];
+    if(buyingPrice<sellingPrice){
+      print("Buying: $buyingPrice\nSelling: $sellingPrice\nSo: You won the trade!");
+    }else{print("Buying: $buyingPrice\nSelling: $sellingPrice\nSo: you lost :(");}
   }
 
   else if (decodedData['msg_type'] == 'candles') {
@@ -133,7 +140,6 @@ void handleBuy(int ticks, String stakePayout, int currentAmount) {
   final PriceProposalRequest = {
     "proposal": 1,
     "amount": currentAmount,
-    "barrier": "+0.1",
     "basis": stakePayout,
     "contract_type": "CALL",
     "currency": "USD",
@@ -141,6 +147,9 @@ void handleBuy(int ticks, String stakePayout, int currentAmount) {
     "duration_unit": "t",
     "symbol": "R_100"
   };
-
   socket?.sink.add(jsonEncode(PriceProposalRequest));
+}
+
+void handleSell(){
+  
 }
