@@ -139,8 +139,7 @@ class _SimulationPageState extends State<SimulationPage> {
                         }
                         currentAmount =
                             context.read<CurrentAmountCubit>().state;
-                        print(
-                            "Ticks: $ticks, SP: $stakePayout, Amount: $currentAmount");
+                        handleBuy(ticks.toInt(), stakePayout, currentAmount);
                       },
                       child: Container(
                         padding: const EdgeInsets.only(right: 10),
@@ -170,8 +169,7 @@ class _SimulationPageState extends State<SimulationPage> {
                         }
                         currentAmount =
                             context.read<CurrentAmountCubit>().state;
-                        print(
-                            "Ticks: $ticks, SP: $stakePayout, Amount: $currentAmount");
+                        handleBuy(ticks.toInt(), stakePayout, currentAmount);
                       },
                       child: Container(
                         padding: const EdgeInsets.only(right: 10),
