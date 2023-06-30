@@ -4,7 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../components/news_tabbar.dart';
 import '../cubit/news_tabbar_cubit.dart';
-import '../components/lazyContainers.dart';
 import '../components/formatString.dart';
 
 class NewsPage extends StatefulWidget {

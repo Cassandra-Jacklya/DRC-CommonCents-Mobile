@@ -4,9 +4,11 @@ import 'package:syncfusion_flutter_gauges/gauges.dart';
 import '../cubit/ticks_cubit.dart';
 
 class TicksGauge extends StatefulWidget {
+
   @override
   _TicksGaugeState createState() => _TicksGaugeState();
 }
+
 
 class _TicksGaugeState extends State<TicksGauge> {
   double selectedValue = 1.0;
@@ -35,10 +37,10 @@ class _TicksGaugeState extends State<TicksGauge> {
             offset: -20,
             child: GestureDetector(
               onTap: () {
-                // Handle the tap on the number
-                selectedValue = value.toDouble();
+                setState(() {
+                  selectedValue = value.toDouble();
+                });
                 context.read<TicksCubit>().updateSelectedValue(selectedValue);
-                print(selectedValue);
               },
               child: Container(
                 width: value == selectedValue ? 30 : 20,

@@ -1,5 +1,7 @@
 // ignore: file_names
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../cubit/numberpicker_cubit.dart';
 
 class IntegerExample extends StatefulWidget {
   const IntegerExample({super.key});
@@ -10,8 +12,15 @@ class IntegerExample extends StatefulWidget {
 }
 
 class _IntegerExampleState extends State<IntegerExample> {
-  int currentHorizontalIntValue = 10;
+  late CurrentAmountCubit currentAmountCubit;
   final TextEditingController _controller = TextEditingController();
+
+
+  @override
+  void didChangeDependencies() {
+    currentAmountCubit = context.watch<CurrentAmountCubit>();
+    super.didChangeDependencies();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -19,34 +28,25 @@ class _IntegerExampleState extends State<IntegerExample> {
       children: [
         IconButton(
           icon: const Icon(Icons.remove),
-          onPressed: () => setState(() {
-            final newValue = currentHorizontalIntValue - 10;
-            currentHorizontalIntValue = newValue.clamp(0, 100);
-            _controller.text = currentHorizontalIntValue.toString();
-          }),
+          onPressed: () {currentAmountCubit.decrement(); _controller.text = currentAmountCubit.state.toString();}
         ),
         Expanded(
-          child: TextField( textAlign: TextAlign.center,
+          child: TextField(
+            textAlign: TextAlign.center,
             controller: _controller,
             keyboardType: TextInputType.number,
             onChanged: (value) {
-              setState(() {
-                currentHorizontalIntValue = int.tryParse(value) ?? 0;
-              });
+              final amount = int.tryParse(value) ?? 0;
+              currentAmountCubit.setCurrentAmount(amount);
             },
-            decoration: InputDecoration(
-              // labelText: 'USD',
+            decoration: const InputDecoration(
               hintText: 'USD',
             ),
           ),
         ),
         IconButton(
           icon: const Icon(Icons.add),
-          onPressed: () => setState(() {
-            final newValue = currentHorizontalIntValue + 10;
-            currentHorizontalIntValue = newValue.clamp(0, 100);
-            _controller.text = currentHorizontalIntValue.toString();
-          }),
+          onPressed: () {currentAmountCubit.increment(); _controller.text = currentAmountCubit.state.toString();}
         ),
       ],
     );
