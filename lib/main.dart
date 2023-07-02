@@ -8,7 +8,6 @@ import 'package:commoncents/cubit/stock_data_cubit.dart';
 import 'package:commoncents/cubit/ticks_cubit.dart';
 import 'package:commoncents/pages/auth_pages/login.dart';
 import 'package:commoncents/pages/auth_pages/register.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:commoncents/cubit/navbar_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -19,9 +18,8 @@ import 'package:commoncents/pages/simulationpage.dart';
 import 'package:commoncents/pages/forumpage.dart';
 import 'package:commoncents/pages/profilepage.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'cubit/login_cubit.dart';
-import 'firebase_options.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 void main() {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
@@ -51,28 +49,28 @@ class _MainAppState extends State<MainApp> {
   @override
   Widget build(BuildContext context) {
     final theme = ThemeData(
-      primaryColor: const Color(0xFF3366FF),
+      primaryColor: const Color(0xFF3366ff),
       primaryColorLight: const Color(0xFF6699FF),
-      primaryColorDark: const Color(0xFF0033FF),
+      primaryColorDark: const Color(0xFF0E34CC),
       scaffoldBackgroundColor: Colors.white,
       textTheme:
           GoogleFonts.robotoTextTheme(Theme.of(context).textTheme).copyWith(
         // Set the font for headings
         displayLarge: const TextStyle(
-          fontFamily: 'Avenir',
+          fontFamily: 'Roboto',
           fontWeight: FontWeight.bold,
-          fontSize: 24,
+          fontSize: 20,
           color: Colors.black,
         ),
         // Set the font for small text in buttons
         displaySmall: const TextStyle(
-          fontFamily: 'Raleway',
+          fontFamily: 'Roboto',
           fontSize: 12,
           color: Colors.black,
         ),
         // Set the font for numbers
         bodyMedium: const TextStyle(
-          fontFamily: 'Gilroy',
+          fontFamily: 'Poppins',
           fontSize: 16,
           color: Colors.black,
         ),
@@ -115,13 +113,125 @@ class _MainAppState extends State<MainApp> {
                   "Forum",
                   "User Profile"
                 ];
+                // return Scaffold(
+                //   backgroundColor: Colors.white,
+                //   appBar: CustomAppBar(
+                //     title: barTitle[selectedIndex],
+                //   ),
+                //   body: _getPage(selectedIndex),
+                //   bottomNavigationBar: const BottomNavBar(),
+                // );
                 return Scaffold(
-                  backgroundColor: Colors.white,
-                  appBar: CustomAppBar(
-                    title: barTitle[selectedIndex],
-                  ),
-                  body: _getPage(selectedIndex),
-                  bottomNavigationBar: const BottomNavBar(),
+                  body: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      children: [
+                      const Padding(
+                        padding: EdgeInsets.fromLTRB(50, 90, 56, 90),
+                        child: Text("Welcome to our CommonCents Community",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 20
+                          ),
+                        ),
+                      ),
+                      const Image(image: AssetImage('assets/images/trading-onboarding.jpg'),
+                        height: 170,
+                        width: 217,
+                      ),
+                      const Padding(
+                        padding:  EdgeInsets.fromLTRB(0, 36, 0, 0),
+                        child:  Text("Zero real money.",
+                          style: TextStyle(
+                            fontSize: 15
+                          ),
+                        ),
+                      ),
+                      const Text("Experience real trading.",
+                        style: TextStyle(
+                          fontSize: 15
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(0, 42, 0, 42),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            IconButton(
+                              onPressed: () {}, 
+                              icon: const FaIcon(FontAwesomeIcons.solidCircle,
+                                size: 10,
+                                color: Color(0xFF5F5F5F),
+                              )
+                            ),
+                            IconButton(
+                              onPressed: () {}, 
+                              icon: const FaIcon(FontAwesomeIcons.solidCircle,
+                                size: 10,
+                                color: Color(0xFFD9D9D9),
+                              )
+                            ),
+                            IconButton(
+                              onPressed: () {}, 
+                              icon: const FaIcon(FontAwesomeIcons.solidCircle,
+                                size: 10,
+                                color: Color(0xFFD9D9D9),
+                              )
+                            ),
+                          ],
+                        ),
+                      ),
+                      ElevatedButton(
+                        onPressed: () async {
+                          Navigator.push(context, 
+                            MaterialPageRoute(
+                              builder: (context) {
+                                return const RegisterView();
+                              }
+                            )
+                          );
+                        },  
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFF3366FF),
+                          fixedSize: const Size(298, 44)
+                        ),
+                        child: const Text("Create Account",
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.normal,
+                            fontFamily: 'Roboto',
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(0, 17, 0, 0),
+                        child: ElevatedButton(
+                          onPressed: () async {
+                            Navigator.push(context, 
+                              MaterialPageRoute(
+                                builder: (context) {
+                                  return const LoginView();
+                                }
+                              )
+                            );
+                          }, 
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFFD9D9D9),
+                            fixedSize: const Size(298, 44)
+                          ),
+                          child: const Text("Log In",
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.normal,
+                              fontFamily: 'Roboto',
+                              color: Colors.black
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                    ),
+                  )
                 );
               },
             ),

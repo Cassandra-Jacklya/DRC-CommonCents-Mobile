@@ -115,7 +115,7 @@ class _LoginViewState extends State<LoginView> {
                                       Navigator.push(context, 
                                       MaterialPageRoute(
                                         builder: (context) {
-                                          return const MainApp();
+                                          return const HomePage();
                                         }));
                                     },
                                     child: const Text('Go to home page'),

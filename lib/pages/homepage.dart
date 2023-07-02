@@ -27,7 +27,13 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<LoginStateBloc>(
+            create: (context) => LoginStateBloc(),
+        ),
+      ], 
+      child: Scaffold(
       body: FutureBuilder(
         future:  Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,),
@@ -330,6 +336,7 @@ class _HomePageState extends State<HomePage> {
           }
         }
       ),
+    )
     );
   }
 }
