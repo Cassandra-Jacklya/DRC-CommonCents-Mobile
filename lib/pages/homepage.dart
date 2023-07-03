@@ -1,3 +1,5 @@
+import 'package:commoncents/components/navbar.dart';
+import 'package:commoncents/cubit/navbar_cubit.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -32,6 +34,9 @@ class _HomePageState extends State<HomePage> {
         BlocProvider<LoginStateBloc>(
             create: (context) => LoginStateBloc(),
         ),
+        BlocProvider<BottomNavBarCubit>(
+          create: ((context) => BottomNavBarCubit())
+        )
       ], 
       child: Scaffold(
       body: FutureBuilder(
@@ -263,7 +268,7 @@ class _HomePageState extends State<HomePage> {
                               Navigator.push(context, 
                                 MaterialPageRoute(
                                   builder: (context) {
-                                    return RegisterView();
+                                    return const RegisterView();
                                   })
                               );
                             }, 
