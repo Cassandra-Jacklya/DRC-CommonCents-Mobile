@@ -8,7 +8,7 @@ import 'package:commoncents/cubit/stock_data_cubit.dart';
 import 'package:commoncents/cubit/ticks_cubit.dart';
 import 'package:commoncents/pages/auth_pages/login.dart';
 import 'package:commoncents/pages/auth_pages/register.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:commoncents/pages/onboarding.dart';
 import 'package:flutter/material.dart';
 import 'package:commoncents/cubit/navbar_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -19,9 +19,8 @@ import 'package:commoncents/pages/simulationpage.dart';
 import 'package:commoncents/pages/forumpage.dart';
 import 'package:commoncents/pages/profilepage.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'cubit/login_cubit.dart';
-import 'firebase_options.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 void main() {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
@@ -51,28 +50,28 @@ class _MainAppState extends State<MainApp> {
   @override
   Widget build(BuildContext context) {
     final theme = ThemeData(
-      primaryColor: const Color(0xFF3366FF),
+      primaryColor: const Color(0xFF3366ff),
       primaryColorLight: const Color(0xFF6699FF),
-      primaryColorDark: const Color(0xFF0033FF),
+      primaryColorDark: const Color(0xFF0E34CC),
       scaffoldBackgroundColor: Colors.white,
       textTheme:
           GoogleFonts.robotoTextTheme(Theme.of(context).textTheme).copyWith(
         // Set the font for headings
         displayLarge: const TextStyle(
-          fontFamily: 'Avenir',
+          fontFamily: 'Roboto',
           fontWeight: FontWeight.bold,
-          fontSize: 24,
+          fontSize: 20,
           color: Colors.black,
         ),
         // Set the font for small text in buttons
         displaySmall: const TextStyle(
-          fontFamily: 'Raleway',
+          fontFamily: 'Roboto',
           fontSize: 12,
           color: Colors.black,
         ),
         // Set the font for numbers
         bodyMedium: const TextStyle(
-          fontFamily: 'Gilroy',
+          fontFamily: 'Poppins',
           fontSize: 16,
           color: Colors.black,
         ),
@@ -115,14 +114,20 @@ class _MainAppState extends State<MainApp> {
                   "Forum",
                   "User Profile"
                 ];
-                return Scaffold(
-                  backgroundColor: Colors.white,
-                  appBar: CustomAppBar(
-                    title: barTitle[selectedIndex],
-                  ),
-                  body: _getPage(selectedIndex),
-                  bottomNavigationBar: const BottomNavBar(),
-                );
+                if (selectedIndex == 5) {
+                  return Scaffold(
+                    body: _getPage(selectedIndex),
+                  );
+                } else {
+                  return Scaffold(
+                    backgroundColor: Colors.white,
+                    appBar: CustomAppBar(
+                      title: barTitle[selectedIndex],
+                    ),
+                    body: _getPage(selectedIndex),
+                    bottomNavigationBar: const BottomNavBar(),
+                  );
+                }
               },
             ),
           ),
@@ -134,15 +139,15 @@ class _MainAppState extends State<MainApp> {
       case 0:
         return const HomePage();
       case 1:
-        return NewsPage();
+        return const NewsPage();
       case 2:
         return SimulationPage();
       case 3:
-        return ForumPage();
+        return const ForumPage();
       case 4:
-        return ProfilePage();
+        return const ProfilePage();
       default:
-        return Container(color: Colors.red);
+        return const Onboarding();
     }
   }
 }

@@ -36,6 +36,7 @@ dependencies:
   firebase_auth: ^4.6.3
   cloud_firestore: ^4.8.2
   number_paginator: ^0.2.3
+  font_awesome_flutter: ^10.4.0
 
 flutter_native_splash:
   color: "#ffffff"
@@ -55,3 +56,6 @@ flutter:
   
   assets:
   - assets/logo.png
+  - assets/images/
+  - assets/videos/
+
