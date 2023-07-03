@@ -19,7 +19,7 @@ final tickStream = {"ticks": "R_50", "subscribe": 1};
 final TicksHistoryRequest = {
   'ticks_history': 'R_50',
   'adjust_start_time': 1,
-  'count': 50,
+  'count': 100,
   'end': 'latest',
   'start': 1,
   'style': 'candles',
@@ -67,25 +67,48 @@ Future<void> handleResponse(dynamic data, BuildContext context) async {
   final decodedData = jsonDecode(data);
   final List<Map<String, dynamic>> tickHistory = [];
 
-  if(decodedData['msg_type'] == 'proposal'){
+  if (decodedData['msg_type'] == 'proposal') {
     late double buyingPrice;
     late double sellingPrice;
+    late double capital;
+    late double currentBalance;
+    late double updatedBalance;
+
     final Map<String, dynamic> proposal = decodedData['proposal'];
+    capital = decodedData['echo_req']['amount'].toDouble();
     FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
     User? user = FirebaseAuth.instance.currentUser;
-    CollectionReference collectionReference = firebaseFirestore.collection('users');
-    collectionReference.doc(user!.uid).update(
-      { 'balance': 100 }
-    );
-    buyingPrice = ticks.last['close']; 
+    CollectionReference collectionReference =
+        firebaseFirestore.collection('users');
+
+    // Retrieve the current balance of the user
+    DocumentSnapshot userSnapshot =
+        await collectionReference.doc(user!.uid).get();
+    Map<String, dynamic>? userData =
+        userSnapshot.data() as Map<String, dynamic>?;
+
+    //deduct the capital users have invested
+    if (userData != null) {
+      currentBalance = userData['balance'].toDouble() ?? 0;
+      updatedBalance = currentBalance - capital;
+      collectionReference.doc(user.uid).update({'balance': updatedBalance});
+    }
+
+    // collectionReference.doc(user!.uid).update(
+    //   { 'balance': 100 }
+    // );
+
+    buyingPrice = ticks.last['close'];
     await Future.delayed(const Duration(seconds: 3));
     sellingPrice = ticks.last['close'];
-    if(buyingPrice<sellingPrice){
-      print("Buying: $buyingPrice\nSelling: $sellingPrice\nSo: You won the trade!");
-    }else{print("Buying: $buyingPrice\nSelling: $sellingPrice\nSo: you lost :(");}
-  }
 
-  else if (decodedData['msg_type'] == 'candles') {
+    if (buyingPrice < sellingPrice) {
+        updatedBalance = updatedBalance + proposal['payout'];
+        collectionReference.doc(user.uid).update({'balance': updatedBalance});
+    } else {
+      print("Buying: $buyingPrice\nSelling: $sellingPrice\nSo: you lost :(");
+    }
+  } else if (decodedData['msg_type'] == 'candles') {
     final List<dynamic> candles = decodedData['candles'];
     for (int i = 0; i < candles.length; i++) {
       final candle = candles[i];
@@ -136,7 +159,6 @@ void handleConnectionClosed() {
 }
 
 void handleBuy(int ticks, String stakePayout, int currentAmount) {
-
   final PriceProposalRequest = {
     "proposal": 1,
     "amount": currentAmount,
@@ -148,8 +170,4 @@ void handleBuy(int ticks, String stakePayout, int currentAmount) {
     "symbol": "R_100"
   };
   socket?.sink.add(jsonEncode(PriceProposalRequest));
-}
-
-void handleSell(){
-  
 }
