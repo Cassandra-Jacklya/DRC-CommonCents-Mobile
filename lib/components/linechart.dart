@@ -17,10 +17,7 @@ class MyLineChart extends StatefulWidget {
 class _LineChartState extends State<MyLineChart> {
   late StockDataCubit stockDataCubit;
   List<FlSpot> spots = [];
-  final List<Color> gradientColors = [
-    const Color(0xff23b6e6),
-    const Color(0xff02d39a)
-  ];
+  int initial = 400;
 
   Widget bottomTitleWidgets(double value, TitleMeta meta, double chartWidth) {
     final style = TextStyle(
@@ -60,86 +57,79 @@ class _LineChartState extends State<MyLineChart> {
       body: Center(
         child: Column(
           children: [
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: SizedBox(
-                height: MediaQuery.of(context).size.height * 0.3,
-                width: MediaQuery.of(context).size.width,
-                child: BlocBuilder<StockDataCubit, List<Map<String, dynamic>>>(
-                  builder: (context, stockData) {
-                    if (stockData.isEmpty) {
-                      return const CircularProgressIndicator();
-                    } else {
-                      spots.clear();
-                      for (var entry in stockData) {
-                        double x = entry['epoch'];
-                        double y = entry['close'];
-                        spots.add(FlSpot(x, y));
+            SizedBox(
+              height: MediaQuery.of(context).size.height * 0.3,
+              // width: MediaQuery.of(context).size.width,
+              child: BlocBuilder<StockDataCubit, List<Map<String, dynamic>>>(
+                builder: (context, stockData) {
+                  if (stockData.isEmpty) {
+                    return const CircularProgressIndicator();
+                  } else {
+                    spots.clear();
+                    for (var entry in stockData) {
+                      double x = entry['epoch'];
+                      double y = entry['close'];
+                      spots.add(FlSpot(x, y));
+                    }
+
+                    if (stockData.length > 956) {
+                      stockData.removeRange(0, stockData.length - 956);
+                    }
+
+                    double minClose = stockData[initial]['close'];
+                    double maxClose = stockData[initial]['close'];
+
+                    for (int i = initial; i < stockData.length; i++) {
+                      double close = stockData[i]['close'];
+                      if (close < minClose) {
+                        minClose = close;
                       }
-
-                      double minX = stockData.first['epoch'].toDouble();
-                      double maxX = stockData.last['epoch'].toDouble();
-                      double minY = stockData
-                          .map((entry) => entry['close'])
-                          .reduce((a, b) => a < b ? a : b);
-                      double maxY = stockData
-                              .map((entry) => entry['close'])
-                              .reduce((a, b) => a > b ? a : b) +
-                          0.1;
-
-                      double newMinX;
-                      if (spots.length >= 100) {
-                        newMinX = spots[spots.length - 100].x;
-                      } else if (spots.isNotEmpty) {
-                        newMinX = spots.first.x;
-                      } else {
-                        newMinX =
-                            0; // Set a default value if spots list is empty
+                      if (close > maxClose) {
+                        maxClose = close;
                       }
-                      double newMaxX;
-                      if (spots.length >= 100) {
-                        newMaxX = spots.last.x;
-                      } else if (spots.isNotEmpty) {
-                        newMaxX = spots[spots.length - 1].x;
-                      } else {
-                        newMaxX =
-                            0; // Set a default value if spots list is empty
-                      }
+                    }
 
-                      double range = newMaxX - newMinX;
-                      double zoomPercentage = 0; // Adjust as needed
+                    if (minClose == maxClose) {
+                      maxClose += 1;
+                    }
 
-                      DateTime visibleMinX =
-                          DateTime.fromMillisecondsSinceEpoch(
-                              (newMinX - range * zoomPercentage).toInt() * 1000,
-                              isUtc: true);
-                      DateTime visibleMaxX =
-                          DateTime.fromMillisecondsSinceEpoch(
-                              (newMaxX + range * zoomPercentage).toInt() * 1000,
-                              isUtc: true);
-
-                      return SfCartesianChart(
+                    return SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: SfCartesianChart(
+                        zoomPanBehavior: ZoomPanBehavior(enablePinching: true),
                         primaryXAxis: DateTimeAxis(
                           dateFormat: DateFormat(
                               'HH:mm'), // Specify the desired time format
                           intervalType: DateTimeIntervalType
                               .seconds, // Adjust based on your data
-                          axisLine: AxisLine(width: 0), // Hide the x-axis line
+                          axisLine:
+                              const AxisLine(width: 0), // Hide the x-axis line
                           minimum: DateTime.fromMillisecondsSinceEpoch(
-                              stockData.first['epoch'].toInt() * 1000,
-                              isUtc:
-                                  true), // Set the minimum value of the x-axis
+                            stockData.first['epoch'].toInt() * 1000,
+                            isUtc: true,
+                          ), // Set the minimum value of the x-axis
                           maximum: DateTime.fromMillisecondsSinceEpoch(
-                              stockData.last['epoch'].toInt() * 1000,
-                              isUtc:
-                                  true), // Set the maximum value of the x-axis
-                          visibleMinimum: visibleMinX, // Set the initial visible range
-                          visibleMaximum: visibleMaxX, // Set the initial visible range
+                            stockData.last['epoch'].toInt() * 1000,
+                            isUtc: true,
+                          ), // Set the maximum value of the x-axis
+                          visibleMinimum: DateTime.fromMillisecondsSinceEpoch(
+                            stockData[initial]['epoch'].toInt() * 1000,
+                            isUtc: true,
+                          ).subtract(const Duration(
+                              seconds: 10)), // Set the initial visible range
+                          visibleMaximum: DateTime.fromMillisecondsSinceEpoch(
+                            stockData.last['epoch'].toInt() * 1000,
+                            isUtc: true,
+                          ), // Display the time of the first item as axis title
                         ),
                         primaryYAxis: NumericAxis(
                           edgeLabelPlacement: EdgeLabelPlacement.shift,
                           opposedPosition: true,
                           isVisible: true,
+                          minimum: minClose.floorToDouble(),
+                          maximum: maxClose.floorToDouble() + 1.5,
+                          interval: 1,
+                          numberFormat: NumberFormat('#'),
                         ),
                         series: <ChartSeries>[
                           LineSeries<FlSpot, DateTime>(
@@ -152,10 +142,10 @@ class _LineChartState extends State<MyLineChart> {
                             yAxisName: 'secondaryYAxis',
                           ),
                         ],
-                      );
-                    }
-                  },
-                ),
+                      ),
+                    );
+                  }
+                },
               ),
             ),
           ],

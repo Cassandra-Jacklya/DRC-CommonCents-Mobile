@@ -19,7 +19,7 @@ final tickStream = {"ticks": "R_50", "subscribe": 1};
 final TicksHistoryRequest = {
   'ticks_history': 'R_50',
   'adjust_start_time': 1,
-  'count': 100,
+  'count': 956, //24 hours
   'end': 'latest',
   'start': 1,
   'style': 'candles',
