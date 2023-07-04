@@ -5,6 +5,8 @@ import 'package:commoncents/cubit/stake_payout_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:toggle_switch/toggle_switch.dart';
+import '../components/appbar.dart';
+import '../components/navbar.dart';
 import '../components/numberPIcker.dart';
 import '../components/linechart.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
@@ -32,6 +34,8 @@ class _SimulationPageState extends State<SimulationPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: const CustomAppBar(
+        title: "Trading Simulation"),
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
         child: Column(
@@ -211,6 +215,7 @@ class _SimulationPageState extends State<SimulationPage> {
           ],
         ),
       ),
+      bottomNavigationBar: const BottomNavBar(index: 2,),
     );
   }
 }

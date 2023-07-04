@@ -7,6 +7,9 @@ import 'package:commoncents/pages/help_support.dart';
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 
+import '../components/appbar.dart';
+import '../components/navbar.dart';
+
 class ProfilePage extends StatelessWidget {
   const ProfilePage({Key? key}) : super(key: key);
 
@@ -62,121 +65,127 @@ class ProfilePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      scrollDirection: Axis.vertical,
-      child: Center(
-        child: Column(
-          children: [
-            Container(
-              margin: const EdgeInsets.symmetric(vertical: 30),
-              padding: const EdgeInsets.all(10),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    margin: const EdgeInsets.only(right: 10),
-                    height: 80,
-                    width: 80,
-                    decoration: BoxDecoration(
-                      color: Colors.grey[400],
-                      borderRadius: BorderRadius.circular(50),
+    return Scaffold(
+      appBar: const CustomAppBar(
+        title: "Profile",
+      ),
+      body: SingleChildScrollView(
+        scrollDirection: Axis.vertical,
+        child: Center(
+          child: Column(
+            children: [
+              Container(
+                margin: const EdgeInsets.symmetric(vertical: 30),
+                padding: const EdgeInsets.all(10),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      margin: const EdgeInsets.only(right: 10),
+                      height: 80,
+                      width: 80,
+                      decoration: BoxDecoration(
+                        color: Colors.grey[400],
+                        borderRadius: BorderRadius.circular(50),
+                      ),
                     ),
-                  ),
-                  Container(
-                    margin: const EdgeInsets.only(top: 5),
-                    height: 70,
-                    width: 250,
-                    color: Colors.grey[400],
-                  ),
-                ],
+                    Container(
+                      margin: const EdgeInsets.only(top: 5),
+                      height: 70,
+                      width: 250,
+                      color: Colors.grey[400],
+                    ),
+                  ],
+                ),
               ),
-            ),
-            Container(
-              width: MediaQuery.of(context).size.width,
-              margin: const EdgeInsets.all(10),
-              padding: const EdgeInsets.all(10),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text("GENERAL", style: TextStyle(fontSize: 20)),
-                  const SizedBox(height: 10),
-                  Column(
-                    children: [
-                      buildContainer(
-                        title: "My Account",
-                        icon: Container(
-                          color: Colors.white,
+              Container(
+                width: MediaQuery.of(context).size.width,
+                margin: const EdgeInsets.all(10),
+                padding: const EdgeInsets.all(10),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text("GENERAL", style: TextStyle(fontSize: 20)),
+                    const SizedBox(height: 10),
+                    Column(
+                      children: [
+                        buildContainer(
+                          title: "My Account",
+                          icon: Container(
+                            color: Colors.white,
+                          ),
+                          onPressed: () {
+                            Navigator.push(
+                              context, 
+                              MaterialPageRoute(builder: (context) => MyAccount())
+                            );
+                          },
                         ),
-                        onPressed: () {
-                          Navigator.push(
-                            context, 
-                            MaterialPageRoute(builder: (context) => MyAccount())
-                          );
-                        },
-                      ),
-                      buildContainer(
-                        title: "Security",
-                        icon: Container(
-                          color: Colors.white,
+                        buildContainer(
+                          title: "Security",
+                          icon: Container(
+                            color: Colors.white,
+                          ),
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => Security())
+                            );
+                          },
                         ),
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => Security())
-                          );
-                        },
-                      ),
-                      buildContainer(
-                        title: "Leaderboard",
-                        icon: Container(
-                          color: Colors.white,
+                        buildContainer(
+                          title: "Leaderboard",
+                          icon: Container(
+                            color: Colors.white,
+                          ),
+                          onPressed: () {
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => Leaderboard()));
+                          },
                         ),
-                        onPressed: () {
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => Leaderboard()));
-                        },
-                      ),
-                      buildContainer(
-                        title: "Recent Trades",
-                        icon: Container(
-                          color: Colors.white,
+                        buildContainer(
+                          title: "Recent Trades",
+                          icon: Container(
+                            color: Colors.white,
+                          ),
+                          onPressed: () {
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => RecentTrades()));
+                          },
                         ),
-                        onPressed: () {
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => RecentTrades()));
-                        },
-                      ),
-                      buildContainer(
-                        title: "Help and Support",
-                        icon: Container(
-                          color: Colors.white,
+                        buildContainer(
+                          title: "Help and Support",
+                          icon: Container(
+                            color: Colors.white,
+                          ),
+                          onPressed: () {
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => HelpSupport()));
+                          },
+                          showBottomBorder: false,
                         ),
-                        onPressed: () {
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => HelpSupport()));
-                        },
-                        showBottomBorder: false,
-                      ),
-                      buildContainer(
-                        title: "Logout",
-                        icon: const Icon(Iconsax.logout),
-                        onPressed: () {
-                          showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return const LogOut();
-                              },
-                          );
-                        },
-                        showBottomBorder: false,
-                      ),
-                    ],
-                  ),
-                ],
+                        buildContainer(
+                          title: "Logout",
+                          icon: const Icon(Iconsax.logout),
+                          onPressed: () {
+                            showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return const LogOut();
+                                },
+                            );
+                          },
+                          showBottomBorder: false,
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
+      bottomNavigationBar: const BottomNavBar(index: 4,),
     );
   }
 }

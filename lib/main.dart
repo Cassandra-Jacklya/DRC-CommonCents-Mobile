@@ -6,9 +6,12 @@ import 'package:commoncents/cubit/register_cubit.dart';
 import 'package:commoncents/cubit/stake_payout_cubit.dart';
 import 'package:commoncents/cubit/stock_data_cubit.dart';
 import 'package:commoncents/cubit/ticks_cubit.dart';
+import 'package:commoncents/firebase_options.dart';
 import 'package:commoncents/pages/auth_pages/login.dart';
 import 'package:commoncents/pages/auth_pages/register.dart';
 import 'package:commoncents/pages/onboarding.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:commoncents/cubit/navbar_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -25,7 +28,10 @@ import 'cubit/login_cubit.dart';
 void main() {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
-  runApp(const MaterialApp(home: MainApp()));
+  runApp(const MaterialApp(
+    debugShowCheckedModeBanner: false,
+    home: MainApp()
+  ));
 }
 
 class MainApp extends StatefulWidget {
@@ -104,50 +110,47 @@ class _MainAppState extends State<MainApp> {
             }
           },
           child: MaterialApp(
+            debugShowCheckedModeBanner: false,
             theme: theme,
-            home: BlocBuilder<BottomNavBarCubit, int>(
-              builder: (context, selectedIndex) {
-                List<String> barTitle = [
-                  "CommonCents",
-                  "Trading News",
-                  "Trading Simulation",
-                  "Forum",
-                  "User Profile"
-                ];
-                if (selectedIndex == 5) {
-                  return Scaffold(
-                    body: _getPage(selectedIndex),
-                  );
-                } else {
-                  return Scaffold(
-                    backgroundColor: Colors.white,
-                    appBar: CustomAppBar(
-                      title: barTitle[selectedIndex],
+            home: FutureBuilder(
+                    future: Firebase.initializeApp(
+                      options: DefaultFirebaseOptions.currentPlatform,
                     ),
-                    body: _getPage(selectedIndex),
-                    bottomNavigationBar: const BottomNavBar(),
-                  );
-                }
-              },
+                    builder: ((context, snapshot) {
+                      switch (snapshot.connectionState) {
+                        case ConnectionState.done:
+                          final User? user = FirebaseAuth.instance.currentUser;
+                          if (user != null) {
+                            return const HomePage();
+                          }
+                          else {
+                            return const Onboarding();
+                          }
+                        default: 
+                          return const Center(child: CircularProgressIndicator());
+                      }
+                    }
+                  )
             ),
           ),
         ));
   }
 
-  Widget _getPage(int index) {
-    switch (index) {
-      case 0:
-        return const HomePage();
-      case 1:
-        return const NewsPage();
-      case 2:
-        return SimulationPage();
-      case 3:
-        return const ForumPage();
-      case 4:
-        return const ProfilePage();
-      default:
-        return const Onboarding();
-    }
-  }
+  // Widget _getPage(int index) {
+  //   switch (index) {
+  //     case 0:
+  //       return const HomePage();
+  //     case 1:
+  //       // return const NewsPage();
+  //       return const Text("News page");
+  //     case 2:
+  //       return SimulationPage();
+  //     case 3:
+  //       return const ForumPage();
+  //     case 4:
+  //       return const ProfilePage();
+  //     default:
+  //       return const Text("not working");
+  //   }
+  // }
 }

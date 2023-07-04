@@ -31,16 +31,18 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                 children: [
                   TextSpan(
                       text: title,
-                      style: Theme.of(context).textTheme.displayLarge),
+                      style: const TextStyle(
+                        fontSize: 20,
+                      )),
                 ],
               ),
             ),
           ),
           actions: [
             IconButton(
-              color: Colors.black,
+              color: Colors.white,
               padding: const EdgeInsets.only(top: 10),
-              iconSize: 40,
+              iconSize: 25,
               icon: const Icon(Iconsax.notification),
               onPressed: () {
                 Navigator.push(
@@ -50,7 +52,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
               },
             ),
           ],
-          backgroundColor: Colors.grey[300],
+          backgroundColor: const Color(0XFF3366FF),
           elevation: 0,
         ),
       ),

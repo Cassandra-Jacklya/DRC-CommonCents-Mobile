@@ -1,10 +1,18 @@
+import 'package:commoncents/components/popup.dart';
+import 'package:commoncents/pages/forumpage.dart';
+import 'package:commoncents/pages/homepage.dart';
+import 'package:commoncents/pages/newspage.dart';
+import 'package:commoncents/pages/profilepage.dart';
+import 'package:commoncents/pages/simulationpage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iconsax/iconsax.dart';
 import '../cubit/navbar_cubit.dart';
 
 class BottomNavBar extends StatefulWidget {
-  const BottomNavBar({Key? key}) : super(key: key);
+  const BottomNavBar({super.key, required this.index});
+
+  final int index;
 
   @override
   // ignore: library_private_types_in_public_api
@@ -12,202 +20,224 @@ class BottomNavBar extends StatefulWidget {
 }
 
 class _BottomNavBarState extends State<BottomNavBar> {
+
+  void _onItemTapped(int index) {
+    switch (index) {
+      case 0:
+        Navigator.pushReplacement(
+        context,
+        PageRouteBuilder(
+            pageBuilder: (context, anim1, anim2) => const HomePage(),
+            transitionDuration: Duration.zero),
+      );
+        break;
+      case 1:
+        Navigator.pushReplacement(
+        context,
+        PageRouteBuilder(
+            pageBuilder: (context, anim1, anim2) => const NewsPage(),
+            transitionDuration: Duration.zero),
+      );
+        break;
+      case 2:
+        Navigator.pushReplacement(
+        context,
+        PageRouteBuilder(
+            pageBuilder: (context, anim1, anim2) => SimulationPage(),
+            transitionDuration: Duration.zero),
+      );
+        break;
+      case 3: 
+        Navigator.pushReplacement(
+          context,
+          PageRouteBuilder(
+              pageBuilder: (context, anim1, anim2) => const ForumPage(),
+              transitionDuration: Duration.zero),
+        );
+        break;
+      case 4:
+        Navigator.pushReplacement(
+          context,
+          PageRouteBuilder(
+              pageBuilder: (context, anim1, anim2) => const ProfilePage(),
+              transitionDuration: Duration.zero),
+        );
+      break;
+      default:
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     // final bottomNavBarCubit = context.watch<BottomNavBarCubit>();
     final Size size = MediaQuery.of(context).size;
 
     return Container(
-      height: 80,
+      height: 70,
       color: Colors.transparent,
       child: Stack(
         clipBehavior: Clip.none,
         children: [
           Container(
-            decoration: BoxDecoration(
-                color: Colors.grey[200],
-                borderRadius: const BorderRadius.only(
+            decoration: const BoxDecoration(
+                color: Colors.white,
+                boxShadow: [BoxShadow(
+                  color: Colors.black87,
+                  spreadRadius: 1.5
+                ),
+                ],
+                borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(15),
-                    topRight: Radius.circular(15))),
-            height: 80,
+                    topRight: Radius.circular(15))),     
+            height: 70,
             width: size.width,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 GestureDetector(
                   onTap: () {
-                    setState(() {
-                      context.read<BottomNavBarCubit>().updatePageIndex(0);
-                    });
+                    _onItemTapped(0);
                   },
-                  child: BlocBuilder<BottomNavBarCubit, int>(
-                    builder: (context, state) {
-                      return Container(
+                  child: Container(
                         margin: const EdgeInsets.only(top: 10, left: 8),
                         child: Column(
                           children: [
-                            Icon(
-                              Iconsax.home_2,
-                              size: 40,
-                              color: state == 0
-                                  ? Theme.of(context).primaryColor
-                                  : Colors.grey,
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(0, 5, 0, 0),
+                              child: Icon(
+                                Iconsax.home_2,
+                                size: 25,
+                                color: widget.index == 0
+                                    ? Theme.of(context).primaryColor
+                                    : Colors.grey,
+                              ),
                             ),
-                            RichText(
-                              text: TextSpan(
-                                text: "Home",
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .displaySmall
-                                    ?.copyWith(
-                                      color: state == 0
-                                          ? Theme.of(context).primaryColor
-                                          : Colors.black,
-                                    ),
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(0, 5, 0, 0),
+                              child: RichText(
+                                text: const TextSpan(
+                                  text: "Home",
+                                  style: TextStyle(fontSize: 10)
+                                ),
                               ),
                             ),
                           ],
                         ),
-                      );
-                    },
-                  ),
+                      )
                 ),
                 const SizedBox(
                   width: 11,
                 ),
                 GestureDetector(
                   onTap: () {
-                    setState(() {
-                      context.read<BottomNavBarCubit>().updatePageIndex(1);
-                    });
+                    _onItemTapped(1);
                   },
-                  child: BlocBuilder<BottomNavBarCubit, int>(
-                    builder: (context, state) {
-                      return Container(
+                  child: Container(
                         margin: const EdgeInsets.only(top: 10, left: 8),
                         child: Column(
                           children: [
-                            Icon(
-                              Iconsax.search_normal_1,
-                              size: 40,
-                              color: state == 1
-                                  ? Theme.of(context).primaryColor
-                                  : Colors.grey,
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(0, 5, 0, 0),
+                              child: Icon(
+                                Iconsax.search_normal_1,
+                                size: 25,
+                                color: widget.index == 1
+                                    ? Theme.of(context).primaryColor
+                                    : Colors.grey,
+                              ),
                             ),
-                            RichText(
-                              text: TextSpan(
-                                text: "News",
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .displaySmall
-                                    ?.copyWith(
-                                      color: state == 1
-                                          ? Theme.of(context).primaryColor
-                                          : Colors.black,
-                                    ),
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(0, 5, 0, 0),
+                              child: RichText(
+                                text: const TextSpan(
+                                  text: "News",
+                                  style: TextStyle(fontSize: 10)
+                                ),
                               ),
                             ),
                           ],
                         ),
-                      );
-                    },
-                  ),
+                      )
                 ),
                 SizedBox(width: size.width * 0.25),
                 GestureDetector(
                   onTap: () {
-                    setState(() {
-                      context.read<BottomNavBarCubit>().updatePageIndex(3);
-                    });
+                    _onItemTapped(3);
                   },
-                  child: BlocBuilder<BottomNavBarCubit, int>(
-                    builder: (context, state) {
-                      return Container(
+                  child: Container(
                         margin: const EdgeInsets.only(top: 10, left: 8),
                         child: Column(
                           children: [
-                            Icon(
-                              Iconsax.messages_2,
-                              size: 40,
-                              color: state == 3
-                                  ? Theme.of(context).primaryColor
-                                  : Colors.grey,
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(0, 5, 0, 0),
+                              child: Icon(
+                                Iconsax.messages_2,
+                                size: 25,
+                                color: widget.index == 3
+                                    ? Theme.of(context).primaryColor
+                                    : Colors.grey,
+                              ),
                             ),
-                            RichText(
-                              text: TextSpan(
-                                text: "Forum",
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .displaySmall
-                                    ?.copyWith(
-                                      color: state == 3
-                                          ? Theme.of(context).primaryColor
-                                          : Colors.black,
-                                    ),
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(0, 5, 0, 0),
+                              child: RichText(
+                                text: const TextSpan(
+                                  text: "Forum",
+                                  style: TextStyle(fontSize: 10)
+                                ),
                               ),
                             ),
                           ],
                         ),
-                      );
-                    },
-                  ),
+                      )
                 ),
                 const SizedBox(
                   width: 16,
                 ),
                 GestureDetector(
                   onTap: () {
-                    setState(() {
-                      context.read<BottomNavBarCubit>().updatePageIndex(4);
-                    });
+                    _onItemTapped(4);
                   },
-                  child: BlocBuilder<BottomNavBarCubit, int>(
-                    builder: (context, state) {
-                      return Container(
+                  child: Container(
                         margin: const EdgeInsets.only(top: 10, left: 8),
                         child: Column(
                           children: [
-                            Icon(
-                              Iconsax.profile_circle,
-                              size: 40,
-                              color: state == 4
-                                  ? Theme.of(context).primaryColor
-                                  : Colors.grey,
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(0, 5, 0, 0),
+                              child: Icon(
+                                Iconsax.profile_circle,
+                                size: 25,
+                                color: widget.index == 4
+                                    ? Theme.of(context).primaryColor
+                                    : Colors.grey,
+                              ),
                             ),
-                            RichText(
-                              text: TextSpan(
-                                text: "Profile",
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .displaySmall
-                                    ?.copyWith(
-                                      color: state == 4
-                                          ? Theme.of(context).primaryColor
-                                          : Colors.black,
-                                    ),
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(0, 5, 0, 0),
+                              child: RichText(
+                                text: const TextSpan(
+                                  text: "Profile",
+                                  style: TextStyle(fontSize: 10)
+                                ),
                               ),
                             ),
                           ],
                         ),
-                      );
-                    },
-                  ),
+                      )
                 ),
               ],
             ),
           ),
           Positioned(
-            bottom: 3, // Adjust the value to control the amount of overflow
-            left: (size.width - 110) / 2, // Center the circle horizontally
+            bottom: 15, // Adjust the value to control the amount of overflow
+            left: (size.width - 80) / 2, // Center the circle horizontally
             child: GestureDetector(
               onTap: () {
-                setState(() {
-                  context.read<BottomNavBarCubit>().updatePageIndex(2);
-                });
+                _onItemTapped(2);
               },
               child: Container(
-                width: 100,
-                height: 100,
+                width: 80,
+                height: 80,
                 decoration: BoxDecoration(
                   border: Border.all(
                       color: Theme.of(context).primaryColorLight, width: 6.0),
@@ -219,16 +249,13 @@ class _BottomNavBarState extends State<BottomNavBar> {
                   children:  [
                     const Icon(
                       Iconsax.status_up,
-                      size: 40,
+                      size: 25,
                       color: Colors.white,
                     ),
                     RichText(
-                      text: TextSpan(
+                      text: const TextSpan(
                         text: "Trade",
-                        style:
-                            Theme.of(context).textTheme.displaySmall?.copyWith(
-                                  color: Colors.white,
-                                ),
+                        style: TextStyle(fontSize: 10)
                       ),
                     ),
                   ],

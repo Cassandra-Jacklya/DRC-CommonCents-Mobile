@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
+import '../components/appbar.dart';
 import 'auth_pages/login.dart';
 import 'auth_pages/register.dart';
 import 'homepage.dart';
@@ -47,7 +48,7 @@ class _OnboardingState extends State<Onboarding> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.fromLTRB(0, 42, 0, 42),
+            padding: const EdgeInsets.fromLTRB(0, 10, 0, 60),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [

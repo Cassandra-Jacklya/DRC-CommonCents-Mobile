@@ -1,10 +1,10 @@
 import 'package:commoncents/components/navbar.dart';
-import 'package:commoncents/cubit/navbar_cubit.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../apistore/news.dart';
+import '../components/appbar.dart';
 import '../components/newscontainer.dart';
 import '../cubit/login_cubit.dart';
 import '../firebase_options.dart';
@@ -34,11 +34,11 @@ class _HomePageState extends State<HomePage> {
         BlocProvider<LoginStateBloc>(
             create: (context) => LoginStateBloc(),
         ),
-        BlocProvider<BottomNavBarCubit>(
-          create: ((context) => BottomNavBarCubit())
-        )
       ], 
       child: Scaffold(
+      appBar: const CustomAppBar(
+        title: "CommonCents",
+      ),
       body: FutureBuilder(
         future:  Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,),
@@ -341,6 +341,7 @@ class _HomePageState extends State<HomePage> {
           }
         }
       ),
+      bottomNavigationBar: const BottomNavBar(index: 0,),
     )
     );
   }

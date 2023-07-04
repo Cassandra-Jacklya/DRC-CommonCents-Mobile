@@ -1,7 +1,9 @@
 import 'package:commoncents/apistore/news_lazyLoading.dart';
+import 'package:commoncents/components/navbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../components/appbar.dart';
 import '../components/news_tabbar.dart';
 import '../cubit/news_tabbar_cubit.dart';
 import '../components/formatString.dart';
@@ -92,6 +94,9 @@ class _NewsPageState extends State<NewsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: const CustomAppBar(
+        title: "News",
+      ),
       body: Column(
         children: [
           const SizedBox(height: 10),
@@ -280,6 +285,7 @@ class _NewsPageState extends State<NewsPage> {
           ),
         ],
       ),
+      bottomNavigationBar: const BottomNavBar(index: 1,),
     );
   }
 }

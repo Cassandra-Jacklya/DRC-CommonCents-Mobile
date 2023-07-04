@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+import '../components/appbar.dart';
+import '../components/navbar.dart';
+
 class ForumPage extends StatefulWidget {
   const ForumPage({super.key});
 
@@ -13,6 +16,9 @@ class _ForumPageState extends State<ForumPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: const CustomAppBar(
+        title: "Forum",
+      ),
       body: Column(
         children: [
           const SizedBox(
@@ -138,6 +144,7 @@ class _ForumPageState extends State<ForumPage> {
           ),
         ],
       ),
+      bottomNavigationBar: const BottomNavBar(index: 3,)
     );
   }
 }
