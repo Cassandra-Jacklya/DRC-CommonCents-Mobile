@@ -1,5 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:ffi';
+import 'package:commoncents/cubit/candlestick_cubit.dart';
+
 import '../apistore/PriceProposal.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -11,7 +14,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../cubit/stock_data_cubit.dart';
 
 WebSocketChannel? socket;
-  late StockDataCubit stockDataCubit;
+late StockDataCubit stockDataCubit;
 const String appId = '1089';
 final Uri url = Uri.parse(
     'wss://ws.binaryws.com/websockets/v3?app_id=$appId&l=EN&brand=deriv');
@@ -20,6 +23,7 @@ final tickStream = {"ticks": "R_50", "subscribe": 1};
 
 final unsubscribeRequest = {"forget_all": "ticks"};
 
+// ignore: non_constant_identifier_names
 final TicksHistoryRequest = {
   'ticks_history': 'R_50',
   'adjust_start_time': 1,
@@ -29,14 +33,37 @@ final TicksHistoryRequest = {
   'style': 'candles',
 };
 
+// ignore: non_constant_identifier_names
+final CandleTicksRequest = {
+  "ticks_history": "R_50",
+  "adjust_start_time": 1,
+  "subscribe": 1,
+  "count": 10,
+  "end": "latest",
+  "start": 1,
+  "style": "candles"
+};
+
+// ignore: non_constant_identifier_names
+final CandleHistoryRequest = {
+  "ticks_history": "R_50",
+  "adjust_start_time": 1,
+  // "subscribe": 1,
+  "count": 100,
+  "end": "latest",
+  "start": 1,
+  "style": "candles"
+};
+
 List<Map<String, dynamic>> ticks = [];
+List<Map<String, dynamic>> candles = [];
 
 Future<void> connectToWebSocket(BuildContext context, bool isCandle) async {
   socket = WebSocketChannel.connect(url);
 
   socket?.stream.listen((dynamic message) {
     try {
-      handleResponse(message, context);
+      handleResponse(message, isCandle, context);
     } catch (e) {
       handleError(e);
     }
@@ -46,10 +73,24 @@ Future<void> connectToWebSocket(BuildContext context, bool isCandle) async {
     handleConnectionClosed();
   });
 
-  if(isCandle){
-    print(isCandle);
+  if (isCandle) {
+    subscribeCandleTicks();
+  } else {
+    subscribeTicks();
   }
-  subscribeTicks();
+}
+
+void subscribeCandleTicks() async {
+  await requestCandleHistory();
+  // await candleTicks();
+}
+
+Future<void> requestCandleHistory() async {
+  socket?.sink.add(jsonEncode(CandleHistoryRequest));
+}
+
+Future<void> candleTicks() async {
+  socket?.sink.add(jsonEncode(CandleTicksRequest));
 }
 
 void subscribeTicks() async {
@@ -57,7 +98,7 @@ void subscribeTicks() async {
   await tickSubscriber();
 }
 
-void unsubscribe() async{
+void unsubscribe() async {
   socket?.sink.add(jsonEncode(unsubscribeRequest));
   // stockDataCubit.clearStockData();
 }
@@ -74,35 +115,88 @@ Future<void> requestTicksHistory() async {
   socket?.sink.add(jsonEncode(TicksHistoryRequest));
 }
 
-Future<void> handleResponse(dynamic data, BuildContext context) async {
+Future<void> handleResponse(
+    dynamic data, bool isCandle, BuildContext context) async {
   final decodedData = jsonDecode(data);
   final List<Map<String, dynamic>> tickHistory = [];
 
   if (decodedData['msg_type'] == 'proposal') {
     handleBuyResponse(decodedData);
-  } else if (decodedData['msg_type'] == 'candles') {
-    final List<dynamic> candles = decodedData['candles'];
-    for (int i = 0; i < candles.length; i++) {
-      final candle = candles[i];
-      final int epoch = candle['epoch'];
+  } else if (decodedData['msg_type'] == 'ohlc') {
+    //stream candles data
+    final ohlc = decodedData['ohlc'];
+    if (ohlc != null) {
+      final String open = ohlc['open'];
+      final String high = ohlc['high'];
+      final String low = ohlc['low'];
+      final String close = ohlc['close'];
+      final int time = ohlc['open_time'];
       DateTime utcTime =
-          DateTime.fromMillisecondsSinceEpoch(epoch * 1000, isUtc: true);
+          DateTime.fromMillisecondsSinceEpoch(time * 1000, isUtc: true);
       double utcTimeDouble = utcTime.millisecondsSinceEpoch.toDouble() / 1000;
-      // final double high = candle['high'];
-      // final double low = candle['low'];
-      final double close = candle['close'];
-      // final double open = candle['open'];
 
-      tickHistory.add({
-        // 'high': high,
-        // 'open': open,
+      // Append the latest tick price and time to the ticks list
+      candles.add({
+        'open': open,
+        'high': high,
+        'low': low,
         'close': close,
-        // 'low': low,
-        'epoch': utcTimeDouble
+        'time': utcTime
       });
+      final candleStickData = BlocProvider.of<CandlestickCubit>(context);
+      candleStickData.updateCandlestickData(candles); // this is for line chart
     }
+  } else if (decodedData['msg_type'] == 'candles') {
+    //history candles data
+    if (isCandle) {
+      final List<dynamic> legitCandles = decodedData['candles'];
+      for (int i = 0; i < legitCandles.length; i++) {
+        final candle = legitCandles[i];
+        final int epoch = candle['epoch'];
+        DateTime utcTime =
+            DateTime.fromMillisecondsSinceEpoch(epoch * 1000, isUtc: true);
+        double utcTimeDouble = utcTime.millisecondsSinceEpoch.toDouble() / 1000;
+        final double high = candle['high'];
+        final double low = candle['low'];
+        final double close = candle['close'];
+        final double open = candle['open'];
 
-    ticks = tickHistory;
+        candles.add({
+          'high': high,
+          'open': open,
+          'close': close,
+          'low': low,
+          'epoch': utcTimeDouble
+        });
+      }
+
+      final candleStickData = BlocProvider.of<CandlestickCubit>(context);
+      candleStickData.updateCandlestickData(candles); // this is for line chart
+
+    } else {
+      //this is for line
+      final List<dynamic> candles = decodedData['candles'];
+      for (int i = 0; i < candles.length; i++) {
+        final candle = candles[i];
+        final int epoch = candle['epoch'];
+        DateTime utcTime =
+            DateTime.fromMillisecondsSinceEpoch(epoch * 1000, isUtc: true);
+        double utcTimeDouble = utcTime.millisecondsSinceEpoch.toDouble() / 1000;
+        // final double high = candle['high'];
+        // final double low = candle['low'];
+        final double close = candle['close'];
+        // final double open = candle['open'];
+
+        tickHistory.add({
+          // 'high': high,
+          // 'open': open,
+          'close': close,
+          // 'low': low,
+          'epoch': utcTimeDouble
+        });
+      }
+      ticks = tickHistory;
+    }
   } else if (decodedData['msg_type'] == 'tick') {
     final tickData = decodedData['tick'];
     if (tickData != null) {
@@ -117,7 +211,6 @@ Future<void> handleResponse(dynamic data, BuildContext context) async {
     }
   }
 
-
   final stockDataCubit = BlocProvider.of<StockDataCubit>(context);
   stockDataCubit.updateStockData(ticks); // this is for line chart
 }
@@ -129,4 +222,3 @@ void handleError(dynamic error) {
 void handleConnectionClosed() {
   print("Connection closed");
 }
-

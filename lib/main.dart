@@ -1,5 +1,6 @@
 import 'package:commoncents/components/appbar.dart';
 import 'package:commoncents/components/navbar.dart';
+import 'package:commoncents/cubit/candlestick_cubit.dart';
 import 'package:commoncents/cubit/news_tabbar_cubit.dart';
 import 'package:commoncents/cubit/numberpicker_cubit.dart';
 import 'package:commoncents/cubit/register_cubit.dart';
@@ -96,6 +97,7 @@ class _MainAppState extends State<MainApp> {
           BlocProvider<StakePayoutCubit>(create: (context)=> StakePayoutCubit()),
           BlocProvider<TicksCubit>(create: (context) => TicksCubit()),
           BlocProvider<CurrentAmountCubit>(create: (context) => CurrentAmountCubit()),
+          BlocProvider<CandlestickCubit>(create: (context) => CandlestickCubit()),
         ],
         child: GestureDetector(
           onTap: () {
