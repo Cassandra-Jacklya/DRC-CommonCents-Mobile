@@ -112,11 +112,11 @@ class _LoginViewState extends State<LoginView> {
                                 actions: <Widget>[
                                   TextButton(
                                     onPressed: () {
-                                      Navigator.push(context, 
-                                      MaterialPageRoute(
-                                        builder: (context) {
-                                          return const HomePage();
-                                        }));
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(builder: (BuildContext context) { return const HomePage(); }
+                                            ),
+                                      );
                                     },
                                     child: const Text('Go to home page'),
                                   )

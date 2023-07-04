@@ -165,11 +165,12 @@ class _RegisterViewState extends State<RegisterView> {
 
                                       //goes to log in page
                                       onPressed: () {
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    const LoginView()));
+                                        Navigator.pushReplacement(
+                                          context,
+                                          PageRouteBuilder(
+                                              pageBuilder: (context, anim1, anim2) => const LoginView(),
+                                              transitionDuration: Duration.zero),
+                                        );
                                       },
                                       child: const Text('Login'),
                                     ),

@@ -22,6 +22,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       ),
       child: ClipRRect(
         child: AppBar(
+          automaticallyImplyLeading: false,
           title: Container(
             margin: const EdgeInsets.only(
               top: 15,
@@ -45,9 +46,11 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
               iconSize: 25,
               icon: const Icon(Iconsax.notification),
               onPressed: () {
-                Navigator.push(
+                Navigator.pushReplacement(
                   context,
-                  MaterialPageRoute(builder: (context) => const NotificationPage()),
+                  PageRouteBuilder(
+                      pageBuilder: (context, anim1, anim2) => const NotificationPage(),
+                      transitionDuration: Duration.zero),
                 );
               },
             ),

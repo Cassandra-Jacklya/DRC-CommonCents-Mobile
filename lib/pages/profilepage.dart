@@ -119,7 +119,7 @@ class ProfilePage extends StatelessWidget {
                           onPressed: () {
                             Navigator.push(
                               context, 
-                              MaterialPageRoute(builder: (context) => MyAccount())
+                              MaterialPageRoute(builder: (context) => const MyAccount())
                             );
                           },
                         ),
@@ -131,7 +131,7 @@ class ProfilePage extends StatelessWidget {
                           onPressed: () {
                             Navigator.push(
                               context,
-                              MaterialPageRoute(builder: (context) => Security())
+                              MaterialPageRoute(builder: (context) => const Security())
                             );
                           },
                         ),
@@ -141,7 +141,7 @@ class ProfilePage extends StatelessWidget {
                             color: Colors.white,
                           ),
                           onPressed: () {
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => Leaderboard()));
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => const Leaderboard()));
                           },
                         ),
                         buildContainer(
@@ -150,7 +150,7 @@ class ProfilePage extends StatelessWidget {
                             color: Colors.white,
                           ),
                           onPressed: () {
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => RecentTrades()));
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => const RecentTrades()));
                           },
                         ),
                         buildContainer(
@@ -159,7 +159,7 @@ class ProfilePage extends StatelessWidget {
                             color: Colors.white,
                           ),
                           onPressed: () {
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => HelpSupport()));
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => const HelpSupport()));
                           },
                           showBottomBorder: false,
                         ),

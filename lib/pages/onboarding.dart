@@ -1,7 +1,6 @@
-import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'dart:async';
 
-import '../components/appbar.dart';
+import 'package:flutter/material.dart';
 import 'auth_pages/login.dart';
 import 'auth_pages/register.dart';
 import 'homepage.dart';
@@ -14,6 +13,71 @@ class Onboarding extends StatefulWidget {
 }
 
 class _OnboardingState extends State<Onboarding> {
+  
+  int _currentPage = 0;
+  int _currentText = 0;
+  late Timer _timer;
+  final PageController _pageController = PageController(
+    initialPage: 0,
+  );
+  final PageController _contentController = PageController(
+    initialPage: 0,
+  );
+
+  List<String> images = [
+    "assets/images/trading-onboarding.jpg",
+    "assets/images/news-onboarding.jpg",
+    "assets/images/forum-onboarding.png"
+  ];
+
+  List<String> text = [
+    "Zero real money",
+    "Experience real trading.",
+    "Discover the latest",
+    "trading news.",
+    "Connect with real",
+    "users globally."
+  ];
+
+  @override
+  void initState() {
+    super.initState();
+    _timer = Timer.periodic(
+      const Duration(seconds: 3), 
+      (Timer timer) {
+        if (_currentPage < 2) {
+          _currentPage++;
+        }
+        else {
+          _currentPage = 0;
+        }
+
+        if (_currentText < 2) {
+          _currentText++;
+        }
+        else {
+          _currentText = 0;
+        }
+
+        _pageController.animateToPage(
+          _currentPage, 
+          duration: const Duration(milliseconds: 300), 
+          curve: Curves.easeIn,
+        );
+
+        _contentController.animateToPage(_currentText, 
+        duration: const Duration(milliseconds: 300), 
+        curve: Curves.linear);
+      }
+    );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _timer.cancel();
+  }
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -30,71 +94,121 @@ class _OnboardingState extends State<Onboarding> {
               ),
             ),
           ),
-          const Image(image: AssetImage('assets/images/trading-onboarding.jpg'),
+          SizedBox(
             height: 170,
             width: 217,
-          ),
-          const Padding(
-            padding:  EdgeInsets.fromLTRB(0, 36, 0, 0),
-            child:  Text("Zero real money.",
-              style: TextStyle(
-                fontSize: 15
-              ),
-            ),
-          ),
-          const Text("Experience real trading.",
-            style: TextStyle(
-              fontSize: 15
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(0, 10, 0, 60),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+            child: PageView(
+              physics: const NeverScrollableScrollPhysics(),
+              controller: _pageController,
               children: [
-                IconButton(
-                  onPressed: () {}, 
-                  icon: const FaIcon(FontAwesomeIcons.solidCircle,
-                    size: 10,
-                    color: Color(0xFF5F5F5F),
-                  )
+                Container(
+                  decoration: BoxDecoration(
+                    image: DecorationImage(image: AssetImage(images[0]),
+                    fit: BoxFit.cover
+                    )
+                  ),
                 ),
-                IconButton(
-                  onPressed: () {}, 
-                  icon: const FaIcon(FontAwesomeIcons.solidCircle,
-                    size: 10,
-                    color: Color(0xFFD9D9D9),
-                  )
+                Container(
+                  decoration: BoxDecoration(
+                    image: DecorationImage(image: AssetImage(images[1]),
+                    fit: BoxFit.cover
+                    )
+                  ),
                 ),
-                IconButton(
-                  onPressed: () {}, 
-                  icon: const FaIcon(FontAwesomeIcons.solidCircle,
-                    size: 10,
-                    color: Color(0xFFD9D9D9),
-                  )
+                Container(
+                  decoration: BoxDecoration(
+                    image: DecorationImage(image: AssetImage(images[2]),
+                    fit: BoxFit.cover
+                    )
+                  ),
+                )
+              ],
+            ),
+          ),
+          SizedBox(
+            height: 100,
+            width: 300,
+            child: PageView(
+              physics: const NeverScrollableScrollPhysics(),
+              controller: _contentController,
+              children: [
+                Padding(
+                  padding:  const EdgeInsets.fromLTRB(0, 36, 0, 0),
+                  child:  Column(
+                    children: [
+                      Text(text[0],
+                        style: const TextStyle(
+                          fontSize: 15
+                        ),
+                      ),
+                      Text(text[1],
+                        style: const TextStyle(
+                          fontSize: 15
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding:  const EdgeInsets.fromLTRB(0, 36, 0, 0),
+                  child:  Column(
+                    children: [
+                      Text(text[2],
+                        style: const TextStyle(
+                          fontSize: 15
+                        ),
+                      ),
+                      Text(text[3],
+                        style: const TextStyle(
+                          fontSize: 15
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding:  const EdgeInsets.fromLTRB(0, 36, 0, 0),
+                  child:  Column(
+                    children: [
+                      Text(text[4],
+                        style: const TextStyle(
+                          fontSize: 15
+                        ),
+                      ),
+                      Text(text[5],
+                        style: const TextStyle(
+                          fontSize: 15
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),
           ),
-          ElevatedButton(
-            onPressed: () async {
-              Navigator.push(context, 
-                MaterialPageRoute(
-                  builder: (context) {
-                    return const RegisterView();
-                  }
-                )
-              );
-            },  
-            style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFF3366FF),
-              fixedSize: const Size(298, 44)
-            ),
-            child: const Text("Create Account",
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.normal,
-                fontFamily: 'Roboto',
+
+          Padding(
+            padding: const EdgeInsets.fromLTRB(0, 91, 0, 0),
+            child: ElevatedButton(
+              onPressed: () async {
+                Navigator.push(context, 
+                  MaterialPageRoute(
+                    builder: (context) {
+                      return const RegisterView();
+                    }
+                  )
+                );
+              },  
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF3366FF),
+                fixedSize: const Size(298, 44)
+              ),
+              child: const Text("Create Account",
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.normal,
+                  fontFamily: 'Roboto',
+                ),
               ),
             ),
           ),
