@@ -59,18 +59,14 @@ class _HomePageState extends State<HomePage> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          ElevatedButton(
-                             style: ElevatedButton.styleFrom(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                              backgroundColor: const Color(0xFF3366FF)
+                          const Text(
+                          "MARKET OVERVIEW",
+                          style: TextStyle(
+                            fontSize: 15, 
+                            fontFamily: 'Roboto',
+                            fontWeight: FontWeight.bold
                             ),
-                            onPressed: () {}, 
-                            child: const Text(
-                            "MARKET OVERVIEW",
-                            style: TextStyle(fontSize: 15, fontFamily: 'Roboto'),
-                          ),),
+                          ),
                           ElevatedButton(
                             style:  const ButtonStyle(
                               backgroundColor: MaterialStatePropertyAll<Color>(Colors.white),
@@ -137,40 +133,35 @@ class _HomePageState extends State<HomePage> {
                     ),
                     const SizedBox(height: 30),
                     Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 10),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children:[
-                          ElevatedButton(onPressed: () {}, 
-                          style: ElevatedButton.styleFrom(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                              backgroundColor: const Color(0xFF3366FF)
-                            ),
-                            child: const Text(
-                            "NEWS HEADLINE",
-                            style: TextStyle(fontSize: 15, fontFamily: 'Roboto'),
-                          )),
-                        ],
+                      width: double.infinity,
+                      margin: const EdgeInsets.symmetric(horizontal: 15),
+                      child: const Text(
+                      "NEWS HEADLINE",
+                      textAlign: TextAlign.left,
+                      style: TextStyle(
+                        fontSize: 15, 
+                        fontFamily: 'Roboto',
+                        fontWeight: FontWeight.bold,
+
+                        ),
                       ),
                     ),
                     const SizedBox(height: 10),
-                    // FutureBuilder<List<dynamic>>(
-                    //   future: _newsFuture,
-                    //   builder: (context, snapshot) {
-                    //     if (snapshot.connectionState == ConnectionState.waiting) {
-                    //       return const CircularProgressIndicator();
-                    //     } else if (snapshot.hasError) {
-                    //       return Text('Error: ${snapshot.error}');
-                    //     } else if (snapshot.hasData) {
-                    //       final newsList = snapshot.data;
-                    //       return NewsContainer(feeds: newsList);
-                    //     } else {
-                    //       return const Text('No news available.');
-                    //     }
-                    //   },
-                    // ),
+                    FutureBuilder<List<dynamic>>(
+                      future: _newsFuture,
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState == ConnectionState.waiting) {
+                          return const CircularProgressIndicator();
+                        } else if (snapshot.hasError) {
+                          return Text('Error: ${snapshot.error}');
+                        } else if (snapshot.hasData) {
+                          final newsList = snapshot.data;
+                          return NewsContainer(feeds: newsList);
+                        } else {
+                          return const Text('No news available.');
+                        }
+                      },
+                    ),
                   ],
                 ),
               );
@@ -187,18 +178,14 @@ class _HomePageState extends State<HomePage> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                              backgroundColor: const Color(0xFF3366FF)
+                          const Text(
+                          "MARKET OVERVIEW",
+                          style: TextStyle(
+                            fontSize: 15, 
+                            fontFamily: 'Roboto',
+                            fontWeight: FontWeight.bold
                             ),
-                            onPressed: () {}, 
-                            child: const Text(
-                            "MARKET OVERVIEW",
-                            style: TextStyle(fontSize: 15, fontFamily: 'Roboto'),
-                          ),),
+                          ),
                           BlocBuilder<LoginStateBloc, LoginState>(
                             builder: ((context, state) {
                               if (state is AppStateInitial) {}
@@ -261,46 +248,44 @@ class _HomePageState extends State<HomePage> {
                         scrollDirection: Axis.horizontal,
                         itemCount: 8,
                         itemBuilder: (context, index) {
-                          return const MarketCard();
+                          return const Padding(
+                            padding: EdgeInsets.fromLTRB(5, 0, 5, 0),
+                            child: MarketCard(),
+                          );
                         },
                       ),
                     ),
                     const SizedBox(height: 30),
                     Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 10),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          ElevatedButton(onPressed: () {}, 
-                          style: ElevatedButton.styleFrom(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                              backgroundColor: const Color(0xFF3366FF)
-                            ),
-                            child: const Text(
-                            "NEWS HEADLINE",
-                            style: TextStyle(fontSize: 15, fontFamily: 'Roboto'),
-                          )),
-                        ],
+                      width: double.infinity,
+                      margin: const EdgeInsets.symmetric(horizontal: 15),
+                      child: const Text(
+                      "NEWS HEADLINE",
+                      textAlign: TextAlign.left,
+                      style: TextStyle(
+                        fontSize: 15, 
+                        fontFamily: 'Roboto',
+                        fontWeight: FontWeight.bold,
+
+                        ),
                       ),
                     ),
                     const SizedBox(height: 10),
-                    // FutureBuilder<List<dynamic>>(
-                    //   future: _newsFuture,
-                    //   builder: (context, snapshot) {
-                    //     if (snapshot.connectionState == ConnectionState.waiting) {
-                    //       return const CircularProgressIndicator();
-                    //     } else if (snapshot.hasError) {
-                    //       return Text('Error: ${snapshot.error}');
-                    //     } else if (snapshot.hasData) {
-                    //       final newsList = snapshot.data;
-                    //       return NewsContainer(feeds: newsList);
-                    //     } else {
-                    //       return const Text('No news available.');
-                    //     }
-                    //   },
-                    // ),
+                    FutureBuilder<List<dynamic>>(
+                      future: _newsFuture,
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState == ConnectionState.waiting) {
+                          return const CircularProgressIndicator();
+                        } else if (snapshot.hasError) {
+                          return Text('Error: ${snapshot.error}');
+                        } else if (snapshot.hasData) {
+                          final newsList = snapshot.data;
+                          return NewsContainer(feeds: newsList);
+                        } else {
+                          return const Text('No news available.');
+                        }
+                      },
+                    ),
                   ],
                 ),
               );
@@ -316,18 +301,14 @@ class _HomePageState extends State<HomePage> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                              backgroundColor: const Color(0xFF3366FF),
+                          const Text(
+                          "MARKET OVERVIEW",
+                          style: TextStyle(
+                            fontSize: 15, 
+                            fontFamily: 'Roboto',
+                            fontWeight: FontWeight.bold
                             ),
-                            onPressed: () {}, 
-                            child: const Text(
-                            "MARKET OVERVIEW",
-                            style: TextStyle(fontSize: 15, fontFamily: 'Roboto'),
-                          ),),
+                          ),
                           ElevatedButton(
                             style:  const ButtonStyle(
                               backgroundColor: MaterialStatePropertyAll<Color>(Colors.white),
@@ -351,7 +332,6 @@ class _HomePageState extends State<HomePage> {
                         ],
                       ),
                     ),
-                    const SizedBox(height: 10),
                     Container(
                       padding: const EdgeInsets.all(10),
                       color: Colors.white,
@@ -394,25 +374,19 @@ class _HomePageState extends State<HomePage> {
                     ),
                     const SizedBox(height: 30),
                     Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 10),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          ElevatedButton(onPressed: () {}, 
-                          style: ElevatedButton.styleFrom(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                              backgroundColor: const Color(0xFF3366FF)
-                            ),
-                            child: const Text(
-                            "NEWS HEADLINE",
-                            style: TextStyle(fontSize: 15, fontFamily: 'Roboto'),
-                          )),
-                        ],
+                      width: double.infinity,
+                      margin: const EdgeInsets.symmetric(horizontal: 15),
+                      child: const Text(
+                      "NEWS HEADLINE",
+                      textAlign: TextAlign.left,
+                      style: TextStyle(
+                        fontSize: 15, 
+                        fontFamily: 'Roboto',
+                        fontWeight: FontWeight.bold,
+
+                        ),
                       ),
                     ),
-                    const SizedBox(height: 10),
                     FutureBuilder<List<dynamic>>(
                       future: _newsFuture,
                       builder: (context, snapshot) {

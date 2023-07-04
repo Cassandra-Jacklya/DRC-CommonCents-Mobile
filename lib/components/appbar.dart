@@ -10,54 +10,56 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.3),
-            spreadRadius: 1,
-            // offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: ClipRRect(
-        child: AppBar(
-          automaticallyImplyLeading: false,
-          title: Container(
-            margin: const EdgeInsets.only(
-              top: 15,
-            ),
-            child: RichText(
-              text: TextSpan(
-                children: [
-                  TextSpan(
-                      text: title,
-                      style: const TextStyle(
-                        fontSize: 20,
-                      )),
-                ],
+    return ClipRRect(
+      child: AppBar(
+        automaticallyImplyLeading: false,
+        title: Row(
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(0, 10, 20, 0),
+              child: Container(
+                height: 40,
+                width: 40,
+                decoration: const BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Colors.white,
+                  image: DecorationImage(image: AssetImage("assets/images/commoncents-logo.png"),
+                  fit: BoxFit.cover
+                  )
+                ),
               ),
             ),
-          ),
-          actions: [
-            IconButton(
-              color: Colors.white,
-              padding: const EdgeInsets.only(top: 10),
-              iconSize: 25,
-              icon: const Icon(Iconsax.notification),
-              onPressed: () {
-                Navigator.pushReplacement(
-                  context,
-                  PageRouteBuilder(
-                      pageBuilder: (context, anim1, anim2) => const NotificationPage(),
-                      transitionDuration: Duration.zero),
-                );
-              },
-            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(0, 8, 0, 0),
+              child: Text(title,
+              style: const TextStyle(color: Colors.white),
+              ),
+            )
           ],
-          backgroundColor: const Color(0XFF3366FF),
-          elevation: 0,
         ),
+        actions: [
+          IconButton(
+            color: Colors.white,
+            padding: const EdgeInsets.only(top: 10, right: 20),
+            iconSize: 25,
+            icon: const Icon(Iconsax.notification),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const NotificationPage()),
+              );
+            },
+          ),
+        ],
+        backgroundColor: const Color(0XFF3366FF),
+        shape: const ContinuousRectangleBorder(side: BorderSide.none,
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(0),
+          topRight: Radius.circular(0),
+          bottomLeft: Radius.circular(0),
+          bottomRight: Radius.circular(0)
+        )),
+        elevation: 0,
       ),
     );
   }

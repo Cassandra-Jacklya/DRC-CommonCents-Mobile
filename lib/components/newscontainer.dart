@@ -21,47 +21,67 @@ class NewsContainer extends StatelessWidget {
             launchUrl(url);
           },
           child: Container(
-            margin: const EdgeInsets.all(10),
-            height: 100,
-            color: Colors.grey[300],
-            padding: const EdgeInsets.all(10),
+            margin: const EdgeInsets.fromLTRB(10, 0, 10, 1),
+            height: 90,
+            width: 321,
+            color: Colors.white,
             child: GestureDetector(
               onTap: () async {
-                print(news['url']);
                 Uri url = Uri.parse(news['url']);
                 launchUrl(url);
               },
-              child: Row(
-                children: [
-                  Container(
-                    color: Colors.white,
-                    height: 80,
-                    width: 80,
-                    child: Image.network(
-                      (news['banner_image'] != null &&
-                              news['banner_image'] != "")
-                          ? news['banner_image']
-                          : 'https://static.vecteezy.com/system/resources/previews/000/440/213/original/question-mark-vector-icon.jpg',
-                      fit: BoxFit.cover,
-                      errorBuilder: (BuildContext context, Object exception,
-                          StackTrace? stackTrace) {
-                        return Text('Your error widget...');
-                      },
-                    ),
+              child: Card(
+                shape: const RoundedRectangleBorder(
+                  side: BorderSide(
+                    color: Color(0xFFD9D9D9),
+                    width: 1
                   ),
-                  const SizedBox(width: 10),
-                  Expanded(
-                    child: Text(
-                      news[
-                          'title'], // Update this with the appropriate key for the news title
-                      style: TextStyle(
-                        color: Theme.of(context).primaryColor,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
+                  borderRadius: BorderRadius.all(Radius.circular(10))
+                ),
+                child: SizedBox(
+                  child: Row(
+                    children: [
+                      SizedBox(
+                        height: 100,
+                        width: 80,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            image: DecorationImage(
+                              image: NetworkImage(
+                                (news['banner_image'] != null &&
+                                    news['banner_image'] != "")
+                                ? news['banner_image']
+                                : 'https://static.vecteezy.com/system/resources/previews/000/440/213/original/question-mark-vector-icon.jpg'
+                              ),
+                              fit: BoxFit.cover
+                            ),
+                            borderRadius: const BorderRadius.only(
+                              topLeft: Radius.circular(10),
+                              topRight: Radius.circular(10),
+                              bottomLeft: Radius.circular(10),
+                              bottomRight: Radius.circular(10)
+                            )
+                          ),
+                          height: double.infinity,
+                          width: double.infinity,
+                        ),
                       ),
-                    ),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: Text(
+                          news[
+                              'title'],
+                          overflow: TextOverflow.ellipsis, 
+                          maxLines: 3,
+                          style: const TextStyle(
+                            fontFamily: 'Roboto',
+                            fontSize: 15
+                          )
+                        ),
+                      ),
+                    ],
                   ),
-                ],
+                ),
               ),
             ),
           ),

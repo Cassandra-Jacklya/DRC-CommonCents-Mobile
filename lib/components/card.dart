@@ -9,7 +9,8 @@ class MarketCard extends StatelessWidget {
       elevation: 0,
       shape: RoundedRectangleBorder(
         side: BorderSide(
-          color: Colors.black
+          color: Colors.black,
+          width: 1.5
         ),
         borderRadius: BorderRadius.all(Radius.circular(10)),
       ),
