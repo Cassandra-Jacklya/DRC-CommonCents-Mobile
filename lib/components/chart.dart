@@ -5,7 +5,9 @@ import '../apistore/stockdata.dart';
 // import 'stock_candlestick_painter.dart';
 
 class CandleStickChart extends StatefulWidget {
-  const CandleStickChart({Key? key}) : super(key: key);
+   final bool isCandle;
+
+  CandleStickChart({required this.isCandle, Key? key}) : super(key: key);
 
   @override
   _CandleStickChartState createState() => _CandleStickChartState();
@@ -18,12 +20,11 @@ class _CandleStickChartState extends State<CandleStickChart> {
   void initState() {
     super.initState();
     stockDataCubit = StockDataCubit();
-    connectToWebSocket(context);
+    connectToWebSocket(context, widget.isCandle);
   }
 
   @override
   void dispose() {
-    closeWebSocket();
     stockDataCubit.close();
     super.dispose();
   }
@@ -34,17 +35,6 @@ class _CandleStickChartState extends State<CandleStickChart> {
       body: Center(
         child: Column(
           children: [
-            GestureDetector(
-              onTap: () {
-                closeWebSocket();
-              },
-              child: Container(
-                height: 50,
-                width: 100,
-                color: Colors.grey[300],
-                child: const Center(child: Text("Unsubscribe Ticks")),
-              ),
-            ),
             SizedBox(
               height: MediaQuery.of(context).size.height * 0.3,
               width: MediaQuery.of(context).size.width,
@@ -53,16 +43,9 @@ class _CandleStickChartState extends State<CandleStickChart> {
                   if (stockData.isEmpty) {
                     return const CircularProgressIndicator();
                   } else {
-                    print("I am from chart page: $stockData");
+                    print("I am from chart page: ${stockData}");
                     return Container();
                   }
-
-                  // return CustomPaint(
-                  //   size: Size.infinite,
-                  //   painter: StockCandleStickPainter(
-                  //     stockData: stockData,
-                  //   ),
-                  // );
                 },
               ),
             ),
@@ -72,6 +55,18 @@ class _CandleStickChartState extends State<CandleStickChart> {
     );
   }
 }
+
+            // GestureDetector(
+            //   onTap: () {
+            //     closeWebSocket();
+            //   },
+            //   child: Container(
+            //     height: 50,
+            //     width: 100,
+            //     color: Colors.grey[300],
+            //     child: const Center(child: Text("Unsubscribe Ticks")),
+            //   ),
+            // ),
 
 
 

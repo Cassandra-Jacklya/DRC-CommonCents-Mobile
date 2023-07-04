@@ -1,4 +1,5 @@
 import 'package:commoncents/apistore/stockdata.dart';
+import 'package:commoncents/components/chart.dart';
 import 'package:commoncents/cubit/numberpicker_cubit.dart';
 import 'package:commoncents/cubit/stake_payout_cubit.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +10,7 @@ import '../components/linechart.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
 import '../components/ticks_gauge.dart';
 import '../cubit/ticks_cubit.dart';
+import '../apistore/PriceProposal.dart';
 
 class SimulationPage extends StatefulWidget {
   @override
@@ -19,6 +21,13 @@ class _SimulationPageState extends State<SimulationPage> {
   late double ticks;
   late String stakePayout;
   late int currentAmount;
+  bool isCandle = false;
+
+  // @override
+  // void dispose() {
+  //   closeWebSocket();
+  //   super.dispose();
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -48,13 +57,21 @@ class _SimulationPageState extends State<SimulationPage> {
                     ],
                   ),
                 ),
-                Container(
-                  height: 60,
-                  color: Colors.grey[300],
-                  child: const IconButton(
-                    onPressed: null,
-                    icon: Icon(
-                      Icons.candlestick_chart,
+                GestureDetector(
+                  child: Container(
+                    height: 60,
+                    color: Colors.grey[300],
+                    child: IconButton(
+                      onPressed: () {
+                        setState(() {
+                          unsubscribe();
+                          closeWebSocket();
+                          isCandle = !isCandle;
+                        });
+                      },
+                      icon: isCandle
+                          ? const Icon(Icons.line_axis)
+                          : const Icon(Icons.candlestick_chart),
                     ),
                   ),
                 ),
@@ -77,11 +94,12 @@ class _SimulationPageState extends State<SimulationPage> {
               ],
             ),
             Container(
-              margin: const EdgeInsets.all(10),
-              height: 250,
+              margin: const EdgeInsets.symmetric(vertical: 10),
+              height: MediaQuery.of(context).size.height * 0.6,
               color: Colors.grey[300],
-              child: const Center(
-                child: MyLineChart(),
+              child: Center(
+                child:
+                    isCandle ? CandleStickChart(isCandle: isCandle,) : MyLineChart(isCandle: isCandle,),
               ),
             ),
             Column(

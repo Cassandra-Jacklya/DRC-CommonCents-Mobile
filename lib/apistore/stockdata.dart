@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import '../apistore/PriceProposal.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -10,11 +11,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../cubit/stock_data_cubit.dart';
 
 WebSocketChannel? socket;
+  late StockDataCubit stockDataCubit;
 const String appId = '1089';
 final Uri url = Uri.parse(
     'wss://ws.binaryws.com/websockets/v3?app_id=$appId&l=EN&brand=deriv');
 
 final tickStream = {"ticks": "R_50", "subscribe": 1};
+
+final unsubscribeRequest = {"forget_all": "ticks"};
 
 final TicksHistoryRequest = {
   'ticks_history': 'R_50',
@@ -27,9 +31,8 @@ final TicksHistoryRequest = {
 
 List<Map<String, dynamic>> ticks = [];
 
-Future<void> connectToWebSocket(BuildContext context) async {
+Future<void> connectToWebSocket(BuildContext context, bool isCandle) async {
   socket = WebSocketChannel.connect(url);
-  print("Connected to websocket!");
 
   socket?.stream.listen((dynamic message) {
     try {
@@ -43,12 +46,20 @@ Future<void> connectToWebSocket(BuildContext context) async {
     handleConnectionClosed();
   });
 
+  if(isCandle){
+    print(isCandle);
+  }
   subscribeTicks();
 }
 
 void subscribeTicks() async {
   await requestTicksHistory();
   await tickSubscriber();
+}
+
+void unsubscribe() async{
+  socket?.sink.add(jsonEncode(unsubscribeRequest));
+  // stockDataCubit.clearStockData();
 }
 
 void closeWebSocket() {
@@ -68,46 +79,7 @@ Future<void> handleResponse(dynamic data, BuildContext context) async {
   final List<Map<String, dynamic>> tickHistory = [];
 
   if (decodedData['msg_type'] == 'proposal') {
-    late double buyingPrice;
-    late double sellingPrice;
-    late double capital;
-    late double currentBalance;
-    late double updatedBalance;
-
-    final Map<String, dynamic> proposal = decodedData['proposal'];
-    capital = decodedData['echo_req']['amount'].toDouble();
-    FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
-    User? user = FirebaseAuth.instance.currentUser;
-    CollectionReference collectionReference =
-        firebaseFirestore.collection('users');
-
-    // Retrieve the current balance of the user
-    DocumentSnapshot userSnapshot =
-        await collectionReference.doc(user!.uid).get();
-    Map<String, dynamic>? userData =
-        userSnapshot.data() as Map<String, dynamic>?;
-
-    //deduct the capital users have invested
-    if (userData != null) {
-      currentBalance = userData['balance'].toDouble() ?? 0;
-      updatedBalance = currentBalance - capital;
-      collectionReference.doc(user.uid).update({'balance': updatedBalance});
-    }
-
-    // collectionReference.doc(user!.uid).update(
-    //   { 'balance': 100 }
-    // );
-
-    buyingPrice = ticks.last['close'];
-    await Future.delayed(const Duration(seconds: 3));
-    sellingPrice = ticks.last['close'];
-
-    if (buyingPrice < sellingPrice) {
-        updatedBalance = updatedBalance + proposal['payout'];
-        collectionReference.doc(user.uid).update({'balance': updatedBalance});
-    } else {
-      print("Buying: $buyingPrice\nSelling: $sellingPrice\nSo: you lost :(");
-    }
+    handleBuyResponse(decodedData);
   } else if (decodedData['msg_type'] == 'candles') {
     final List<dynamic> candles = decodedData['candles'];
     for (int i = 0; i < candles.length; i++) {
@@ -131,7 +103,6 @@ Future<void> handleResponse(dynamic data, BuildContext context) async {
     }
 
     ticks = tickHistory;
-    // print("New ticks data: $ticks");
   } else if (decodedData['msg_type'] == 'tick') {
     final tickData = decodedData['tick'];
     if (tickData != null) {
@@ -146,8 +117,9 @@ Future<void> handleResponse(dynamic data, BuildContext context) async {
     }
   }
 
+
   final stockDataCubit = BlocProvider.of<StockDataCubit>(context);
-  stockDataCubit.updateStockData(ticks);
+  stockDataCubit.updateStockData(ticks); // this is for line chart
 }
 
 void handleError(dynamic error) {
@@ -158,16 +130,3 @@ void handleConnectionClosed() {
   print("Connection closed");
 }
 
-void handleBuy(int ticks, String stakePayout, int currentAmount) {
-  final PriceProposalRequest = {
-    "proposal": 1,
-    "amount": currentAmount,
-    "basis": stakePayout,
-    "contract_type": "CALL",
-    "currency": "USD",
-    "duration": ticks,
-    "duration_unit": "t",
-    "symbol": "R_100"
-  };
-  socket?.sink.add(jsonEncode(PriceProposalRequest));
-}

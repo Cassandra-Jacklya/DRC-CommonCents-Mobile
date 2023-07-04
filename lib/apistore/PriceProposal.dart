@@ -1,40 +1,83 @@
-import 'package:flutter/material.dart';
-import 'package:web_socket_channel/web_socket_channel.dart';
+import 'dart:convert';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
 import '../apistore/stockdata.dart';
 
-WebSocketChannel? socket;
-const String appId = '1089';
-final Uri url = Uri.parse(
-    'wss://ws.binaryws.com/websockets/v3?app_id=$appId&l=EN&brand=deriv');
-
-Future<void> PriceProposalRequest(BuildContext context) async {
-  socket = WebSocketChannel.connect(url);
-  print("Connected to websocket!");
-
-  socket?.stream.listen((dynamic message) {
-    try {
-      // print("this is message: $message");
-      handleResponse(message, context);
-    } catch (e) {
-      handleError(e);
-    }
-  }, onError: (error) {
-    handleError(error);
-  }, onDone: () {
-    handleConnectionClosed();
-  });
-
-  subscribeTicks();
+void handleBuy(int ticks, String stakePayout, int currentAmount) {
+  final PriceProposalRequest = {
+    "proposal": 1,
+    "amount": currentAmount,
+    "basis": stakePayout,
+    "contract_type": "CALL",
+    "currency": "USD",
+    "duration": ticks,
+    "duration_unit": "t",
+    "symbol": "R_100"
+  };
+  socket?.sink.add(jsonEncode(PriceProposalRequest));
 }
 
-final PriceProposal = {
-  "proposal": 1,
-  "amount": 100,
-  "barrier": "+0.1",
-  "basis": "payout",
-  "contract_type": "CALL",
-  "currency": "USD",
-  "duration": 60,
-  "duration_unit": "s",
-  "symbol": "R_100"
-};
+Future<double> getUpdatedBalance(String userId, double capital) async {
+
+    
+  FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
+  User? user = FirebaseAuth.instance.currentUser;
+
+  CollectionReference collectionReference =
+      firebaseFirestore.collection('users');
+
+  DocumentSnapshot userSnapshot =
+      await collectionReference.doc(user!.uid).get();
+  Map<String, dynamic>? userData = userSnapshot.data() as Map<String, dynamic>?;
+
+  if (userData != null) {
+    double currentBalance = userData['balance'].toDouble() ?? 0;
+    double updatedBalance = currentBalance - capital;
+    await collectionReference.doc(user.uid).update({'balance': updatedBalance});
+    return updatedBalance;
+  }
+  return 0;
+}
+
+void handleBuyResponse(Map<String,dynamic> decodedData) async {
+    late double buyingPrice;
+    late double sellingPrice;
+    late double capital;
+    late double currentBalance;
+    late double updatedBalance;
+
+    final Map<String, dynamic> proposal = decodedData['proposal'];
+    capital = decodedData['echo_req']['amount'].toDouble();
+
+    
+    FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
+    User? user = FirebaseAuth.instance.currentUser;
+    CollectionReference collectionReference =
+        firebaseFirestore.collection('users');
+
+    
+    DocumentSnapshot userSnapshot =
+        await collectionReference.doc(user!.uid).get();
+    Map<String, dynamic>? userData =
+        userSnapshot.data() as Map<String, dynamic>?;
+
+    
+    if (userData != null) {
+      currentBalance = userData['balance'].toDouble() ?? 0;
+      updatedBalance = currentBalance - capital;
+      collectionReference.doc(user.uid).update({'balance': updatedBalance});
+    }
+
+    buyingPrice = ticks.last['close'];
+    await Future.delayed(const Duration(seconds: 3));
+    sellingPrice = ticks.last['close'];
+
+    if (buyingPrice < sellingPrice) {
+        updatedBalance = updatedBalance + proposal['payout'];
+        collectionReference.doc(user.uid).update({'balance': updatedBalance});
+        print("You Won");
+    } else {
+      print("Buying: $buyingPrice\nSelling: $sellingPrice\nSo: you lost :(");
+    }
+}

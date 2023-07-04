@@ -20,7 +20,7 @@ import 'package:commoncents/pages/forumpage.dart';
 import 'package:commoncents/pages/profilepage.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'cubit/login_cubit.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+// import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 void main() {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
@@ -93,7 +93,7 @@ class _MainAppState extends State<MainApp> {
           BlocProvider<NewsTabBarCubit>(create: (context) => NewsTabBarCubit()),
           BlocProvider<StakePayoutCubit>(create: (context)=> StakePayoutCubit()),
           BlocProvider<TicksCubit>(create: (context) => TicksCubit()),
-          BlocProvider<CurrentAmountCubit>(create: (context) => CurrentAmountCubit())
+          BlocProvider<CurrentAmountCubit>(create: (context) => CurrentAmountCubit()),
         ],
         child: GestureDetector(
           onTap: () {
