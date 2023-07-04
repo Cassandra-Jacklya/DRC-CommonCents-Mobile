@@ -18,6 +18,7 @@ class _ForumPageState extends State<ForumPage> {
     return Scaffold(
       appBar: const CustomAppBar(
         title: "Forum",
+        logo: "assets/images/commoncents-logo.png"
       ),
       body: Column(
         children: [

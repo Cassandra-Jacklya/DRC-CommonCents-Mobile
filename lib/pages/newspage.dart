@@ -96,6 +96,7 @@ class _NewsPageState extends State<NewsPage> {
     return Scaffold(
       appBar: const CustomAppBar(
         title: "News",
+        logo: "assets/images/commoncents-logo.png"
       ),
       body: Column(
         children: [

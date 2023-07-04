@@ -1,5 +1,6 @@
 //Register View
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:commoncents/components/appbar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -7,6 +8,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../cubit/register_cubit.dart';
 import '../../firebase_options.dart';
 import 'login.dart';
+import 'dart:math' as math;
 
 class RegisterView extends StatefulWidget {
   const RegisterView({super.key});
@@ -15,10 +17,11 @@ class RegisterView extends StatefulWidget {
   State<RegisterView> createState() => _RegisterViewState();
 }
 
-class _RegisterViewState extends State<RegisterView> {
+class _RegisterViewState extends State<RegisterView> with SingleTickerProviderStateMixin {
   late final TextEditingController _email;
   late final TextEditingController _password;
   late final Future<FirebaseApp> _firebaseInitialization;
+  late final AnimationController _controller = AnimationController(vsync: this, duration: const Duration(seconds: 3))..repeat();
 
   Future<FirebaseApp> initializeFirebase() async {
     await Firebase.initializeApp(
@@ -52,25 +55,14 @@ class _RegisterViewState extends State<RegisterView> {
   void dispose() {
     _email.dispose();
     _password.dispose();
+    _controller.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: const Text(
-          "SIGN UP FOR YOUR ACCOUNT",
-          style: TextStyle(
-              fontFamily: 'Raleway',
-              fontSize: 20,
-              color: Colors.white,
-              fontWeight: FontWeight.w600),
-        ),
-        shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.only(bottomRight: Radius.circular(30))),
-      ),
+      appBar: const CustomAppBar(title: "Create an Account", logo: ""),
       body: FutureBuilder<FirebaseApp>(
         future: _firebaseInitialization,
         builder: (context, snapshot) {
@@ -80,69 +72,73 @@ class _RegisterViewState extends State<RegisterView> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Column(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(40, 50, 40, 0),
-                          child: SizedBox(
-
-                            //email text field
-                            child: TextField(
-                              controller: _email,
-                              enableSuggestions: false,
-                              autocorrect: false,
-                              keyboardType: TextInputType.emailAddress,
-                              decoration: InputDecoration(
-                                hintText: "Enter your email here",
-                                enabledBorder: OutlineInputBorder(
-                                  borderSide: const BorderSide(
-                                    width: 3, //<-- SEE HERE
-                                    color: Color.fromRGBO(240, 140, 15, 100),
-                                  ),
-                                  borderRadius: BorderRadius.circular(50.0),
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderSide: const BorderSide(
-                                    width: 3, //<-- SEE HERE
-                                    color: Color.fromRGBO(240, 140, 15, 100),
-                                  ),
-                                  borderRadius: BorderRadius.circular(50.0),
-                                ),
-                              ),
+                    SizedBox(
+                      child: Padding(
+                        padding: const EdgeInsets.fromLTRB(0, 100, 0, 0),
+                        child: AnimatedBuilder(
+                          animation: _controller,
+                          builder: (_, child) { 
+                            return Transform.rotate(
+                              angle: _controller.value * 2 * math.pi,
+                              child: child
+                            );
+                          },
+                          child: const Image(
+                            image: AssetImage("assets/images/commoncents-logo.png"),
+                            height: 100,
+                            width: 100,
                             ),
-                          ),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(40, 10, 40, 10),
-                          child: SizedBox(
-                            child: TextField(
-                              controller: _password,
-                              obscureText: true,
-                              enableSuggestions: false,
-                              autocorrect: false,
-
-                              //password text field
-                              decoration: InputDecoration(
-                                hintText: "Enter password",
-                                enabledBorder: OutlineInputBorder(
-                                  borderSide: const BorderSide(
-                                    width: 3, 
-                                    color: Color.fromRGBO(240, 140, 15, 100),
-                                  ),
-                                  borderRadius: BorderRadius.circular(50.0),
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderSide: const BorderSide(
-                                    width: 3, 
-                                    color: Color.fromRGBO(240, 140, 15, 100),
-                                  ),
-                                  borderRadius: BorderRadius.circular(50.0),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
+                      ),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: const [
+                        Text("C", style: TextStyle(color: Color(0xFF0E34CC), fontWeight: FontWeight.bold),),
+                        Text("ommon"),
+                        Text("C", style: TextStyle(fontWeight: FontWeight.bold),),
+                        Text("ents")
                       ],
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(0, 80, 0, 0),
+                      child: SizedBox(
+                        height: 70,
+                        width: 311,
+                        child: TextFormField(
+                          controller: _email,
+                          enableSuggestions: false,
+                          autocorrect: false,
+                          keyboardType: TextInputType.emailAddress,
+                          decoration: InputDecoration(
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide: const BorderSide(color: Color(0xFF5F5F5F))
+                            ),
+                            labelText: 'Email',
+                          ),
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(0, 0, 0, 45),
+                      child: SizedBox(
+                        height: 70,
+                        width: 311,
+                        child: TextFormField(
+                          controller: _password,
+                          enableSuggestions: false,
+                          autocorrect: false,
+                          obscureText: true,
+                          decoration: InputDecoration(
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide: const BorderSide(color: Color(0xFF5F5F5F))
+                            ),
+                            labelText: 'Password',
+                          ),
+                        ),
+                      ),
                     ),
                     BlocConsumer<SignUpStateBloc, RegisterState>(
                         listener: (context, state) {
@@ -202,10 +198,11 @@ class _RegisterViewState extends State<RegisterView> {
                         padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
                         child: ElevatedButton(
                           style: ButtonStyle(
+                            backgroundColor: MaterialStateProperty.all<Color>(const Color(0xFF3366FF)),
                             shape: MaterialStateProperty.all<
                                 RoundedRectangleBorder>(
                               RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(18.0),
+                                borderRadius: BorderRadius.circular(5.0),
                               ),
                             ),
                           ),
@@ -216,10 +213,10 @@ class _RegisterViewState extends State<RegisterView> {
                                 .signUp(email, password);
                           },
                           child: const Text(
-                            'Register',
+                            'Sign Up',
                             style: TextStyle(
-                                fontFamily: 'Raleway',
-                                fontWeight: FontWeight.w800,
+                                fontFamily: 'Roboto',
+                                fontWeight: FontWeight.normal,
                                 fontSize: 16,
                                 color: Colors.white),
                           ),

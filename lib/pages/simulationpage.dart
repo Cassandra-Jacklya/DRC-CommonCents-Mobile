@@ -35,7 +35,9 @@ class _SimulationPageState extends State<SimulationPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const CustomAppBar(
-        title: "Trading Simulation"),
+        title: "Trading Simulation",
+        logo: "assets/images/commoncents-logo.png"
+      ),
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
         child: Column(
