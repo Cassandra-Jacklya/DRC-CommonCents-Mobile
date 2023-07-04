@@ -17,10 +17,6 @@ import 'package:commoncents/cubit/navbar_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:commoncents/pages/homepage.dart';
-import 'package:commoncents/pages/newspage.dart';
-import 'package:commoncents/pages/simulationpage.dart';
-import 'package:commoncents/pages/forumpage.dart';
-import 'package:commoncents/pages/profilepage.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'cubit/login_cubit.dart';
 // import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -135,22 +131,4 @@ class _MainAppState extends State<MainApp> {
           ),
         ));
   }
-
-  // Widget _getPage(int index) {
-  //   switch (index) {
-  //     case 0:
-  //       return const HomePage();
-  //     case 1:
-  //       // return const NewsPage();
-  //       return const Text("News page");
-  //     case 2:
-  //       return SimulationPage();
-  //     case 3:
-  //       return const ForumPage();
-  //     case 4:
-  //       return const ProfilePage();
-  //     default:
-  //       return const Text("not working");
-  //   }
-  // }
 }

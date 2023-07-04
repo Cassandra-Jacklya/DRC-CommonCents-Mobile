@@ -1,13 +1,10 @@
-import 'package:commoncents/components/popup.dart';
 import 'package:commoncents/pages/forumpage.dart';
 import 'package:commoncents/pages/homepage.dart';
 import 'package:commoncents/pages/newspage.dart';
 import 'package:commoncents/pages/profilepage.dart';
 import 'package:commoncents/pages/simulationpage.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iconsax/iconsax.dart';
-import '../cubit/navbar_cubit.dart';
 
 class BottomNavBar extends StatefulWidget {
   const BottomNavBar({super.key, required this.index});
@@ -117,7 +114,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
                               child: RichText(
                                 text: const TextSpan(
                                   text: "Home",
-                                  style: TextStyle(fontSize: 10)
+                                  style: TextStyle(fontSize: 10, color: Colors.black)
                                 ),
                               ),
                             ),
@@ -151,7 +148,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
                               child: RichText(
                                 text: const TextSpan(
                                   text: "News",
-                                  style: TextStyle(fontSize: 10)
+                                  style: TextStyle(fontSize: 10, color: Colors.black)
                                 ),
                               ),
                             ),
@@ -183,7 +180,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
                               child: RichText(
                                 text: const TextSpan(
                                   text: "Forum",
-                                  style: TextStyle(fontSize: 10)
+                                  style: TextStyle(fontSize: 10, color: Colors.black)
                                 ),
                               ),
                             ),
@@ -217,7 +214,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
                               child: RichText(
                                 text: const TextSpan(
                                   text: "Profile",
-                                  style: TextStyle(fontSize: 10)
+                                  style: TextStyle(fontSize: 10, color: Colors.black)
                                 ),
                               ),
                             ),
@@ -247,15 +244,21 @@ class _BottomNavBarState extends State<BottomNavBar> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children:  [
-                    const Icon(
-                      Iconsax.status_up,
-                      size: 25,
-                      color: Colors.white,
+                    const Padding(
+                      padding: EdgeInsets.fromLTRB(0, 5, 0, 0),
+                      child: Icon(
+                        Iconsax.status_up,
+                        size: 25,
+                        color: Colors.white,
+                      ),
                     ),
-                    RichText(
-                      text: const TextSpan(
-                        text: "Trade",
-                        style: TextStyle(fontSize: 10)
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(0, 5, 0, 0),
+                      child: RichText(
+                        text: const TextSpan(
+                          text: "Trade",
+                          style: TextStyle(fontSize: 10, color: Colors.white)
+                        ),
                       ),
                     ),
                   ],

@@ -3,13 +3,15 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:iconsax/iconsax.dart';
 import '../apistore/news.dart';
 import '../components/appbar.dart';
+import '../components/card.dart';
 import '../components/newscontainer.dart';
 import '../cubit/login_cubit.dart';
 import '../firebase_options.dart';
 import 'auth_pages/login.dart';
-import 'auth_pages/register.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -19,7 +21,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  Future<List<dynamic>>? _newsFuture;
+  late Future<List<dynamic>>? _newsFuture;
 
   @override
   void initState() {
@@ -57,10 +59,18 @@ class _HomePageState extends State<HomePage> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const Text(
+                          ElevatedButton(
+                             style: ElevatedButton.styleFrom(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              backgroundColor: const Color(0xFF3366FF)
+                            ),
+                            onPressed: () {}, 
+                            child: const Text(
                             "MARKET OVERVIEW",
-                            style: TextStyle(fontSize: 20, fontFamily: 'Roboto'),
-                          ),
+                            style: TextStyle(fontSize: 15, fontFamily: 'Roboto'),
+                          ),),
                           ElevatedButton(
                             style:  const ButtonStyle(
                               backgroundColor: MaterialStatePropertyAll<Color>(Colors.white),
@@ -87,7 +97,7 @@ class _HomePageState extends State<HomePage> {
                     const SizedBox(height: 10),
                     Container(
                       padding: const EdgeInsets.all(10),
-                      color: Colors.grey[300],
+                      color: Colors.white,
                       height: 160,
                       child: ListView.builder(
                         scrollDirection: Axis.horizontal,
@@ -100,7 +110,7 @@ class _HomePageState extends State<HomePage> {
                                 Container(
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(50),
-                                    color: Colors.white,
+                                    color: Colors.grey,
                                   ),
                                   height: 75,
                                   width: 75,
@@ -113,35 +123,54 @@ class _HomePageState extends State<HomePage> {
                         },
                       ),
                     ),
+                    Container(
+                      padding: const EdgeInsets.all(10),
+                      color: Colors.white,
+                      height: 160,
+                      child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: 8,
+                        itemBuilder: (context, index) {
+                          return const MarketCard();
+                        },
+                      ),
+                    ),
                     const SizedBox(height: 30),
                     Container(
                       margin: const EdgeInsets.symmetric(horizontal: 10),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.start,
-                        children: const [
-                          Text(
+                        children:[
+                          ElevatedButton(onPressed: () {}, 
+                          style: ElevatedButton.styleFrom(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              backgroundColor: const Color(0xFF3366FF)
+                            ),
+                            child: const Text(
                             "NEWS HEADLINE",
-                            style: TextStyle(fontSize: 20, fontFamily: 'Roboto'),
-                          ),
+                            style: TextStyle(fontSize: 15, fontFamily: 'Roboto'),
+                          )),
                         ],
                       ),
                     ),
                     const SizedBox(height: 10),
-                    FutureBuilder<List<dynamic>>(
-                      future: _newsFuture,
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState == ConnectionState.waiting) {
-                          return const CircularProgressIndicator();
-                        } else if (snapshot.hasError) {
-                          return Text('Error: ${snapshot.error}');
-                        } else if (snapshot.hasData) {
-                          final newsList = snapshot.data;
-                          return NewsContainer(feeds: newsList);
-                        } else {
-                          return const Text('No news available.');
-                        }
-                      },
-                    ),
+                    // FutureBuilder<List<dynamic>>(
+                    //   future: _newsFuture,
+                    //   builder: (context, snapshot) {
+                    //     if (snapshot.connectionState == ConnectionState.waiting) {
+                    //       return const CircularProgressIndicator();
+                    //     } else if (snapshot.hasError) {
+                    //       return Text('Error: ${snapshot.error}');
+                    //     } else if (snapshot.hasData) {
+                    //       final newsList = snapshot.data;
+                    //       return NewsContainer(feeds: newsList);
+                    //     } else {
+                    //       return const Text('No news available.');
+                    //     }
+                    //   },
+                    // ),
                   ],
                 ),
               );
@@ -158,15 +187,33 @@ class _HomePageState extends State<HomePage> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const Text(
+                          ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              backgroundColor: const Color(0xFF3366FF)
+                            ),
+                            onPressed: () {}, 
+                            child: const Text(
                             "MARKET OVERVIEW",
-                            style: TextStyle(fontSize: 20, fontFamily: 'Roboto'),
-                          ),
+                            style: TextStyle(fontSize: 15, fontFamily: 'Roboto'),
+                          ),),
                           BlocBuilder<LoginStateBloc, LoginState>(
                             builder: ((context, state) {
                               if (state is AppStateInitial) {}
                               else if (state is AppStateLoggedIn) {
-                                return Text(state.balance);
+                                return Row(
+                                  children: [
+                                    const Padding(
+                                      padding: EdgeInsets.fromLTRB(0, 0, 5, 0),
+                                      child: FaIcon(FontAwesomeIcons.wallet,
+                                        size: 15,
+                                      ),
+                                    ),
+                                    Text(state.balance),
+                                  ],
+                                );
                               }
                               else if (state is AppStateError){
                                 return const Text("null");
@@ -180,7 +227,7 @@ class _HomePageState extends State<HomePage> {
                     const SizedBox(height: 10),
                     Container(
                       padding: const EdgeInsets.all(10),
-                      color: Colors.grey[300],
+                      color: Colors.white,
                       height: 160,
                       child: ListView.builder(
                         scrollDirection: Axis.horizontal,
@@ -193,7 +240,7 @@ class _HomePageState extends State<HomePage> {
                                 Container(
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(50),
-                                    color: Colors.white,
+                                    color: Colors.grey,
                                   ),
                                   height: 75,
                                   width: 75,
@@ -206,35 +253,54 @@ class _HomePageState extends State<HomePage> {
                         },
                       ),
                     ),
+                    Container(
+                      padding: const EdgeInsets.all(10),
+                      color: Colors.white,
+                      height: 160,
+                      child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: 8,
+                        itemBuilder: (context, index) {
+                          return const MarketCard();
+                        },
+                      ),
+                    ),
                     const SizedBox(height: 30),
                     Container(
                       margin: const EdgeInsets.symmetric(horizontal: 10),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.start,
-                        children: const [
-                          Text(
+                        children: [
+                          ElevatedButton(onPressed: () {}, 
+                          style: ElevatedButton.styleFrom(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              backgroundColor: const Color(0xFF3366FF)
+                            ),
+                            child: const Text(
                             "NEWS HEADLINE",
-                            style: TextStyle(fontSize: 20, fontFamily: 'Roboto'),
-                          ),
+                            style: TextStyle(fontSize: 15, fontFamily: 'Roboto'),
+                          )),
                         ],
                       ),
                     ),
                     const SizedBox(height: 10),
-                    FutureBuilder<List<dynamic>>(
-                      future: _newsFuture,
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState == ConnectionState.waiting) {
-                          return const CircularProgressIndicator();
-                        } else if (snapshot.hasError) {
-                          return Text('Error: ${snapshot.error}');
-                        } else if (snapshot.hasData) {
-                          final newsList = snapshot.data;
-                          return NewsContainer(feeds: newsList);
-                        } else {
-                          return const Text('No news available.');
-                        }
-                      },
-                    ),
+                    // FutureBuilder<List<dynamic>>(
+                    //   future: _newsFuture,
+                    //   builder: (context, snapshot) {
+                    //     if (snapshot.connectionState == ConnectionState.waiting) {
+                    //       return const CircularProgressIndicator();
+                    //     } else if (snapshot.hasError) {
+                    //       return Text('Error: ${snapshot.error}');
+                    //     } else if (snapshot.hasData) {
+                    //       final newsList = snapshot.data;
+                    //       return NewsContainer(feeds: newsList);
+                    //     } else {
+                    //       return const Text('No news available.');
+                    //     }
+                    //   },
+                    // ),
                   ],
                 ),
               );
@@ -250,10 +316,18 @@ class _HomePageState extends State<HomePage> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const Text(
+                          ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              backgroundColor: const Color(0xFF3366FF),
+                            ),
+                            onPressed: () {}, 
+                            child: const Text(
                             "MARKET OVERVIEW",
-                            style: TextStyle(fontSize: 20, fontFamily: 'Roboto'),
-                          ),
+                            style: TextStyle(fontSize: 15, fontFamily: 'Roboto'),
+                          ),),
                           ElevatedButton(
                             style:  const ButtonStyle(
                               backgroundColor: MaterialStatePropertyAll<Color>(Colors.white),
@@ -268,11 +342,11 @@ class _HomePageState extends State<HomePage> {
                               Navigator.push(context, 
                                 MaterialPageRoute(
                                   builder: (context) {
-                                    return const RegisterView();
+                                    return const LoginView();
                                   })
                               );
                             }, 
-                            child: const Text("Register", style: TextStyle(color: Colors.black),)
+                            child: const Text("Log In", style: TextStyle(color: Colors.black),)
                           )
                         ],
                       ),
@@ -280,7 +354,7 @@ class _HomePageState extends State<HomePage> {
                     const SizedBox(height: 10),
                     Container(
                       padding: const EdgeInsets.all(10),
-                      color: Colors.grey[300],
+                      color: Colors.white,
                       height: 160,
                       child: ListView.builder(
                         scrollDirection: Axis.horizontal,
@@ -293,7 +367,7 @@ class _HomePageState extends State<HomePage> {
                                 Container(
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(50),
-                                    color: Colors.white,
+                                    color: Colors.grey,
                                   ),
                                   height: 75,
                                   width: 75,
@@ -306,16 +380,35 @@ class _HomePageState extends State<HomePage> {
                         },
                       ),
                     ),
+                    Container(
+                      padding: const EdgeInsets.all(10),
+                      color: Colors.white,
+                      height: 160,
+                      child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: 8,
+                        itemBuilder: (context, index) {
+                          return const MarketCard();
+                        },
+                      ),
+                    ),
                     const SizedBox(height: 30),
                     Container(
                       margin: const EdgeInsets.symmetric(horizontal: 10),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.start,
-                        children: const [
-                          Text(
+                        children: [
+                          ElevatedButton(onPressed: () {}, 
+                          style: ElevatedButton.styleFrom(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              backgroundColor: const Color(0xFF3366FF)
+                            ),
+                            child: const Text(
                             "NEWS HEADLINE",
-                            style: TextStyle(fontSize: 20, fontFamily: 'Roboto'),
-                          ),
+                            style: TextStyle(fontSize: 15, fontFamily: 'Roboto'),
+                          )),
                         ],
                       ),
                     ),
