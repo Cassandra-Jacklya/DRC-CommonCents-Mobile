@@ -36,7 +36,8 @@ class _SimulationPageState extends State<SimulationPage> {
     return Scaffold(
       appBar: const CustomAppBar(
         title: "Trading Simulation",
-        logo: "assets/images/commoncents-logo.png"
+        logo: "assets/images/commoncents-logo.png",
+        hasBell: true,
       ),
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,

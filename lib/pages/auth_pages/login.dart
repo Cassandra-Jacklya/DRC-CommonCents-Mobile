@@ -1,10 +1,15 @@
 import 'package:commoncents/cubit/login_cubit.dart';
 import 'package:commoncents/firebase_options.dart';
 import 'package:commoncents/main.dart';
+import 'package:commoncents/pages/auth_pages/register.dart';
 import 'package:commoncents/pages/homepage.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:iconsax/iconsax.dart';
+import 'dart:math' as math;
+
+import '../../components/appbar.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
@@ -13,11 +18,13 @@ class LoginView extends StatefulWidget {
   State<LoginView> createState() => _LoginViewState();
 }
 
-class _LoginViewState extends State<LoginView> {
+class _LoginViewState extends State<LoginView> with SingleTickerProviderStateMixin {
 
+  bool viewPass = false;
   late final TextEditingController _email;
   late final TextEditingController _password;
   late final Future<FirebaseApp> _firebaseInitialization;
+  late final AnimationController _controller = AnimationController(vsync: this, duration: const Duration(seconds: 3))..repeat();
 
   Future<FirebaseApp> initializeFirebase() async {
     await Firebase.initializeApp(
@@ -39,59 +46,96 @@ class _LoginViewState extends State<LoginView> {
   void dispose() {
     _email.dispose();
     _password.dispose();
+    _controller.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Log In"),
-      ),
+      appBar: const CustomAppBar(title: "Log In", logo: "", hasBell: false,),
       body: FutureBuilder(
         future: _firebaseInitialization,
         builder: (context, snapshot) {
           switch (snapshot.connectionState) {
             case ConnectionState.done:
-              return Padding(
-                padding: const EdgeInsets.all(20.0),
+              return SingleChildScrollView(
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.all(4.0),
-                      child: TextField(
-                        controller: _email,
-                        enableSuggestions: false,
-                        autocorrect: false,
-                        keyboardType:  TextInputType.emailAddress,
-                        decoration: InputDecoration(
-                          hintText: "Email address",
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: const BorderSide(
-                              width: 2,
-                              color: Color.fromRGBO(95, 95, 95, 100)
+                    SizedBox(
+                      child: Padding(
+                        padding: const EdgeInsets.fromLTRB(0, 100, 0, 0),
+                        child: AnimatedBuilder(
+                          animation: _controller,
+                          builder: (_, child) { 
+                            return Transform.rotate(
+                              angle: _controller.value * 2 * math.pi,
+                              child: child
+                            );
+                          },
+                          child: const Image(
+                            image: AssetImage("assets/images/commoncents-logo.png"),
+                            height: 100,
+                            width: 100,
                             ),
-                            borderRadius: BorderRadius.circular(10.0)
-                          )
+                        ),
+                      ),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: const [
+                        Text("C", style: TextStyle(color: Color(0xFF0E34CC), fontWeight: FontWeight.bold),),
+                        Text("ommon"),
+                        Text("C", style: TextStyle(fontWeight: FontWeight.bold),),
+                        Text("ents")
+                      ],
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(0, 80, 0, 0),
+                      child: SizedBox(
+                        height: 70,
+                        width: 311,
+                        child: TextFormField(
+                          controller: _email,
+                          enableSuggestions: false,
+                          autocorrect: false,
+                          keyboardType: TextInputType.emailAddress,
+                          decoration: InputDecoration(
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide: const BorderSide(color: Color(0xFF5F5F5F))
+                            ),
+                            labelText: 'Email',
+                          ),
                         ),
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.all(4.0),
-                      child: TextField(
-                        controller: _password,
-                        obscureText: true,
-                        enableSuggestions: false,
-                        autocorrect: false,
-                        decoration: InputDecoration(
-                          hintText: "Enter password",
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: const BorderSide(
-                              width: 2,
-                              color: Color.fromRGBO(95, 95, 95, 100)
+                      padding: const EdgeInsets.fromLTRB(0, 0, 0, 85),
+                      child: SizedBox(
+                        height: 70,
+                        width: 311,
+                        child: TextFormField(
+                          controller: _password,
+                          enableSuggestions: false,
+                          autocorrect: false,
+                          obscureText: true,
+                          decoration: InputDecoration(
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide: const BorderSide(color: Color(0xFF5F5F5F))
                             ),
-                            borderRadius: BorderRadius.circular(10.0)
-                          )
+                            labelText: 'Password',             
+                            suffixIcon: GestureDetector(
+                              child: viewPass ? const Icon(Iconsax.eye) : const Icon(Iconsax.eye_slash),
+                              onTap: () {
+                                setState(() {
+                                  viewPass = !viewPass;
+                                });
+                              },
+                            ), //Icon at the end
+                          ),
                         ),
                       ),
                     ),
@@ -130,12 +174,13 @@ class _LoginViewState extends State<LoginView> {
                       builder: (context, state) {
                         return Padding(
                         padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
-                        child: ElevatedButton(
+                        child:ElevatedButton(
                           style: ButtonStyle(
+                            backgroundColor: MaterialStateProperty.all<Color>(const Color(0xFF3366FF)),
                             shape: MaterialStateProperty.all<
                                 RoundedRectangleBorder>(
                               RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(18.0),
+                                borderRadius: BorderRadius.circular(5.0),
                               ),
                             ),
                           ),
@@ -155,10 +200,38 @@ class _LoginViewState extends State<LoginView> {
                         ),
                       );
                       },
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(0, 15, 0, 0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          const Text(
+                            "Don't have an account? ",
+                            style: TextStyle(
+                              fontSize: 13
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(builder: (context) => const RegisterView()),
+                              );
+                            },
+                            child: const Text("Sign Up",
+                              style: TextStyle(fontSize: 13,
+                                color: Color(0XFF3366FF),
+                                decoration: TextDecoration.underline
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     )
                   ],
                 ),
-                
               );
               default:
                 return const CircularProgressIndicator();

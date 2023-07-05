@@ -6,8 +6,9 @@ import 'package:iconsax/iconsax.dart';
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
   final String logo;
+  final bool hasBell;
 
-  const CustomAppBar({super.key, required this.title, required this.logo});
+  const CustomAppBar({super.key, required this.title, required this.logo, required this.hasBell});
 
   @override
   Widget build(BuildContext context) {
@@ -41,17 +42,20 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           ],
         ),
         actions: [
-          IconButton(
-            color: Colors.white,
-            padding: const EdgeInsets.only(top: 5, right: 20),
-            iconSize: 25,
-            icon: const Icon(Iconsax.notification),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const NotificationPage()),
-              );
-            },
+          Visibility(
+            visible: hasBell ? true : false,
+            child: IconButton(
+              color: Colors.white,
+              padding: const EdgeInsets.only(top: 5, right: 20),
+              iconSize: 25,
+              icon: const Icon(Iconsax.notification),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const NotificationPage()),
+                );
+              },
+            ),
           ),
         ],
         backgroundColor: const Color(0XFF3366FF),

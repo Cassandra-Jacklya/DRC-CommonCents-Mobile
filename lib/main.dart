@@ -1,5 +1,3 @@
-import 'package:commoncents/components/appbar.dart';
-import 'package:commoncents/components/navbar.dart';
 import 'package:commoncents/cubit/candlestick_cubit.dart';
 import 'package:commoncents/cubit/news_tabbar_cubit.dart';
 import 'package:commoncents/cubit/numberpicker_cubit.dart';
@@ -8,8 +6,6 @@ import 'package:commoncents/cubit/stake_payout_cubit.dart';
 import 'package:commoncents/cubit/stock_data_cubit.dart';
 import 'package:commoncents/cubit/ticks_cubit.dart';
 import 'package:commoncents/firebase_options.dart';
-import 'package:commoncents/pages/auth_pages/login.dart';
-import 'package:commoncents/pages/auth_pages/register.dart';
 import 'package:commoncents/pages/onboarding.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';

@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:iconsax/iconsax.dart';
 import '../../cubit/register_cubit.dart';
 import '../../firebase_options.dart';
 import 'login.dart';
@@ -18,8 +19,11 @@ class RegisterView extends StatefulWidget {
 }
 
 class _RegisterViewState extends State<RegisterView> with SingleTickerProviderStateMixin {
+  bool viewPass = false;
+  bool viewConfirmPass = false;
   late final TextEditingController _email;
   late final TextEditingController _password;
+  late final TextEditingController _confirmPassword;
   late final Future<FirebaseApp> _firebaseInitialization;
   late final AnimationController _controller = AnimationController(vsync: this, duration: const Duration(seconds: 3))..repeat();
 
@@ -46,6 +50,7 @@ class _RegisterViewState extends State<RegisterView> with SingleTickerProviderSt
   void initState() {
     _email = TextEditingController();
     _password = TextEditingController();
+    _confirmPassword = TextEditingController();
     _firebaseInitialization = initializeFirebase();
     super.initState();
   }
@@ -55,6 +60,7 @@ class _RegisterViewState extends State<RegisterView> with SingleTickerProviderSt
   void dispose() {
     _email.dispose();
     _password.dispose();
+    _confirmPassword.dispose();
     _controller.dispose();
     super.dispose();
   }
@@ -62,7 +68,7 @@ class _RegisterViewState extends State<RegisterView> with SingleTickerProviderSt
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CustomAppBar(title: "Create an Account", logo: ""),
+      appBar: const CustomAppBar(title: "Create an Account", logo: "", hasBell: false,),
       body: FutureBuilder<FirebaseApp>(
         future: _firebaseInitialization,
         builder: (context, snapshot) {
@@ -120,13 +126,38 @@ class _RegisterViewState extends State<RegisterView> with SingleTickerProviderSt
                         ),
                       ),
                     ),
+                    SizedBox(
+                      height: 70,
+                      width: 311,
+                      child: TextFormField(
+                        controller: _password,
+                        enableSuggestions: false,
+                        autocorrect: false,
+                        obscureText: true,
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: const BorderSide(color: Color(0xFF5F5F5F))
+                          ),
+                          labelText: 'Password',             
+                          suffixIcon: GestureDetector(
+                            child: viewPass ? const Icon(Iconsax.eye) : const Icon(Iconsax.eye_slash),
+                            onTap: () {
+                              setState(() {
+                                viewPass = !viewPass;
+                              });
+                            },
+                          ), //Icon at the end
+                        ),
+                      ),
+                    ),
                     Padding(
                       padding: const EdgeInsets.fromLTRB(0, 0, 0, 45),
                       child: SizedBox(
                         height: 70,
                         width: 311,
                         child: TextFormField(
-                          controller: _password,
+                          controller: _confirmPassword,
                           enableSuggestions: false,
                           autocorrect: false,
                           obscureText: true,
@@ -135,7 +166,15 @@ class _RegisterViewState extends State<RegisterView> with SingleTickerProviderSt
                               borderRadius: BorderRadius.circular(10),
                               borderSide: const BorderSide(color: Color(0xFF5F5F5F))
                             ),
-                            labelText: 'Password',
+                            labelText: 'Confirm Password',
+                            suffixIcon: GestureDetector(
+                            child: viewConfirmPass ? const Icon(Iconsax.eye) : const Icon(Iconsax.eye_slash),
+                            onTap: () {
+                              setState(() {
+                                viewConfirmPass = !viewConfirmPass;
+                              });
+                            },
+                          ),
                           ),
                         ),
                       ),
@@ -222,8 +261,37 @@ class _RegisterViewState extends State<RegisterView> with SingleTickerProviderSt
                           ),
                         ),
                       );
+
                     }),
-                    
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(0, 15, 0, 0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          const Text(
+                            "Have an account? ",
+                            style: TextStyle(
+                              fontSize: 13
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(builder: (context) => const LoginView()),
+                              );
+                            },
+                            child: const Text("Log In",
+                              style: TextStyle(fontSize: 13,
+                                color: Color(0XFF3366FF),
+                                decoration: TextDecoration.underline
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
                   ],
                 ),
               );

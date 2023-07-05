@@ -68,7 +68,8 @@ class ProfilePage extends StatelessWidget {
     return Scaffold(
       appBar: const CustomAppBar(
         title: "Profile",
-        logo: "assets/images/commoncents-logo.png"
+        logo: "assets/images/commoncents-logo.png",
+        hasBell: true,
       ),
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,

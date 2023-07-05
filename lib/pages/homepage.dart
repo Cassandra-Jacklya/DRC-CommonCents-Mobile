@@ -40,7 +40,8 @@ class _HomePageState extends State<HomePage> {
       child: Scaffold(
       appBar: const CustomAppBar(
         title: "CommonCents",
-        logo: "assets/images/commoncents-logo.png"
+        logo: "assets/images/commoncents-logo.png",
+        hasBell: true,
       ),
       body: FutureBuilder(
         future:  Firebase.initializeApp(
