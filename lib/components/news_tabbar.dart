@@ -86,7 +86,7 @@ class _NewsTabBarState extends State<NewsTabBar>
                 decoration: BoxDecoration(
                   border: Border(
                     bottom: BorderSide(
-                      color: isSelected ? Colors.black : Colors.grey,
+                      color: isSelected ? Colors.black : const Color(0xFFD9D9D9),
                       style: BorderStyle.solid,
                       width: isSelected ? 3 + 5 * _animation.value : 1,
                     ),
@@ -99,6 +99,8 @@ class _NewsTabBarState extends State<NewsTabBar>
                     topic,
                     style: TextStyle(
                       color: isSelected ? Colors.black : Colors.grey,
+                      fontSize: 15,
+                      fontFamily: 'Roboto'
                     ),
                   ),
                 ),
