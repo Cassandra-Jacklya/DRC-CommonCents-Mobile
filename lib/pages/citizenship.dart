@@ -8,11 +8,11 @@ class Citizenship extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.grey[300],
+        backgroundColor: Color(0XFF3366FF),
         automaticallyImplyLeading: false,
         title: Text(
           "Choose Citizenship",
-          style: Theme.of(context).textTheme.displayLarge,
+          style: TextStyle(fontSize:Theme.of(context).textTheme.displayLarge!.fontSize ,color: Colors.white)
         ),
         actions: [
           IconButton(
@@ -20,7 +20,7 @@ class Citizenship extends StatelessWidget {
             onPressed: () {
               Navigator.pop(context);
             },
-            icon: const Icon(Iconsax.close_circle),
+            icon: const SizedBox(height: 80, width: 80, child: Icon(Iconsax.close_circle)),
           ),
         ],
       ),
@@ -37,7 +37,7 @@ class Citizenship extends StatelessWidget {
                 Expanded(
                   child: Container(
                     height: 70,
-                    color: Colors.grey[500],
+                    color: Colors.white,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
@@ -46,7 +46,7 @@ class Citizenship extends StatelessWidget {
                           height: 20,
                           width: 20,
                           decoration: const BoxDecoration(
-                            border: Border(bottom: BorderSide(color: Colors.black)),
+                            border: Border(bottom: BorderSide(width: 2,color: Colors.black)),
                             shape: BoxShape.circle,
                             color: Colors.white,
                           ),

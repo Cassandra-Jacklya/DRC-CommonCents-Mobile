@@ -167,60 +167,9 @@ class _NewsPageState extends State<NewsPage> {
                   return Text('Error: ${snapshot.error}');
                 } else if (snapshot.hasData) {
                   _NewsData = snapshot.data as List<dynamic>;
-                  // print("News data: ${_NewsData.length}");
                   if (_textEditingController.text.isNotEmpty) {
-                    // print("Before: ${_constantData.length}");
                     final filteredList =
                         _applyFilter(_NewsData, _textEditingController.text);
-                    // print("Const: ${_constantData.length}");
-                    // return ListView.builder(
-                    //     controller: controller,
-                    //     itemCount: filteredList.length + 1,
-                    //     itemBuilder: (context, index) {
-                    //       if (index < filteredList.length) {
-                    //         final news = filteredList[index];
-                    //         return Container(
-                    //           margin: const EdgeInsets.all(10),
-                    //           height: 100,
-                    //           color: Colors.grey[300],
-                    //           padding: const EdgeInsets.all(10),
-                    //           child: Row(
-                    //             children: [
-                    //               GestureDetector(
-                    //                 onTap: () async {
-                    //                   Uri url = Uri.parse(news['url']);
-                    //                   launchUrl(url);
-                    //                 },
-                    //                 child: Container(
-                    //                   color: Colors.white,
-                    //                   height: 80,
-                    //                   width: 80,
-                    //                   child: Image.network(
-                    //                     (news['banner_image'] != null &&
-                    //                             news['banner_image'] != "")
-                    //                         ? news['banner_image']
-                    //                         : 'https://static.vecteezy.com/system/resources/previews/000/440/213/original/question-mark-vector-icon.jpg',
-                    //                     fit: BoxFit.cover,
-                    //                   ),
-                    //                 ),
-                    //               ),
-                    //               const SizedBox(width: 10),
-                    //               Expanded(
-                    //                 child: Text(
-                    //                   news[
-                    //                       'title'], // Update this with the appropriate key for the news title
-                    //                   style: TextStyle(
-                    //                     color: Theme.of(context).primaryColor,
-                    //                     fontSize: 16,
-                    //                     fontWeight: FontWeight.bold,
-                    //                   ),
-                    //                 ),
-                    //               ),
-                    //             ],
-                    //           ),
-                    //         );
-                    //       }
-                    //     });
                     return NewsContainer(feeds: filteredList, scrollable: false);
                   } else if (_textEditingController.text.isEmpty) {
                     bool once = true;
@@ -233,67 +182,6 @@ class _NewsPageState extends State<NewsPage> {
                               .take(takeCount));
                       once =!once;
                     }
-
-                    print(_OriginalNewsList.length);
-                    // return ListView.builder(
-                    //   controller: controller,
-                    //   itemCount: _OriginalNewsList.length + 1,
-                    //   itemBuilder: (context, index) {
-                    //     if (index < _OriginalNewsList.length) {
-                    //       final news = _OriginalNewsList[index];
-                    //       return Container(
-                    //         margin: const EdgeInsets.all(10),
-                    //         height: 100,
-                    //         color: Colors.grey[300],
-                    //         padding: const EdgeInsets.all(10),
-                    //         child: Row(
-                    //           children: [
-                    //             GestureDetector(
-                    //               onTap: () async {
-                    //                 Uri url = Uri.parse(news['url']);
-                    //                 launchUrl(url);
-                    //               },
-                    //               child: Container(
-                    //                 color: Colors.white,
-                    //                 height: 80,
-                    //                 width: 80,
-                    //                 child: Image.network(
-                    //                   (news['banner_image'] != null &&
-                    //                           news['banner_image'] != "")
-                    //                       ? news['banner_image']
-                    //                       : 'https://static.vecteezy.com/system/resources/previews/000/440/213/original/question-mark-vector-icon.jpg',
-                    //                   fit: BoxFit.cover,
-                    //                 ),
-                    //               ),
-                    //             ),
-                    //             const SizedBox(width: 10),
-                    //             Expanded(
-                    //               child: Text(
-                    //                 news[
-                    //                     'title'], // Update this with the appropriate key for the news title
-                    //                 style: TextStyle(
-                    //                   color: Theme.of(context).primaryColor,
-                    //                   fontSize: 16,
-                    //                   fontWeight: FontWeight.bold,
-                    //                 ),
-                    //               ),
-                    //             ),
-                    //           ],
-                    //         ),
-                    //       );
-                    //     } else {
-                    //       return isLoading
-                    //           ? const SizedBox(
-                    //               height: 100,
-                    //               width: 100,
-                    //               child: CircularProgressIndicator())
-                    //           : Container(
-                    //               color: Colors.red,
-                    //               child: const Text("No News Available"),
-                    //             );
-                    //     }
-                    //   },
-                    // );
                     return NewsContainer(feeds: _OriginalNewsList, scrollable: true);
                   }
                 }

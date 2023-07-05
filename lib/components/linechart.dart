@@ -18,7 +18,7 @@ class MyLineChart extends StatefulWidget {
 class _LineChartState extends State<MyLineChart> {
   late StockDataCubit stockDataCubit;
   List<FlSpot> spots = [];
-  int initial = 950;
+  int initial = 50;
   Widget bottomTitleWidgets(double value, TitleMeta meta, double chartWidth) {
     final style = TextStyle(
       fontWeight: FontWeight.bold,
@@ -63,7 +63,7 @@ class _LineChartState extends State<MyLineChart> {
                 width: MediaQuery.of(context).size.width,
                 child: BlocBuilder<StockDataCubit, List<Map<String, dynamic>>>(
                   builder: (context, stockData) {
-                    if (stockData.length >= 900) {
+                    if (stockData.length >= 100) {
                       spots.clear();
                       for (var entry in stockData) {
                         double x = entry['epoch'];
@@ -71,8 +71,8 @@ class _LineChartState extends State<MyLineChart> {
                         spots.add(FlSpot(x, y));
                       }
 
-                      if (stockData.length > 956) {
-                        stockData.removeRange(0, stockData.length - 956);
+                      if (stockData.length > 100) {
+                        stockData.removeRange(0, stockData.length - 100);
                       }
 
 

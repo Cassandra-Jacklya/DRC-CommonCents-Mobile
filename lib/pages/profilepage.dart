@@ -1,21 +1,57 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:commoncents/components/popup.dart';
 import 'package:commoncents/pages/myaccount.dart';
 import 'package:commoncents/pages/security.dart';
 import 'package:commoncents/pages/leaderboard.dart';
 import 'package:commoncents/pages/recentTrades.dart';
 import 'package:commoncents/pages/help_support.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 
 import '../components/appbar.dart';
 import '../components/navbar.dart';
 
-class ProfilePage extends StatelessWidget {
-  const ProfilePage({Key? key}) : super(key: key);
+class ProfilePage extends StatefulWidget {
+  _ProfilePageState createState() => _ProfilePageState();
+}
+
+class _ProfilePageState extends State<ProfilePage> {
+  String photoUrl = ''; // Initialize with an empty string
+  String displayName = ''; // Initialize with an empty string
+  double balance = 0.0; // Initialize with 0.0
+
+  @override
+  void initState() {
+    super.initState();
+    loadData();
+  }
+
+  Future<void> loadData() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      final docSnapshot = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .get();
+
+      if (docSnapshot.exists) {
+        final data = docSnapshot.data();
+        if (data != null && data.containsKey('photoURL')) {
+          setState(() {
+            photoUrl = data['photoURL'] ?? ''; // Get the photoURL if it exists
+            displayName = data['displayName'] ??
+                'nope'; // Get the displayName if it exists
+            balance = data['balance'] ?? 0.0; // Get the balance if it exists
+          });
+        }
+      }
+    }
+  }
 
   Widget buildContainer({
     required String title,
-    required Widget icon,
+    required Widget? icon,
     required VoidCallback onPressed,
     bool showBottomBorder = true,
   }) {
@@ -26,7 +62,7 @@ class ProfilePage extends StatelessWidget {
         height: 80,
         padding: const EdgeInsets.all(10),
         decoration: BoxDecoration(
-          color: Colors.grey[400],
+
           border: showBottomBorder
               ? const Border(
                   bottom: BorderSide(
@@ -40,8 +76,8 @@ class ProfilePage extends StatelessWidget {
           children: [
             Container(
               margin: const EdgeInsets.only(right: 20),
-              height: 50,
-              width: 50,
+              height: icon == null ? 0 : 50,
+              width: icon == null ? 0 : 50,
               color: Colors.transparent,
               child: icon,
             ),
@@ -65,6 +101,11 @@ class ProfilePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
+    // User? user = FirebaseAuth.instance.currentUser;
+    // CollectionReference collectionReference =
+    //     firebaseFirestore.collection('users');
+
     return Scaffold(
       appBar: const CustomAppBar(
         title: "Profile",
@@ -83,20 +124,43 @@ class ProfilePage extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Container(
-                      margin: const EdgeInsets.only(right: 10),
-                      height: 80,
-                      width: 80,
-                      decoration: BoxDecoration(
-                        color: Colors.grey[400],
-                        borderRadius: BorderRadius.circular(50),
+                    Hero(
+                      tag: 'test',
+                      child: Container(
+                        margin: const EdgeInsets.only(right: 10),
+                        height: 80,
+                        width: 80,
+                        decoration: BoxDecoration(
+                          color: Colors.grey[400],
+                          borderRadius: BorderRadius.circular(50),
+                        ),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(50),
+                          child: photoUrl.isNotEmpty
+                              ? Image.network(photoUrl, fit: BoxFit.cover)
+                              : Image.network(
+                                  'https://static01.nyt.com/newsgraphics/2019/08/01/candidate-pages/3b31eab6a3fd70444f76f133924ae4317567b2b5/trump-circle.png',
+                                  fit: BoxFit.cover,
+                                ),
+                        ),
                       ),
                     ),
                     Container(
                       margin: const EdgeInsets.only(top: 5),
                       height: 70,
                       width: 250,
-                      color: Colors.grey[400],
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            displayName,
+                            style: const TextStyle(fontFamily: 'Roboto'),
+                          ),
+                          Text(balance.toString(),
+                              style: const TextStyle(fontFamily: "Roboto"))
+                        ],
+                      ),
                     ),
                   ],
                 ),
@@ -109,59 +173,58 @@ class ProfilePage extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text("GENERAL", style: TextStyle(fontSize: 20)),
                     const SizedBox(height: 10),
                     Column(
                       children: [
                         buildContainer(
                           title: "My Account",
-                          icon: Container(
-                            color: Colors.white,
-                          ),
+                          icon: null,
                           onPressed: () {
                             Navigator.push(
-                              context, 
-                              MaterialPageRoute(builder: (context) => const MyAccount())
-                            );
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => MyAccount(displayName: displayName,photoUrl: photoUrl,balance: balance,)));
                           },
                         ),
                         buildContainer(
                           title: "Security",
-                          icon: Container(
-                            color: Colors.white,
-                          ),
+                          icon: null,
                           onPressed: () {
                             Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (context) => const Security())
-                            );
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => Security(displayName: displayName,)));
                           },
                         ),
                         buildContainer(
                           title: "Leaderboard",
-                          icon: Container(
-                            color: Colors.white,
-                          ),
+                          icon: null,
                           onPressed: () {
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => const Leaderboard()));
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const Leaderboard()));
                           },
                         ),
                         buildContainer(
                           title: "Recent Trades",
-                          icon: Container(
-                            color: Colors.white,
-                          ),
+                          icon: null,
                           onPressed: () {
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => const RecentTrades()));
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        const RecentTrades()));
                           },
                         ),
                         buildContainer(
                           title: "Help and Support",
-                          icon: Container(
-                            color: Colors.white,
-                          ),
+                          icon:null,
                           onPressed: () {
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => const HelpSupport()));
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const HelpSupport()));
                           },
                           showBottomBorder: false,
                         ),
@@ -170,10 +233,10 @@ class ProfilePage extends StatelessWidget {
                           icon: const Icon(Iconsax.logout),
                           onPressed: () {
                             showDialog(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  return const LogOut();
-                                },
+                              context: context,
+                              builder: (BuildContext context) {
+                                return const LogOut();
+                              },
                             );
                           },
                           showBottomBorder: false,
@@ -187,7 +250,9 @@ class ProfilePage extends StatelessWidget {
           ),
         ),
       ),
-      bottomNavigationBar: const BottomNavBar(index: 4,),
+      bottomNavigationBar: const BottomNavBar(
+        index: 4,
+      ),
     );
   }
 }

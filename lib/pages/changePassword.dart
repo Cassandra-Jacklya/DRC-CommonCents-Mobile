@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 
 class ChangePassword extends StatelessWidget {
+  TextEditingController textEditingController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
           shadowColor: Colors.transparent,
           toolbarHeight: 60,
-          backgroundColor: Colors.grey[300],
+          backgroundColor: Color(0XFF3366FF),
           title: const Text("Change Password"),
           foregroundColor: Colors.black,
         ),
@@ -16,34 +17,30 @@ class ChangePassword extends StatelessWidget {
             Container(
               width: MediaQuery.of(context).size.width * 0.9,
               margin: const EdgeInsets.only(top: 40, bottom: 30),
-              child: TextField(
-                obscureText: true,
+              child: TextFormField(
+                controller: textEditingController,
                 decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: 'Password',
-                  suffixIcon: IconButton(
-                    icon: Icon(Icons.visibility),
-                    onPressed: () {
-                      // Handle the visibility toggle
-                    },
-                  ),
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide: const BorderSide(color: Color(0xFF5F5F5F))),
+                  labelText: 'New Password',
+                  // hintText: 'ben',
+                  suffixIcon: const Icon(Icons.person),
                 ),
               ),
             ),
             Container(
               width: MediaQuery.of(context).size.width * 0.9,
               margin: const EdgeInsets.only(bottom: 30),
-              child: TextField(
-                obscureText: true,
+              child: TextFormField(
+                controller: textEditingController,
                 decoration: InputDecoration(
-                  border: const OutlineInputBorder(),
-                  labelText: 'Password',
-                  suffixIcon: IconButton(
-                    icon: const Icon(Icons.visibility),
-                    onPressed: () {
-                      // Handle the visibility toggle
-                    },
-                  ),
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide: const BorderSide(color: Color(0xFF5F5F5F))),
+                  labelText: 'Confirm Password',
+                  // hintText: 'ben',
+                  suffixIcon: const Icon(Icons.person),
                 ),
               ),
             ),
@@ -53,12 +50,14 @@ class ChangePassword extends StatelessWidget {
                 onTap: () {
                   Navigator.of(context).pop();
                 },
-                child: Container( 
+                child: Container(
+                  decoration: BoxDecoration(
+                      color: Color(0XFF3366FF),
+                      borderRadius: BorderRadius.circular(10),),
                   margin: const EdgeInsets.only(top: 10, right: 30),
-                  color: Colors.grey[300],
                   height: 50,
                   width: MediaQuery.of(context).size.width * 0.3,
-                  child: const Center(child: Text("Save")),
+                  child: const Center(child: Text(style: TextStyle(color: Colors.white),"Save")),
                 ),
               ),
             ),

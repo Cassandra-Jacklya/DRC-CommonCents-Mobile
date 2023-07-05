@@ -50,6 +50,7 @@ class _CandleStickChartState extends State<CandleStickChart> {
                       double close = data['close'];
                       DateTime time =
                           DateTime.fromMillisecondsSinceEpoch(x.toInt());
+  
                       return ChartData(
                         time: time,
                         open: open,
@@ -64,6 +65,8 @@ class _CandleStickChartState extends State<CandleStickChart> {
                         enablePinching: true,
                         enablePanning: true,
                         zoomMode: ZoomMode.xy,
+                        enableSelectionZooming: true,
+                        maximumZoomLevel: 0.1,
                       ),
                       series: <CandleSeries>[
                         CandleSeries<ChartData, DateTime>(
@@ -74,9 +77,11 @@ class _CandleStickChartState extends State<CandleStickChart> {
                           highValueMapper: (ChartData data, _) => data.high,
                           openValueMapper: (ChartData data, _) => data.open,
                           closeValueMapper: (ChartData data, _) => data.close,
+                          enableSolidCandles: true,
                         ),
                       ],
                       primaryXAxis: DateTimeAxis(
+                        autoScrollingMode: AutoScrollingMode.start,
                       ),
                       primaryYAxis: NumericAxis(
                         edgeLabelPlacement: EdgeLabelPlacement.shift,

@@ -19,15 +19,15 @@ const String appId = '1089';
 final Uri url = Uri.parse(
     'wss://ws.binaryws.com/websockets/v3?app_id=$appId&l=EN&brand=deriv');
 
-final tickStream = {"ticks": "R_50", "subscribe": 1};
+final tickStream = {"ticks": "R_10", "subscribe": 1};
 
 final unsubscribeRequest = {"forget_all": "ticks"};
 
 // ignore: non_constant_identifier_names
 final TicksHistoryRequest = {
-  'ticks_history': 'R_50',
+  'ticks_history': 'R_10',
   'adjust_start_time': 1,
-  'count': 956, //24 hours
+  'count': 100, //24 hours
   'end': 'latest',
   'start': 1,
   'style': 'candles',
@@ -123,7 +123,7 @@ Future<void> handleResponse(
   if (decodedData['msg_type'] == 'proposal') {
     handleBuyResponse(decodedData);
   } else if (decodedData['msg_type'] == 'ohlc') {
-    //stream candles data
+    // Stream candles data
     final ohlc = decodedData['ohlc'];
     if (ohlc != null) {
       final double open = double.parse(ohlc['open']);
@@ -131,18 +131,34 @@ Future<void> handleResponse(
       final double low = double.parse(ohlc['low']);
       final double close = double.parse(ohlc['close']);
       final double time = ohlc['open_time'].toDouble();
-      // DateTime utcTime =
-      //     DateTime.fromMillisecondsSinceEpoch(time * 1000, isUtc: true);
-      // double utcTimeDouble = utcTime.millisecondsSinceEpoch.toDouble() / 1000;
 
-      // Append the latest tick price and time to the ticks list
-      candles.add({
-        'high': high,
-        'open': open,
-        'close': close,
-        'low': low,
-        'epoch': time
-      });
+      if (candles.isNotEmpty) {
+        final lastItem = candles.last;
+        final double lastEpoch = lastItem['epoch'];
+
+        if (time == lastEpoch) {
+          lastItem['high'] = high;
+          lastItem['low'] = low;
+          lastItem['close'] = close;
+          // lastItem['open'] = open;
+        } else {
+          candles.add({
+            'high': high,
+            'open': open,
+            'close': close,
+            'low': low,
+            'epoch': time,
+          });
+        }
+      } else {
+        candles.add({
+          'high': high,
+          'open': open,
+          'close': close,
+          'low': low,
+          'epoch': time,
+        });
+      }
 
       final candleStickData = BlocProvider.of<CandlestickCubit>(context);
       candleStickData.updateCandlestickData(candles);
@@ -173,7 +189,6 @@ Future<void> handleResponse(
 
       final candleStickData = BlocProvider.of<CandlestickCubit>(context);
       candleStickData.updateCandlestickData(candles); // this is for line chart
-
     } else {
       //this is for line
       final List<dynamic> candles = decodedData['candles'];

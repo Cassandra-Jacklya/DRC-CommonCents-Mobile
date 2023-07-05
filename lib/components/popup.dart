@@ -2,6 +2,7 @@ import 'package:commoncents/main.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:commoncents/pages/changePassword.dart';
+import 'package:iconsax/iconsax.dart';
 
 class AccountSettings extends StatelessWidget {
   const AccountSettings({super.key});
@@ -58,9 +59,8 @@ class AccountSettings extends StatelessWidget {
               height: 50,
               width: 120,
               decoration: BoxDecoration(
-                color: Colors.grey[400],
-                borderRadius: BorderRadius.circular(10),
-              ),
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(color: Color(0xFF5F5F5F))),
               child: const Center(child: Text("Cancel")),
             ),
           ),
@@ -75,10 +75,11 @@ class AccountSettings extends StatelessWidget {
               height: 50,
               width: 120,
               decoration: BoxDecoration(
-                color: Colors.grey[400],
+                color: Color(0XFF3366FF),
                 borderRadius: BorderRadius.circular(10),
               ),
-              child: const Center(child: Text("Yes")),
+              child: const Center(
+                  child: Text("Yes", style: TextStyle(color: Colors.white))),
             ),
           ),
         ),
@@ -142,9 +143,9 @@ class LogOut extends StatelessWidget {
               height: 50,
               width: 120,
               decoration: BoxDecoration(
-                color: Colors.grey[400],
-                borderRadius: BorderRadius.circular(10),
-              ),
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(color: Color(0xFF5F5F5F))),
               child: const Center(child: Text("Cancel")),
             ),
           ),
@@ -154,22 +155,23 @@ class LogOut extends StatelessWidget {
           child: GestureDetector(
             onTap: () async {
               await FirebaseAuth.instance.signOut();
-                if (context.mounted) {
-                  Navigator.push(
+              if (context.mounted) {
+                Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => const MainApp(),
-                  ));
-                }
+                      builder: (context) => const MainApp(),
+                    ));
+              }
             },
             child: Container(
               height: 50,
               width: 120,
               decoration: BoxDecoration(
-                color: Colors.grey[400],
+                color: Color(0XFF3366FF),
                 borderRadius: BorderRadius.circular(10),
               ),
-              child: const Center(child: Text("Yes")),
+              child: const Center(
+                  child: Text(style: TextStyle(color: Colors.white), "Yes")),
             ),
           ),
         ),
@@ -178,8 +180,20 @@ class LogOut extends StatelessWidget {
   }
 }
 
-class Password extends StatelessWidget {
-  const Password({super.key});
+class Password extends StatefulWidget {
+  @override
+  _PasswordState createState() => _PasswordState();
+}
+
+class _PasswordState extends State<Password> {
+  TextEditingController textEditingController = TextEditingController();
+  late bool viewPass;
+
+  @override
+  void initState() {
+    super.initState();
+    viewPass = false;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -212,7 +226,7 @@ class Password extends StatelessWidget {
                       heightFactor: 0.9,
                       alignment: Alignment.center,
                       child: Text(
-                        'Enter your old password to continue',
+                        'Enter your current password',
                         textAlign: TextAlign.center,
                         style: Theme.of(context).textTheme.displayLarge!.merge(
                               const TextStyle(
@@ -226,11 +240,26 @@ class Password extends StatelessWidget {
                 ],
               ),
             ),
-            content: const TextField(
-              obscureText: true,
+            content: TextFormField(
+              controller: textEditingController,
+              enableSuggestions: false,
+              autocorrect: false,
+              obscureText: viewPass ? false : true,
               decoration: InputDecoration(
-                border: OutlineInputBorder(),
+                border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: const BorderSide(color: Color(0xFF5F5F5F))),
                 labelText: 'Password',
+                suffixIcon: GestureDetector(
+                  child: viewPass
+                      ? const Icon(Iconsax.eye)
+                      : const Icon(Iconsax.eye_slash),
+                  onTap: () {
+                    setState(() {
+                      viewPass = !viewPass;
+                    });
+                  },
+                ), //Icon at the end
               ),
             ),
             actions: [
@@ -244,8 +273,9 @@ class Password extends StatelessWidget {
                     height: 50,
                     width: 120,
                     decoration: BoxDecoration(
-                      color: Colors.grey[400],
+                      color: Colors.white,
                       borderRadius: BorderRadius.circular(10),
+                      border: Border.all(color: Colors.black)
                     ),
                     child: const Center(child: Text("Cancel")),
                   ),
@@ -265,10 +295,10 @@ class Password extends StatelessWidget {
                     height: 50,
                     width: 120,
                     decoration: BoxDecoration(
-                      color: Colors.grey[400],
+                      color: Color(0XFF3366FF),
                       borderRadius: BorderRadius.circular(10),
                     ),
-                    child: const Center(child: Text("Yes")),
+                    child: const Center(child: Text(style: TextStyle(color: Colors.white),"Yes")),
                   ),
                 ),
               ),
@@ -313,7 +343,7 @@ class TradeDetails extends StatelessWidget {
           ],
         ),
       ),
-      content: Container( 
+      content: Container(
           padding: const EdgeInsets.only(top: 10),
           child: SizedBox(
             height: MediaQuery.of(context).size.height * 0.28,
