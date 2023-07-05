@@ -76,8 +76,12 @@ class _CandleStickChartState extends State<CandleStickChart> {
                           closeValueMapper: (ChartData data, _) => data.close,
                         ),
                       ],
-                      primaryXAxis: DateTimeAxis(),
-                      primaryYAxis: NumericAxis(),
+                      primaryXAxis: DateTimeAxis(
+                      ),
+                      primaryYAxis: NumericAxis(
+                        edgeLabelPlacement: EdgeLabelPlacement.shift,
+                        opposedPosition: true,
+                      ),
                     );
                   } else {
                     return const CircularProgressIndicator();

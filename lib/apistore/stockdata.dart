@@ -38,7 +38,7 @@ final CandleTicksRequest = {
   "ticks_history": "R_50",
   "adjust_start_time": 1,
   "subscribe": 1,
-  "count": 10,
+  "count": 1,
   "end": "latest",
   "start": 1,
   "style": "candles"
@@ -82,7 +82,7 @@ Future<void> connectToWebSocket(BuildContext context, bool isCandle) async {
 
 void subscribeCandleTicks() async {
   await requestCandleHistory();
-  // await candleTicks();
+  await candleTicks();
 }
 
 Future<void> requestCandleHistory() async {
@@ -126,25 +126,26 @@ Future<void> handleResponse(
     //stream candles data
     final ohlc = decodedData['ohlc'];
     if (ohlc != null) {
-      final String open = ohlc['open'];
-      final String high = ohlc['high'];
-      final String low = ohlc['low'];
-      final String close = ohlc['close'];
-      final int time = ohlc['open_time'];
-      DateTime utcTime =
-          DateTime.fromMillisecondsSinceEpoch(time * 1000, isUtc: true);
-      double utcTimeDouble = utcTime.millisecondsSinceEpoch.toDouble() / 1000;
+      final double open = double.parse(ohlc['open']);
+      final double high = double.parse(ohlc['high']);
+      final double low = double.parse(ohlc['low']);
+      final double close = double.parse(ohlc['close']);
+      final double time = ohlc['open_time'].toDouble();
+      // DateTime utcTime =
+      //     DateTime.fromMillisecondsSinceEpoch(time * 1000, isUtc: true);
+      // double utcTimeDouble = utcTime.millisecondsSinceEpoch.toDouble() / 1000;
 
       // Append the latest tick price and time to the ticks list
       candles.add({
-        'open': open,
         'high': high,
-        'low': low,
+        'open': open,
         'close': close,
-        'time': utcTime
+        'low': low,
+        'epoch': time
       });
+
       final candleStickData = BlocProvider.of<CandlestickCubit>(context);
-      candleStickData.updateCandlestickData(candles); // this is for line chart
+      candleStickData.updateCandlestickData(candles);
     }
   } else if (decodedData['msg_type'] == 'candles') {
     //history candles data

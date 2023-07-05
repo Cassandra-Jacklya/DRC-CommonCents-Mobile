@@ -75,7 +75,6 @@ class _LineChartState extends State<MyLineChart> {
                         stockData.removeRange(0, stockData.length - 956);
                       }
 
-                      print(stockData.length);
 
                       double minClose = stockData[initial]['close'];
                       double maxClose = stockData[initial]['close'];
@@ -120,15 +119,15 @@ class _LineChartState extends State<MyLineChart> {
                               stockData.last['epoch'].toInt() * 1000,
                               isUtc: true,
                             ), // Set the maximum value of the x-axis
-                            visibleMinimum: DateTime.fromMillisecondsSinceEpoch(
-                              stockData[initial]['epoch'].toInt() * 1000,
-                              isUtc: true,
-                            ).subtract(const Duration(
-                                seconds: 10)), // Set the initial visible range
-                            visibleMaximum: DateTime.fromMillisecondsSinceEpoch(
-                              stockData.last['epoch'].toInt() * 1000,
-                              isUtc: true,
-                            ), // Display the time of the first item as axis title
+                            // visibleMinimum: DateTime.fromMillisecondsSinceEpoch(
+                            //   stockData[initial]['epoch'].toInt() * 1000,
+                            //   isUtc: true,
+                            // ).subtract(const Duration(
+                            //     seconds: 10)), // Set the initial visible range
+                            // visibleMaximum: DateTime.fromMillisecondsSinceEpoch(
+                            //   stockData.last['epoch'].toInt() * 1000,
+                            //   isUtc: true,
+                            // ), // Display the time of the first item as axis title
                           ),
                           primaryYAxis: NumericAxis(
                             edgeLabelPlacement: EdgeLabelPlacement.shift,
