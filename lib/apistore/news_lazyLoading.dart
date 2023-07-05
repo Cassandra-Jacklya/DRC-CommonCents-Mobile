@@ -14,7 +14,9 @@ Future<List<dynamic>> getLazyNews(String topic) async {
     if (response.statusCode == 200) {
       data = jsonDecode(response.body);
       final feed = data['feed'];
-      news = feed;
+      if (feed != null) {
+        news = feed;
+      }
       return news;
     } else {
       throw Exception('Failed to load data');
