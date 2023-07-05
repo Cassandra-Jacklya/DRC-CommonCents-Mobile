@@ -20,6 +20,7 @@ class _NewsPageState extends State<NewsPage> {
   final controller = ScrollController();
   final TextEditingController _textEditingController = TextEditingController();
   List<dynamic> _NewsData = [];
+  List<dynamic> _constantData = [];
   List<dynamic> _OriginalNewsList = [];
   List<dynamic> _newsList = [];
   bool isLoading = true;
@@ -44,7 +45,7 @@ class _NewsPageState extends State<NewsPage> {
 
   void _handleFilterChanged(String filterText) {
     setState(() {
-      _newsList = _applyFilter(_newsList, filterText);
+      _newsList = _applyFilter(_constantData, filterText);
     });
   }
 
@@ -75,13 +76,21 @@ class _NewsPageState extends State<NewsPage> {
 
   Future<void> fetch() async {
     final int originalNewsListLength = _OriginalNewsList.length;
-    final int takeCount =
-        originalNewsListLength < 8 ? originalNewsListLength : 8;
+    const int takeCount = 8;
+    final remainingNewsCount = _NewsData.length - originalNewsListLength;
 
-    setState(() {});
-
-    if (_OriginalNewsList.isEmpty) {
-      return;
+    if (remainingNewsCount > 0) {
+      final int newsToAddCount =
+          remainingNewsCount < takeCount ? remainingNewsCount : takeCount;
+      final newNewsList =
+          _NewsData.skip(originalNewsListLength).take(newsToAddCount).toList();
+      setState(() {
+        _OriginalNewsList.addAll(newNewsList);
+      });
+    } else {
+      setState(() {
+        isLoading = false;
+      });
     }
   }
 
@@ -156,11 +165,13 @@ class _NewsPageState extends State<NewsPage> {
                 } else if (snapshot.hasError) {
                   return Text('Error: ${snapshot.error}');
                 } else if (snapshot.hasData) {
-                  _NewsData = snapshot.data ?? []; 
-                  _OriginalNewsList = _NewsData;
+                  _NewsData = snapshot.data as List<dynamic>;
+                  // print("News data: ${_NewsData.length}");
                   if (_textEditingController.text.isNotEmpty) {
-                    final filteredList = _applyFilter(
-                        _OriginalNewsList, _textEditingController.text);
+                    // print("Before: ${_constantData.length}");
+                    final filteredList =
+                        _applyFilter(_NewsData, _textEditingController.text);
+                    // print("Const: ${_constantData.length}");
                     return ListView.builder(
                         controller: controller,
                         itemCount: filteredList.length + 1,
@@ -176,7 +187,6 @@ class _NewsPageState extends State<NewsPage> {
                                 children: [
                                   GestureDetector(
                                     onTap: () async {
-                                      print(news['url']);
                                       Uri url = Uri.parse(news['url']);
                                       launchUrl(url);
                                     },
@@ -211,75 +221,78 @@ class _NewsPageState extends State<NewsPage> {
                           }
                         });
                   } else if (_textEditingController.text.isEmpty) {
-                    final int originalNewsListLength = _OriginalNewsList.length;
-                    final int takeCount =
-                        originalNewsListLength < 8 ? originalNewsListLength : 8;
-                    _newsList
-                        .addAll(_OriginalNewsList.take(takeCount).toList());
-                    _OriginalNewsList.removeRange(0, takeCount);
+                    bool once = true;
+                    if (once) {
+                      final int originalNewsListLength =
+                          _OriginalNewsList.length;
+                      const int takeCount = 8;
+                      _OriginalNewsList.addAll(
+                          _NewsData.skip(originalNewsListLength)
+                              .take(takeCount));
+                      once =!once;
+                    }
+
+                    print(_OriginalNewsList.length);
                     return ListView.builder(
-                        controller: controller,
-                        itemCount: _newsList.length + 1,
-                        itemBuilder: (context, index) {
-                          if (index < _newsList.length) {
-                            final news = _newsList[index];
-                            return Container(
-                              margin: const EdgeInsets.all(10),
-                              height: 100,
-                              color: Colors.grey[300],
-                              padding: const EdgeInsets.all(10),
-                              child: Row(
-                                children: [
-                                  GestureDetector(
-                                    onTap: () async {
-                                      print(news['url']);
-                                      Uri url = Uri.parse(news['url']);
-                                      launchUrl(url);
-                                    },
-                                    child: Container(
-                                      color: Colors.white,
-                                      height: 80,
-                                      width: 80,
-                                      child: Image.network(
-                                        (news['banner_image'] != null &&
-                                                news['banner_image'] != "")
-                                            ? news['banner_image']
-                                            : 'https://static.vecteezy.com/system/resources/previews/000/440/213/original/question-mark-vector-icon.jpg',
-                                        fit: BoxFit.cover,
-                                      ),
+                      controller: controller,
+                      itemCount: _OriginalNewsList.length + 1,
+                      itemBuilder: (context, index) {
+                        if (index < _OriginalNewsList.length) {
+                          final news = _OriginalNewsList[index];
+                          return Container(
+                            margin: const EdgeInsets.all(10),
+                            height: 100,
+                            color: Colors.grey[300],
+                            padding: const EdgeInsets.all(10),
+                            child: Row(
+                              children: [
+                                GestureDetector(
+                                  onTap: () async {
+                                    Uri url = Uri.parse(news['url']);
+                                    launchUrl(url);
+                                  },
+                                  child: Container(
+                                    color: Colors.white,
+                                    height: 80,
+                                    width: 80,
+                                    child: Image.network(
+                                      (news['banner_image'] != null &&
+                                              news['banner_image'] != "")
+                                          ? news['banner_image']
+                                          : 'https://static.vecteezy.com/system/resources/previews/000/440/213/original/question-mark-vector-icon.jpg',
+                                      fit: BoxFit.cover,
                                     ),
                                   ),
-                                  const SizedBox(width: 10),
-                                  Expanded(
-                                    child: Text(
-                                      news[
-                                          'title'], // Update this with the appropriate key for the news title
-                                      style: TextStyle(
-                                        color: Theme.of(context).primaryColor,
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold,
-                                      ),
+                                ),
+                                const SizedBox(width: 10),
+                                Expanded(
+                                  child: Text(
+                                    news[
+                                        'title'], // Update this with the appropriate key for the news title
+                                    style: TextStyle(
+                                      color: Theme.of(context).primaryColor,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
                                     ),
                                   ),
-                                ],
-                              ),
-                            );
-                          } else if (_OriginalNewsList.isEmpty) {
-                            return Container(
-                              color: Colors.red,
-                              child: const Text("No News Available"),
-                            );
-                          } else {
-                            return isLoading
-                                ? const SizedBox(
-                                    height: 100,
-                                    width: 100,
-                                    child: CircularProgressIndicator())
-                                : Container();
-                          }
-                        },
-                        );
-                  } 
+                                ),
+                              ],
+                            ),
+                          );
+                        } else {
+                          return isLoading
+                              ? const SizedBox(
+                                  height: 100,
+                                  width: 100,
+                                  child: CircularProgressIndicator())
+                              : Container(
+                                  color: Colors.red,
+                                  child: const Text("No News Available"),
+                                );
+                        }
+                      },
+                    );
+                  }
                 }
                 return const Text('No News Available');
               },
@@ -287,7 +300,9 @@ class _NewsPageState extends State<NewsPage> {
           ),
         ],
       ),
-      bottomNavigationBar: const BottomNavBar(index: 1,),
+      bottomNavigationBar: const BottomNavBar(
+        index: 1,
+      ),
     );
   }
 }

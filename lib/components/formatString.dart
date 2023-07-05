@@ -9,7 +9,7 @@
       case 'IPO':
         return 'ipo';
       case 'Mergers & Acquisition':
-        return 'mergers_and_acquisition';
+        return 'mergers_and_acquisitions';
       case 'Financial Markets':
         return 'financial_markets';
       case 'Econ - Fiscal Policy':

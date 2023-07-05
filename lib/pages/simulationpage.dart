@@ -25,11 +25,10 @@ class _SimulationPageState extends State<SimulationPage> {
   late int currentAmount;
   bool isCandle = false;
 
-  // @override
-  // void dispose() {
-  //   closeWebSocket();
-  //   super.dispose();
-  // }
+  @override
+  void dispose() {
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
