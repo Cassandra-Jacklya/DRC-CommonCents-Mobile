@@ -27,6 +27,7 @@ class _SimulationPageState extends State<SimulationPage> {
 
   @override
   void dispose() {
+    closeWebSocket();
     super.dispose();
   }
 
