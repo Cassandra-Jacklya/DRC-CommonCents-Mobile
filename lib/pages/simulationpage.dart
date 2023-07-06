@@ -64,7 +64,6 @@ class _SimulationPageState extends State<SimulationPage> {
                           children: [
                             GestureDetector(
                               onTap: () {
-                                print("go");
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
@@ -98,7 +97,7 @@ class _SimulationPageState extends State<SimulationPage> {
                                   onPressed: () {
                                     setState(() {
                                       unsubscribe();
-                                      closeWebSocket();
+                                      // stockDataCubit.close();
                                       isCandle = !isCandle;
                                     });
                                   },
@@ -135,8 +134,13 @@ class _SimulationPageState extends State<SimulationPage> {
                                 ? CandleStickChart(
                                     isCandle: isCandle,
                                   )
-                                : MyLineChart(
-                                    isCandle: isCandle,
+                                : BlocBuilder<MarketsCubit, String>(
+                                    builder: (context, market) {
+                                      return MyLineChart(
+                                        isCandle: isCandle,
+                                        market: market,
+                                      );
+                                    },
                                   ),
                           ),
                         ),
@@ -274,37 +278,38 @@ class _SimulationPageState extends State<SimulationPage> {
                         const SizedBox(height: 10),
                         Row(
                           children: [
-                            BlocBuilder<MarketsCubit,String>(
-                              builder: (context,market) {
-                                return GestureDetector(
-                                  onTap: () {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) => Markets()));
-                                  },
-                                  child: Container(
-                                    padding: const EdgeInsets.only(left: 15),
-                                    margin: const EdgeInsets.all(10),
-                                    height: 60,
-                                    color: Colors.grey[300],
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children:  [
-                                        Text(market),
-                                        const IconButton(
-                                          onPressed: null,
-                                          icon: Icon(
-                                            Icons.keyboard_arrow_down_sharp,
-                                          ),
+                            BlocBuilder<MarketsCubit, String>(
+                                builder: (context, market) {
+                              return GestureDetector(
+                                onTap: () {
+                                  unsubscribe();
+                                  closeWebSocket();
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => Markets()));
+                                },
+                                child: Container(
+                                  padding: const EdgeInsets.only(left: 15),
+                                  margin: const EdgeInsets.all(10),
+                                  height: 60,
+                                  color: Colors.grey[300],
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(market),
+                                      const IconButton(
+                                        onPressed: null,
+                                        icon: Icon(
+                                          Icons.keyboard_arrow_down_sharp,
                                         ),
-                                      ],
-                                    ),
+                                      ),
+                                    ],
                                   ),
-                                );
-                              }
-                            ),
+                                ),
+                              );
+                            }),
                             GestureDetector(
                               child: Container(
                                 height: 60,
@@ -356,8 +361,13 @@ class _SimulationPageState extends State<SimulationPage> {
                                 ? CandleStickChart(
                                     isCandle: isCandle,
                                   )
-                                : MyLineChart(
-                                    isCandle: isCandle,
+                                : BlocBuilder<MarketsCubit, String>(
+                                    builder: (context, market) {
+                                      return MyLineChart(
+                                        isCandle: isCandle,
+                                        market: market,
+                                      );
+                                    },
                                   ),
                           ),
                         ),
@@ -558,8 +568,13 @@ class _SimulationPageState extends State<SimulationPage> {
                               ? CandleStickChart(
                                   isCandle: isCandle,
                                 )
-                              : MyLineChart(
-                                  isCandle: isCandle,
+                              : BlocBuilder<MarketsCubit, String>(
+                                  builder: (context, market) {
+                                    return MyLineChart(
+                                      isCandle: isCandle,
+                                      market: market,
+                                    );
+                                  },
                                 ),
                         ),
                       ),

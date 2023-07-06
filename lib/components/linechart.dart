@@ -1,3 +1,4 @@
+import 'package:commoncents/cubit/markets_cubit.dart';
 import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:fl_chart/fl_chart.dart';
@@ -5,11 +6,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
 import '../cubit/stock_data_cubit.dart';
 import '../apistore/stockdata.dart';
+import 'formatMarkets.dart';
 
 class MyLineChart extends StatefulWidget {
    final bool isCandle;
+   final String market;
 
-  MyLineChart({required this.isCandle, Key? key}) : super(key: key);
+  MyLineChart({required this.isCandle, required this.market, Key? key}) : super(key: key);
 
   @override
   _LineChartState createState() => _LineChartState();
@@ -17,6 +20,7 @@ class MyLineChart extends StatefulWidget {
 
 class _LineChartState extends State<MyLineChart> {
   late StockDataCubit stockDataCubit;
+  late MarketsCubit marketsCubit;
   List<FlSpot> spots = [];
   int initial = 50;
   Widget bottomTitleWidgets(double value, TitleMeta meta, double chartWidth) {
@@ -41,7 +45,8 @@ class _LineChartState extends State<MyLineChart> {
   void initState() {
     super.initState();
     stockDataCubit = StockDataCubit();
-    connectToWebSocket(context,widget.isCandle);
+    marketsCubit = MarketsCubit();
+    connectToWebSocket(context,widget.isCandle, formatMarkets(widget.market));
   }
 
   @override
@@ -160,34 +165,34 @@ class _LineChartState extends State<MyLineChart> {
                 ),
               ),
             ),
-            Row(
-              children: [
-                GestureDetector(
-                  child: Container(
-                    height: 30,
-                    width: 30,
-                    color: Colors.grey,
-                  ),
-                  onTap: () {
-                    setState(() {
-                      initial = 400;
-                    });
-                  },
-                ),
-                GestureDetector(
-                  child: Container(
-                    height: 30,
-                    width: 30,
-                    color: Colors.red,
-                  ),
-                  onTap: () {
-                    setState(() {
-                      initial = 950;
-                    });
-                  },
-                ),
-              ],
-            )
+            // Row(
+            //   children: [
+            //     GestureDetector(
+            //       child: Container(
+            //         height: 30,
+            //         width: 30,
+            //         color: Colors.grey,
+            //       ),
+            //       onTap: () {
+            //         setState(() {
+            //           initial = 400;
+            //         });
+            //       },
+            //     ),
+            //     GestureDetector(
+            //       child: Container(
+            //         height: 30,
+            //         width: 30,
+            //         color: Colors.red,
+            //       ),
+            //       onTap: () {
+            //         setState(() {
+            //           initial = 950;
+            //         });
+            //       },
+            //     ),
+            //   ],
+            // )
           ],
         ),
       ),

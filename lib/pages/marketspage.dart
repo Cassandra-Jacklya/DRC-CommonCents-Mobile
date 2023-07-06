@@ -1,4 +1,5 @@
 import 'package:commoncents/cubit/markets_cubit.dart';
+import 'package:commoncents/pages/simulationpage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -62,7 +63,7 @@ class _MarketsState extends State<Markets> {
                 onTap: () {
                   setState(() {
                     marketsCubit.updateMarkets(market);
-                    Navigator.pop(context);
+                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => SimulationPage()));
                   });
                 },
               );

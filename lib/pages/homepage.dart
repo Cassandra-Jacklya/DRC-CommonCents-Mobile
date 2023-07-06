@@ -250,21 +250,21 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ),
                     const SizedBox(height: 10),
-                    FutureBuilder<List<dynamic>>(
-                      future: _newsFuture,
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState == ConnectionState.waiting) {
-                          return const CircularProgressIndicator();
-                        } else if (snapshot.hasError) {
-                          return Text('Error: ${snapshot.error}');
-                        } else if (snapshot.hasData) {
-                          final newsList = snapshot.data;
-                          return NewsContainer(feeds: newsList, scrollable: false,);
-                        } else {
-                          return const Text('No news available.');
-                        }
-                      },
-                    ),
+                    // FutureBuilder<List<dynamic>>(
+                    //   future: _newsFuture,
+                    //   builder: (context, snapshot) {
+                    //     if (snapshot.connectionState == ConnectionState.waiting) {
+                    //       return const CircularProgressIndicator();
+                    //     } else if (snapshot.hasError) {
+                    //       return Text('Error: ${snapshot.error}');
+                    //     } else if (snapshot.hasData) {
+                    //       final newsList = snapshot.data;
+                    //       return NewsContainer(feeds: newsList, scrollable: false,);
+                    //     } else {
+                    //       return const Text('No news available.');
+                    //     }
+                    //   },
+                    // ),
                   ],
                 ),
               );

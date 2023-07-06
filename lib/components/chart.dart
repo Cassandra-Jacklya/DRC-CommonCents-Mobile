@@ -1,4 +1,6 @@
+import 'package:commoncents/components/formatMarkets.dart';
 import 'package:commoncents/cubit/candlestick_cubit.dart';
+import 'package:commoncents/cubit/markets_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
 import '../cubit/stock_data_cubit.dart';
@@ -16,12 +18,14 @@ class CandleStickChart extends StatefulWidget {
 
 class _CandleStickChartState extends State<CandleStickChart> {
   late CandlestickCubit candleStickCubit;
+  late MarketsCubit marketsCubit;
 
   @override
   void initState() {
     super.initState();
     candleStickCubit = CandlestickCubit();
-    connectToWebSocket(context, widget.isCandle);
+    marketsCubit = MarketsCubit();
+    connectToWebSocket(context, widget.isCandle, formatMarkets(marketsCubit.state));
   }
 
   @override

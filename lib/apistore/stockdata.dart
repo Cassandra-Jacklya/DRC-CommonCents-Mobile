@@ -19,19 +19,24 @@ const String appId = '1089';
 final Uri url = Uri.parse(
     'wss://ws.binaryws.com/websockets/v3?app_id=$appId&l=EN&brand=deriv');
 
-final tickStream = {"ticks": "R_10", "subscribe": 1};
+Map<String, dynamic> tickStream(String market) {
+  Map<String, dynamic> request = {"ticks": market, "subscribe": 1};
+  return request;
+}
 
 final unsubscribeRequest = {"forget_all": "ticks"};
 
-// ignore: non_constant_identifier_names
-final TicksHistoryRequest = {
-  'ticks_history': 'R_10',
-  'adjust_start_time': 1,
-  'count': 100, //24 hours
-  'end': 'latest',
-  'start': 1,
-  'style': 'candles',
-};
+Map<String, dynamic> ticksHistoryRequest(String market) {
+  Map<String, dynamic> request = {
+    "ticks_history": "$market",
+    "adjust_start_time": 1,
+    "count": 100,
+    "end": "latest",
+    "start": 1,
+    "style": "ticks"
+  };
+  return request;
+}
 
 // ignore: non_constant_identifier_names
 final CandleTicksRequest = {
@@ -48,7 +53,6 @@ final CandleTicksRequest = {
 final CandleHistoryRequest = {
   "ticks_history": "R_50",
   "adjust_start_time": 1,
-  // "subscribe": 1,
   "count": 100,
   "end": "latest",
   "start": 1,
@@ -58,7 +62,8 @@ final CandleHistoryRequest = {
 List<Map<String, dynamic>> ticks = [];
 List<Map<String, dynamic>> candles = [];
 
-Future<void> connectToWebSocket(BuildContext context, bool isCandle) async {
+Future<void> connectToWebSocket(
+    BuildContext context, bool isCandle, String market) async {
   socket = WebSocketChannel.connect(url);
 
   socket?.stream.listen((dynamic message) {
@@ -76,7 +81,7 @@ Future<void> connectToWebSocket(BuildContext context, bool isCandle) async {
   if (isCandle) {
     subscribeCandleTicks();
   } else {
-    subscribeTicks();
+    subscribeTicks(market);
   }
 }
 
@@ -93,12 +98,14 @@ Future<void> candleTicks() async {
   socket?.sink.add(jsonEncode(CandleTicksRequest));
 }
 
-void subscribeTicks() async {
-  await requestTicksHistory();
-  await tickSubscriber();
+void subscribeTicks(String market) async {
+  print("This now: $market");
+  await requestTicksHistory(market);
+  await tickSubscriber(market);
 }
 
 void unsubscribe() async {
+  print("unsuscribing");
   socket?.sink.add(jsonEncode(unsubscribeRequest));
   // stockDataCubit.clearStockData();
 }
@@ -107,12 +114,14 @@ void closeWebSocket() {
   socket?.sink.close();
 }
 
-Future<void> tickSubscriber() async {
-  socket?.sink.add(jsonEncode(tickStream));
+Future<void> tickSubscriber(String market) async {
+  final request = tickStream(market);
+  socket?.sink.add(jsonEncode(request));
 }
 
-Future<void> requestTicksHistory() async {
-  socket?.sink.add(jsonEncode(TicksHistoryRequest));
+Future<void> requestTicksHistory(String market) async {
+  final request = ticksHistoryRequest(market);
+  socket?.sink.add(jsonEncode(request));
 }
 
 Future<void> handleResponse(
@@ -189,32 +198,29 @@ Future<void> handleResponse(
 
       final candleStickData = BlocProvider.of<CandlestickCubit>(context);
       candleStickData.updateCandlestickData(candles); // this is for line chart
-    } else {
-      //this is for line
-      final List<dynamic> candles = decodedData['candles'];
-      for (int i = 0; i < candles.length; i++) {
-        final candle = candles[i];
-        final int epoch = candle['epoch'];
-        DateTime utcTime =
-            DateTime.fromMillisecondsSinceEpoch(epoch * 1000, isUtc: true);
-        double utcTimeDouble = utcTime.millisecondsSinceEpoch.toDouble() / 1000;
-        // final double high = candle['high'];
-        // final double low = candle['low'];
-        final double close = candle['close'];
-        // final double open = candle['open'];
-
-        tickHistory.add({
-          // 'high': high,
-          // 'open': open,
-          'close': close,
-          // 'low': low,
-          'epoch': utcTimeDouble
-        });
-      }
-      ticks = tickHistory;
     }
+  } else if (decodedData['msg_type'] == 'history') {
+    final List<dynamic> prices = decodedData['history']['prices'];
+    final List<dynamic> times = decodedData['history']['times'];
+
+    for (int i = 0; i < prices.length; i++) {
+      final double quote = prices[i].toDouble();
+      final int epoch = times[i];
+
+      DateTime utcTime =
+          DateTime.fromMillisecondsSinceEpoch(epoch * 1000, isUtc: true);
+      double utcTimeDouble = utcTime.millisecondsSinceEpoch.toDouble() / 1000;
+
+      tickHistory.add({
+        'close': quote,
+        'epoch': utcTimeDouble,
+      });
+    }
+
+    ticks = tickHistory;
   } else if (decodedData['msg_type'] == 'tick') {
     final tickData = decodedData['tick'];
+
     if (tickData != null) {
       final double price = tickData['quote'];
       final int time = tickData['epoch'];
@@ -225,10 +231,11 @@ Future<void> handleResponse(
       // Append the latest tick price and time to the ticks list
       ticks.add({'close': price, 'epoch': utcTimeDouble});
     }
+    print(ticks.last);
+    print(ticks.length);
+    final stockDataCubit = BlocProvider.of<StockDataCubit>(context);
+    stockDataCubit.updateStockData(ticks); // this is for line chart
   }
-
-  final stockDataCubit = BlocProvider.of<StockDataCubit>(context);
-  stockDataCubit.updateStockData(ticks); // this is for line chart
 }
 
 void handleError(dynamic error) {
