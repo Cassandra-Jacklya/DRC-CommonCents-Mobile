@@ -44,12 +44,22 @@ class _MarketsState extends State<Markets> {
 
     return Scaffold(
       appBar: AppBar(
-        shadowColor: Colors.transparent,
-        toolbarHeight: 60,
-        backgroundColor: Color(0xFF3366FF),
-        title: const Text("Markets"),
-        foregroundColor: Colors.black,
-      ),
+  shadowColor: Colors.transparent,
+  toolbarHeight: 60,
+  backgroundColor: Color(0xFF3366FF),
+  foregroundColor: Colors.black,
+  title: const Text("Markets"),
+  leading: IconButton(
+    icon: Icon(Icons.arrow_back),
+    onPressed: () {
+      marketsCubit.updateMarkets(marketsCubit.state);
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => SimulationPage()),
+      );
+    },
+  ),
+),
       body: BlocBuilder<MarketsCubit, String>(
         builder: (context, state) {
           return ListView.builder(

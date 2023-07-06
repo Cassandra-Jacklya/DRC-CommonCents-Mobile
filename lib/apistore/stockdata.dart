@@ -137,7 +137,7 @@ Future<void> handleResponse(
   final List<Map<String, dynamic>> tickHistory = [];
 
   if (decodedData['msg_type'] == 'proposal') {
-    handleBuyResponse(decodedData);
+    handleBuyResponse(context, decodedData);
   } else if (decodedData['msg_type'] == 'ohlc') {
     // Stream candles data
     final ohlc = decodedData['ohlc'];

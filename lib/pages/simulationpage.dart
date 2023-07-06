@@ -41,7 +41,7 @@ class _SimulationPageState extends State<SimulationPage> {
   @override
   void initState() {
     super.initState();
-    marketType = context.read<MarketsCubit>(); 
+    marketType = context.read<MarketsCubit>();
     isCandleCubit =
         context.read<IsCandleCubit>(); // Initialize the isCandleCubit
     isCandle = isCandleCubit.state;
@@ -352,28 +352,52 @@ class _SimulationPageState extends State<SimulationPage> {
                                 ),
                               ),
                             ),
-                            BlocBuilder<LoginStateBloc, LoginState>(
-                              builder: (context, state) {
-                                if (state is AppStateInitial) {
-                                  // return IconButton(
-                                  //   onPressed: () {},
-                                  //   icon: const Icon(
-                                  //     Icons.account_balance_wallet_sharp,
-                                  //   ),
-                                  // )
-                                } else if (state is AppStateLoggedIn) {
-                                  return Row(
-                                    children: [
-                                      Text(state.balance),
-                                    ],
-                                  );
-                                } else if (state is AppStateError) {
-                                  return const Text("null");
-                                }
-
-                                return const CircularProgressIndicator();
-                              },
+                            Container(
+                              margin:
+                                  const EdgeInsets.symmetric(horizontal: 10),
+                              width: 25,
+                              height: 25,
+                              decoration: const BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: Colors.blue,
+                              ),
+                              child: const Icon(
+                                Icons.info,
+                                color: Colors.white,
+                                size: 24,
+                              ),
                             ),
+                            BlocConsumer<LoginStateBloc, LoginState>(
+                              builder: (context, state) {
+                                if (state is AppStateLoggedIn) {
+                                  return Container(
+                                    margin: const EdgeInsets.only(left: 10),
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.end,
+                                      children: [
+                                        const Icon(Icons.wallet),
+                                        Text(
+                                          "${double.parse(state.balance).toStringAsFixed(2)} USD",
+                                        )
+                                      ],
+                                    ),
+                                  );
+                                }
+                                return const SizedBox();
+                              },
+                              listenWhen: (previous, current) {
+                                return current
+                                    is AppStateLoggedIn; // Only listen when the state is AppStateLoggedIn
+                              },
+                              listener: (context, state) {
+                                if (state is AppStateLoggedIn) {
+                                  print(state.balance);
+                                }
+                              },
+                            )
                           ],
                         ),
                         Container(
@@ -460,8 +484,8 @@ class _SimulationPageState extends State<SimulationPage> {
                                     currentAmount = context
                                         .read<CurrentAmountCubit>()
                                         .state;
-                                    handleBuy(ticks.toInt(), stakePayout,
-                                        currentAmount);
+                                    handleBuy(context, ticks.toInt(),
+                                        stakePayout, currentAmount);
                                   },
                                   child: Container(
                                     padding: const EdgeInsets.only(right: 10),
@@ -497,8 +521,8 @@ class _SimulationPageState extends State<SimulationPage> {
                                     currentAmount = context
                                         .read<CurrentAmountCubit>()
                                         .state;
-                                    handleBuy(ticks.toInt(), stakePayout,
-                                        currentAmount);
+                                    handleBuy(context, ticks.toInt(),
+                                        stakePayout, currentAmount);
                                   },
                                   child: Container(
                                     padding: const EdgeInsets.only(right: 10),
@@ -519,6 +543,7 @@ class _SimulationPageState extends State<SimulationPage> {
                                 ),
                               ],
                             ),
+                            const SizedBox(height: 20),
                           ],
                         ),
                       ],
@@ -526,208 +551,209 @@ class _SimulationPageState extends State<SimulationPage> {
                   );
                 }
               default:
-                return SingleChildScrollView(
-                  scrollDirection: Axis.vertical,
-                  child: Column(
-                    children: [
-                      const SizedBox(height: 10),
-                      Row(
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.only(left: 15),
-                            margin: const EdgeInsets.all(10),
-                            height: 60,
-                            color: Colors.grey[300],
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: const [
-                                Text("VOLATILITY INDEX"),
-                                IconButton(
-                                  onPressed: null,
-                                  icon: Icon(
-                                    Icons.keyboard_arrow_down_sharp,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          GestureDetector(
-                            child: Container(
-                              height: 60,
-                              color: Colors.grey[300],
-                              child: IconButton(
-                                onPressed: () {
-                                  setState(() {
-                                    unsubscribe();
-                                    closeWebSocket();
-                                    isCandle = !isCandle;
-                                  });
-                                },
-                                icon: isCandle
-                                    ? const Icon(Icons.line_axis)
-                                    : const Icon(Icons.candlestick_chart),
-                              ),
-                            ),
-                          ),
-                          Container(
-                            margin: const EdgeInsets.only(left: 6),
-                            height: 60,
-                            width: 110,
-                            color: Colors.grey[300],
-                            child: Row(
-                              children: const [
-                                IconButton(
-                                  onPressed: null,
-                                  icon: Icon(
-                                    Icons.account_balance_wallet_sharp,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          )
-                        ],
-                      ),
-                      Container(
-                        margin: const EdgeInsets.symmetric(vertical: 10),
-                        height: MediaQuery.of(context).size.height * 0.6,
-                        color: Colors.grey[300],
-                        child: Center(
-                          child: isCandle
-                              ? BlocBuilder<MarketsCubit, String>(
-                                  builder: (context, market) {
-                                  return CandleStickChart(
-                                    isCandle: isCandle,
-                                    market: market,
-                                  );
-                                })
-                              : BlocBuilder<MarketsCubit, String>(
-                                  builder: (context, market) {
-                                    return MyLineChart(
-                                      isCandle: isCandle,
-                                      market: market,
-                                    );
-                                  },
-                                ),
-                        ),
-                      ),
-                      Column(
-                        children: [
-                          BlocBuilder<TicksCubit, double>(
-                              builder: (context, selectedValue) {
-                            return Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [const Text("Ticks"), TicksGauge()],
-                            );
-                          }),
-                          const SizedBox(height: 20),
-                          BlocBuilder<StakePayoutCubit, int>(
-                            builder: (context, index) {
-                              return ToggleSwitch(
-                                minWidth: 90.0,
-                                initialLabelIndex:
-                                    context.read<StakePayoutCubit>().state,
-                                cornerRadius: 20.0,
-                                activeFgColor: Colors.white,
-                                inactiveBgColor: Colors.grey,
-                                inactiveFgColor: Colors.white,
-                                totalSwitches: 2,
-                                labels: const ['Stake', 'Payout'],
-                                activeBgColors: const [
-                                  [Colors.greenAccent],
-                                  [Colors.blueAccent]
-                                ],
-                                onToggle: (index) {
-                                  context
-                                      .read<StakePayoutCubit>()
-                                      .updateStakePayout(index as int);
-                                },
-                              );
-                            },
-                          ),
-                          const SizedBox(height: 20),
-                          BlocBuilder<CurrentAmountCubit, int>(
-                              builder: (context, amount) {
-                            return const IntegerExample();
-                          }),
-                          const SizedBox(height: 20),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              GestureDetector(
-                                onTap: () {
-                                  ticks = context.read<TicksCubit>().state;
-                                  if (BlocProvider.of<StakePayoutCubit>(context)
-                                          .state ==
-                                      0) {
-                                    stakePayout = 'stake';
-                                  } else if (BlocProvider.of<StakePayoutCubit>(
-                                              context)
-                                          .state ==
-                                      1) {
-                                    stakePayout = 'payout';
-                                  }
-                                  currentAmount =
-                                      context.read<CurrentAmountCubit>().state;
-                                  handleBuy(ticks.toInt(), stakePayout,
-                                      currentAmount);
-                                },
-                                child: Container(
-                                  padding: const EdgeInsets.only(right: 10),
-                                  decoration: BoxDecoration(
-                                      color: Colors.green,
-                                      borderRadius: BorderRadius.circular(10)),
-                                  height: 45,
-                                  width: 140,
-                                  child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceAround,
-                                      children: const [
-                                        Icon(Icons.arrow_upward),
-                                        Text("Higher")
-                                      ]),
-                                ),
-                              ),
-                              GestureDetector(
-                                onTap: () {
-                                  ticks = context.read<TicksCubit>().state;
-                                  if (BlocProvider.of<StakePayoutCubit>(context)
-                                          .state ==
-                                      0) {
-                                    stakePayout = 'stake';
-                                  } else if (BlocProvider.of<StakePayoutCubit>(
-                                              context)
-                                          .state ==
-                                      1) {
-                                    stakePayout = 'payout';
-                                  }
-                                  currentAmount =
-                                      context.read<CurrentAmountCubit>().state;
-                                  handleBuy(ticks.toInt(), stakePayout,
-                                      currentAmount);
-                                },
-                                child: Container(
-                                  padding: const EdgeInsets.only(right: 10),
-                                  decoration: BoxDecoration(
-                                      color: Colors.red,
-                                      borderRadius: BorderRadius.circular(10)),
-                                  height: 45,
-                                  width: 140,
-                                  child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceAround,
-                                      children: const [
-                                        Icon(Icons.arrow_downward),
-                                        Text("Lower")
-                                      ]),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                );
+                return Container();
+              // return SingleChildScrollView(
+              //   scrollDirection: Axis.vertical,
+              //   child: Column(
+              //     children: [
+              //       const SizedBox(height: 10),
+              //       Row(
+              //         children: [
+              //           Container(
+              //             padding: const EdgeInsets.only(left: 15),
+              //             margin: const EdgeInsets.all(10),
+              //             height: 60,
+              //             color: Colors.grey[300],
+              //             child: Row(
+              //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              //               children: const [
+              //                 Text("VOLATILITY INDEX"),
+              //                 IconButton(
+              //                   onPressed: null,
+              //                   icon: Icon(
+              //                     Icons.keyboard_arrow_down_sharp,
+              //                   ),
+              //                 ),
+              //               ],
+              //             ),
+              //           ),
+              //           GestureDetector(
+              //             child: Container(
+              //               height: 60,
+              //               color: Colors.grey[300],
+              //               child: IconButton(
+              //                 onPressed: () {
+              //                   setState(() {
+              //                     unsubscribe();
+              //                     closeWebSocket();
+              //                     isCandle = !isCandle;
+              //                   });
+              //                 },
+              //                 icon: isCandle
+              //                     ? const Icon(Icons.line_axis)
+              //                     : const Icon(Icons.candlestick_chart),
+              //               ),
+              //             ),
+              //           ),
+              //           Container(
+              //             margin: const EdgeInsets.only(left: 6),
+              //             height: 60,
+              //             width: 110,
+              //             color: Colors.grey[300],
+              //             child: Row(
+              //               children: const [
+              //                 IconButton(
+              //                   onPressed: null,
+              //                   icon: Icon(
+              //                     Icons.account_balance_wallet_sharp,
+              //                   ),
+              //                 ),
+              //               ],
+              //             ),
+              //           )
+              //         ],
+              //       ),
+              //       Container(
+              //         margin: const EdgeInsets.symmetric(vertical: 10),
+              //         height: MediaQuery.of(context).size.height * 0.6,
+              //         color: Colors.grey[300],
+              //         child: Center(
+              //           child: isCandle
+              //               ? BlocBuilder<MarketsCubit, String>(
+              //                   builder: (context, market) {
+              //                   return CandleStickChart(
+              //                     isCandle: isCandle,
+              //                     market: market,
+              //                   );
+              //                 })
+              //               : BlocBuilder<MarketsCubit, String>(
+              //                   builder: (context, market) {
+              //                     return MyLineChart(
+              //                       isCandle: isCandle,
+              //                       market: market,
+              //                     );
+              //                   },
+              //                 ),
+              //         ),
+              //       ),
+              //       Column(
+              //         children: [
+              //           BlocBuilder<TicksCubit, double>(
+              //               builder: (context, selectedValue) {
+              //             return Row(
+              //               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              //               children: [const Text("Ticks"), TicksGauge()],
+              //             );
+              //           }),
+              //           const SizedBox(height: 20),
+              //           BlocBuilder<StakePayoutCubit, int>(
+              //             builder: (context, index) {
+              //               return ToggleSwitch(
+              //                 minWidth: 90.0,
+              //                 initialLabelIndex:
+              //                     context.read<StakePayoutCubit>().state,
+              //                 cornerRadius: 20.0,
+              //                 activeFgColor: Colors.white,
+              //                 inactiveBgColor: Colors.grey,
+              //                 inactiveFgColor: Colors.white,
+              //                 totalSwitches: 2,
+              //                 labels: const ['Stake', 'Payout'],
+              //                 activeBgColors: const [
+              //                   [Colors.greenAccent],
+              //                   [Colors.blueAccent]
+              //                 ],
+              //                 onToggle: (index) {
+              //                   context
+              //                       .read<StakePayoutCubit>()
+              //                       .updateStakePayout(index as int);
+              //                 },
+              //               );
+              //             },
+              //           ),
+              //           const SizedBox(height: 20),
+              //           BlocBuilder<CurrentAmountCubit, int>(
+              //               builder: (context, amount) {
+              //             return const IntegerExample();
+              //           }),
+              //           const SizedBox(height: 20),
+              //           Row(
+              //             mainAxisAlignment: MainAxisAlignment.spaceAround,
+              //             children: [
+              //               GestureDetector(
+              //                 onTap: () {
+              //                   ticks = context.read<TicksCubit>().state;
+              //                   if (BlocProvider.of<StakePayoutCubit>(context)
+              //                           .state ==
+              //                       0) {
+              //                     stakePayout = 'stake';
+              //                   } else if (BlocProvider.of<StakePayoutCubit>(
+              //                               context)
+              //                           .state ==
+              //                       1) {
+              //                     stakePayout = 'payout';
+              //                   }
+              //                   currentAmount =
+              //                       context.read<CurrentAmountCubit>().state;
+              //                   handleBuy(ticks.toInt(), stakePayout,
+              //                       currentAmount);
+              //                 },
+              //                 child: Container(
+              //                   padding: const EdgeInsets.only(right: 10),
+              //                   decoration: BoxDecoration(
+              //                       color: Colors.green,
+              //                       borderRadius: BorderRadius.circular(10)),
+              //                   height: 45,
+              //                   width: 140,
+              //                   child: Row(
+              //                       mainAxisAlignment:
+              //                           MainAxisAlignment.spaceAround,
+              //                       children: const [
+              //                         Icon(Icons.arrow_upward),
+              //                         Text("Higher")
+              //                       ]),
+              //                 ),
+              //               ),
+              //               GestureDetector(
+              //                 onTap: () {
+              //                   ticks = context.read<TicksCubit>().state;
+              //                   if (BlocProvider.of<StakePayoutCubit>(context)
+              //                           .state ==
+              //                       0) {
+              //                     stakePayout = 'stake';
+              //                   } else if (BlocProvider.of<StakePayoutCubit>(
+              //                               context)
+              //                           .state ==
+              //                       1) {
+              //                     stakePayout = 'payout';
+              //                   }
+              //                   currentAmount =
+              //                       context.read<CurrentAmountCubit>().state;
+              //                   handleBuy(ticks.toInt(), stakePayout,
+              //                       currentAmount);
+              //                 },
+              //                 child: Container(
+              //                   padding: const EdgeInsets.only(right: 10),
+              //                   decoration: BoxDecoration(
+              //                       color: Colors.red,
+              //                       borderRadius: BorderRadius.circular(10)),
+              //                   height: 45,
+              //                   width: 140,
+              //                   child: Row(
+              //                       mainAxisAlignment:
+              //                           MainAxisAlignment.spaceAround,
+              //                       children: const [
+              //                         Icon(Icons.arrow_downward),
+              //                         Text("Lower")
+              //                       ]),
+              //                 ),
+              //               ),
+              //             ],
+              //           ),
+              //         ],
+              //       ),
+              //     ],
+              //   ),
+              // );
             }
           }),
       bottomNavigationBar: const BottomNavBar(
