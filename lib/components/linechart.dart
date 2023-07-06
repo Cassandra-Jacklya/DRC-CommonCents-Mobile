@@ -104,6 +104,7 @@ class _LineChartState extends State<MyLineChart> {
                         maxScale: 4.0,
                         child: SfCartesianChart(
                           zoomPanBehavior: ZoomPanBehavior(
+                            enableSelectionZooming: true,
                             enablePinching: true,
                             enablePanning: true,
                             zoomMode: ZoomMode.xy,

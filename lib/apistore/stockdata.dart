@@ -19,18 +19,18 @@ const String appId = '1089';
 final Uri url = Uri.parse(
     'wss://ws.binaryws.com/websockets/v3?app_id=$appId&l=EN&brand=deriv');
 
+final unsubscribeRequest = {"forget_all": "ticks"};
+
 Map<String, dynamic> tickStream(String market) {
   Map<String, dynamic> request = {"ticks": market, "subscribe": 1};
   return request;
 }
 
-final unsubscribeRequest = {"forget_all": "ticks"};
-
 Map<String, dynamic> ticksHistoryRequest(String market) {
   Map<String, dynamic> request = {
     "ticks_history": "$market",
     "adjust_start_time": 1,
-    "count": 100,
+    "count": 1000,
     "end": "latest",
     "start": 1,
     "style": "ticks"
@@ -38,26 +38,32 @@ Map<String, dynamic> ticksHistoryRequest(String market) {
   return request;
 }
 
-// ignore: non_constant_identifier_names
-final CandleTicksRequest = {
-  "ticks_history": "R_50",
-  "adjust_start_time": 1,
-  "subscribe": 1,
-  "count": 1,
-  "end": "latest",
-  "start": 1,
-  "style": "candles"
-};
+Map<String, dynamic> CandleHistoryRequest(String market) {
+  Map<String, dynamic> request = {
+    "ticks_history": "$market",
+    "adjust_start_time": 1,
+    "count": 100,
+    "end": "latest",
+    "start": 1,
+    "style": "candles"
+  };
 
-// ignore: non_constant_identifier_names
-final CandleHistoryRequest = {
-  "ticks_history": "R_50",
-  "adjust_start_time": 1,
-  "count": 100,
-  "end": "latest",
-  "start": 1,
-  "style": "candles"
-};
+  return request;
+}
+
+Map<String, dynamic> CandleTicksRequest(String market) {
+  Map<String, dynamic> request = {
+    "ticks_history": "$market",
+    "adjust_start_time": 1,
+    "subscribe": 1,
+    "count": 1,
+    "end": "latest",
+    "start": 1,
+    "style": "candles"
+  };
+
+  return request;
+}
 
 List<Map<String, dynamic>> ticks = [];
 List<Map<String, dynamic>> candles = [];
@@ -79,23 +85,25 @@ Future<void> connectToWebSocket(
   });
 
   if (isCandle) {
-    subscribeCandleTicks();
+    subscribeCandleTicks(market);
   } else {
     subscribeTicks(market);
   }
 }
 
-void subscribeCandleTicks() async {
-  await requestCandleHistory();
-  await candleTicks();
+void subscribeCandleTicks(String market) async {
+  await requestCandleHistory(market);
+  await candleTicks(market);
 }
 
-Future<void> requestCandleHistory() async {
-  socket?.sink.add(jsonEncode(CandleHistoryRequest));
+Future<void> requestCandleHistory(String market) async {
+  final request = CandleHistoryRequest(market);
+  socket?.sink.add(jsonEncode(request));
 }
 
-Future<void> candleTicks() async {
-  socket?.sink.add(jsonEncode(CandleTicksRequest));
+Future<void> candleTicks(String market) async {
+  final request = CandleTicksRequest(market);
+  socket?.sink.add(jsonEncode(request));
 }
 
 void subscribeTicks(String market) async {
@@ -105,7 +113,6 @@ void subscribeTicks(String market) async {
 }
 
 void unsubscribe() async {
-  print("unsuscribing");
   socket?.sink.add(jsonEncode(unsubscribeRequest));
   // stockDataCubit.clearStockData();
 }
@@ -169,6 +176,8 @@ Future<void> handleResponse(
         });
       }
 
+      print(candles.last);
+
       final candleStickData = BlocProvider.of<CandlestickCubit>(context);
       candleStickData.updateCandlestickData(candles);
     }
@@ -182,10 +191,10 @@ Future<void> handleResponse(
         DateTime utcTime =
             DateTime.fromMillisecondsSinceEpoch(epoch * 1000, isUtc: true);
         double utcTimeDouble = utcTime.millisecondsSinceEpoch.toDouble() / 1000;
-        final double high = candle['high'];
-        final double low = candle['low'];
-        final double close = candle['close'];
-        final double open = candle['open'];
+        final double high = candle['high'].toDouble();
+        final double low = candle['low'].toDouble();
+        final double close = candle['close'].toDouble();
+        final double open = candle['open'].toDouble();
 
         candles.add({
           'high': high,
@@ -195,9 +204,14 @@ Future<void> handleResponse(
           'epoch': utcTimeDouble
         });
       }
+      print("before deduct: ${candles.length}");
+      if (candles.length > 101) {
+        candles = candles.sublist(candles.length - 101);
+      }
+      print("after deduct: ${candles.length}");
 
       final candleStickData = BlocProvider.of<CandlestickCubit>(context);
-      candleStickData.updateCandlestickData(candles); // this is for line chart
+      candleStickData.updateCandlestickData(candles);
     }
   } else if (decodedData['msg_type'] == 'history') {
     final List<dynamic> prices = decodedData['history']['prices'];
@@ -222,7 +236,7 @@ Future<void> handleResponse(
     final tickData = decodedData['tick'];
 
     if (tickData != null) {
-      final double price = tickData['quote'];
+      final double price = tickData['quote'].toDouble();
       final int time = tickData['epoch'];
       DateTime utcTime =
           DateTime.fromMillisecondsSinceEpoch(time * 1000, isUtc: true);
@@ -231,8 +245,6 @@ Future<void> handleResponse(
       // Append the latest tick price and time to the ticks list
       ticks.add({'close': price, 'epoch': utcTimeDouble});
     }
-    print(ticks.last);
-    print(ticks.length);
     final stockDataCubit = BlocProvider.of<StockDataCubit>(context);
     stockDataCubit.updateStockData(ticks); // this is for line chart
   }

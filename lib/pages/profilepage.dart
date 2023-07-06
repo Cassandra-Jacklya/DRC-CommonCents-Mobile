@@ -42,7 +42,7 @@ class _ProfilePageState extends State<ProfilePage> {
             photoUrl = data['photoURL'] ?? ''; // Get the photoURL if it exists
             displayName = data['displayName'] ??
                 'nope'; // Get the displayName if it exists
-            balance = data['balance'] ?? 0.0; // Get the balance if it exists
+            balance = data['balance'].toDouble() ?? 0.0; // Get the balance if it exists
           });
         }
       }

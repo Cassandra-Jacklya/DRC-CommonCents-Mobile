@@ -40,7 +40,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
         Navigator.pushReplacement(
         context,
         PageRouteBuilder(
-            pageBuilder: (context, anim1, anim2) => SimulationPage(),
+            pageBuilder: (context, anim1, anim2) => const SimulationPage(),
             transitionDuration: Duration.zero),
       );
         break;

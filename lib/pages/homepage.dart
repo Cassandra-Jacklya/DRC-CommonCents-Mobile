@@ -47,6 +47,7 @@ class _HomePageState extends State<HomePage> {
         future:  Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,),
         builder: (context, snapshot) {
+          print(snapshot.connectionState);
           switch (snapshot.connectionState) {
             case ConnectionState.done:
             final User? user = FirebaseAuth.instance.currentUser;

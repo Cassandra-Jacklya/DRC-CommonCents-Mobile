@@ -4,7 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class Markets extends StatefulWidget {
+  const Markets({super.key});
+
+  @override
   _MarketsState createState() => _MarketsState();
+
 }
 
 class _MarketsState extends State<Markets> {

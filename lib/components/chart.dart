@@ -9,8 +9,9 @@ import 'package:syncfusion_flutter_charts/charts.dart';
 
 class CandleStickChart extends StatefulWidget {
   final bool isCandle;
+  final String market;
 
-  CandleStickChart({required this.isCandle, Key? key}) : super(key: key);
+  CandleStickChart({required this.isCandle,required this.market, Key? key}) : super(key: key);
 
   @override
   _CandleStickChartState createState() => _CandleStickChartState();
@@ -25,11 +26,12 @@ class _CandleStickChartState extends State<CandleStickChart> {
     super.initState();
     candleStickCubit = CandlestickCubit();
     marketsCubit = MarketsCubit();
-    connectToWebSocket(context, widget.isCandle, formatMarkets(marketsCubit.state));
+    connectToWebSocket(context, widget.isCandle, formatMarkets(widget.market));
   }
 
   @override
   void dispose() {
+    candleStickCubit.clearStockData();
     candleStickCubit.close();
     super.dispose();
   }
@@ -46,6 +48,7 @@ class _CandleStickChartState extends State<CandleStickChart> {
               child: BlocBuilder<CandlestickCubit, List<Map<String, dynamic>>>(
                 builder: (context, candleData) {
                   if (candleData.isNotEmpty) {
+                    print(candleData.length);
                     List<ChartData> chartData = candleData.map((data) {
                       double x = data['epoch'];
                       double open = data['open'];

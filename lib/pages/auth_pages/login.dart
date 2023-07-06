@@ -156,10 +156,16 @@ class _LoginViewState extends State<LoginView> with SingleTickerProviderStateMix
                                 actions: <Widget>[
                                   TextButton(
                                     onPressed: () {
-                                      Navigator.push(
+                                      // Navigator.push(
+                                      //   context,
+                                      //   MaterialPageRoute(builder: (BuildContext context) { return const HomePage(); }
+                                      //       ),
+                                      // );
+                                      Navigator.pushReplacement(
                                         context,
-                                        MaterialPageRoute(builder: (BuildContext context) { return const HomePage(); }
-                                            ),
+                                        PageRouteBuilder(
+                                            pageBuilder: (context, anim1, anim2) => const HomePage(),
+                                            transitionDuration: Duration.zero),
                                       );
                                     },
                                     child: const Text('Go to home page'),
