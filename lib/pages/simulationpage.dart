@@ -390,11 +390,10 @@ class _SimulationPageState extends State<SimulationPage> {
                               },
                               listenWhen: (previous, current) {
                                 return current
-                                    is AppStateLoggedIn; // Only listen when the state is AppStateLoggedIn
+                                    is AppStateLoggedIn; 
                               },
                               listener: (context, state) {
                                 if (state is AppStateLoggedIn) {
-                                  print(state.balance);
                                 }
                               },
                             )
@@ -415,7 +414,7 @@ class _SimulationPageState extends State<SimulationPage> {
                                   })
                                 : BlocBuilder<MarketsCubit, String>(
                                     builder: (context, market) {
-                                      return MyLineChart(
+                                      return MyLineChart(isMini: false,
                                         isCandle: isCandle,
                                         market: market,
                                       );

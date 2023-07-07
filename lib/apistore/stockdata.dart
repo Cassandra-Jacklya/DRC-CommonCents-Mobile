@@ -1,13 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:ffi';
 import 'package:commoncents/cubit/candlestick_cubit.dart';
-
+import 'package:commoncents/cubit/miniChart_cubit.dart';
 import '../apistore/PriceProposal.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -18,6 +13,9 @@ late StockDataCubit stockDataCubit;
 const String appId = '1089';
 final Uri url = Uri.parse(
     'wss://ws.binaryws.com/websockets/v3?app_id=$appId&l=EN&brand=deriv');
+
+List<Map<String, dynamic>> ticks = [];
+List<Map<String, dynamic>> candles = [];
 
 final unsubscribeRequest = {"forget_all": "ticks"};
 
@@ -30,7 +28,7 @@ Map<String, dynamic> ticksHistoryRequest(String market) {
   Map<String, dynamic> request = {
     "ticks_history": "$market",
     "adjust_start_time": 1,
-    "count": 1000,
+    "count": 100,
     "end": "latest",
     "start": 1,
     "style": "ticks"
@@ -65,16 +63,15 @@ Map<String, dynamic> CandleTicksRequest(String market) {
   return request;
 }
 
-List<Map<String, dynamic>> ticks = [];
-List<Map<String, dynamic>> candles = [];
-
 Future<void> connectToWebSocket(
-    BuildContext context, bool isCandle, String market) async {
+    {required BuildContext context,
+    required bool isCandle,
+    required String market}) async {
   socket = WebSocketChannel.connect(url);
 
   socket?.stream.listen((dynamic message) {
     try {
-      handleResponse(message, isCandle, context);
+      handleResponse(data: message, isCandle: isCandle, context: context);
     } catch (e) {
       handleError(e);
     }
@@ -107,7 +104,6 @@ Future<void> candleTicks(String market) async {
 }
 
 void subscribeTicks(String market) async {
-  print("This now: $market");
   await requestTicksHistory(market);
   await tickSubscriber(market);
 }
@@ -132,9 +128,13 @@ Future<void> requestTicksHistory(String market) async {
 }
 
 Future<void> handleResponse(
-    dynamic data, bool isCandle, BuildContext context) async {
+    {required BuildContext context,
+    required bool isCandle,
+    required dynamic data}) async {
   final decodedData = jsonDecode(data);
   final List<Map<String, dynamic>> tickHistory = [];
+  final List<Map<String, dynamic>> miniHistory = [];
+  final stockDataCubit = BlocProvider.of<StockDataCubit>(context);
 
   if (decodedData['msg_type'] == 'proposal') {
     handleBuyResponse(context, decodedData);
@@ -176,8 +176,6 @@ Future<void> handleResponse(
         });
       }
 
-      print(candles.last);
-
       final candleStickData = BlocProvider.of<CandlestickCubit>(context);
       candleStickData.updateCandlestickData(candles);
     }
@@ -204,16 +202,15 @@ Future<void> handleResponse(
           'epoch': utcTimeDouble
         });
       }
-      print("before deduct: ${candles.length}");
       if (candles.length > 101) {
         candles = candles.sublist(candles.length - 101);
       }
-      print("after deduct: ${candles.length}");
 
       final candleStickData = BlocProvider.of<CandlestickCubit>(context);
       candleStickData.updateCandlestickData(candles);
     }
   } else if (decodedData['msg_type'] == 'history') {
+    //lines historty
     final List<dynamic> prices = decodedData['history']['prices'];
     final List<dynamic> times = decodedData['history']['times'];
 
@@ -230,8 +227,8 @@ Future<void> handleResponse(
         'epoch': utcTimeDouble,
       });
     }
-
     ticks = tickHistory;
+    print(ticks.length);
   } else if (decodedData['msg_type'] == 'tick') {
     final tickData = decodedData['tick'];
 
@@ -245,7 +242,7 @@ Future<void> handleResponse(
       // Append the latest tick price and time to the ticks list
       ticks.add({'close': price, 'epoch': utcTimeDouble});
     }
-    final stockDataCubit = BlocProvider.of<StockDataCubit>(context);
+
     stockDataCubit.updateStockData(ticks); // this is for line chart
   }
 }

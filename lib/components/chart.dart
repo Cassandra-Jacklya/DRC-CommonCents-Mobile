@@ -26,7 +26,7 @@ class _CandleStickChartState extends State<CandleStickChart> {
     super.initState();
     candleStickCubit = CandlestickCubit();
     marketsCubit = MarketsCubit();
-    connectToWebSocket(context, widget.isCandle, formatMarkets(widget.market));
+    connectToWebSocket(context: context, isCandle: widget.isCandle,market: formatMarkets(widget.market));
   }
 
   @override

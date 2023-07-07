@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import '../components/shape.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 
 class Leaderboard extends StatelessWidget {
   const Leaderboard({super.key});
@@ -121,3 +123,31 @@ class Leaderboard extends StatelessWidget {
     );
   }
 }
+
+
+// Future<List<Map<String, dynamic>>> rankUsersByBalance() async {
+//   List<Map<String, dynamic>> rankedUsers = [];
+
+//   // Retrieve all users from the Firestore collection
+//   QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+//       .collection('users')
+//       .get();
+
+//   // Iterate through each document and retrieve balance field
+//   querySnapshot.docs.forEach((userDoc) {
+//     Object? userData = userDoc.data();
+//     String userId = userDoc.id;
+//     int balance = userData!['balance'] as int;
+
+//     rankedUsers.add({
+//       'userId': userId,
+//       'balance': balance,
+//     });
+//   });
+
+//   // Sort the rankedUsers list in descending order based on balance
+//   rankedUsers.sort((a, b) => b['balance'].compareTo(a['balance']));
+
+//   return rankedUsers;
+// }
+

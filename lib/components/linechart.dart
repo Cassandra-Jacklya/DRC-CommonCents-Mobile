@@ -11,8 +11,9 @@ import 'formatMarkets.dart';
 class MyLineChart extends StatefulWidget {
    final bool isCandle;
    final String market;
+   final bool isMini;
 
-  MyLineChart({required this.isCandle, required this.market, Key? key}) : super(key: key);
+  MyLineChart({required this.isCandle, required this.market, required this.isMini, Key? key}) : super(key: key);
 
   @override
   _LineChartState createState() => _LineChartState();
@@ -46,7 +47,7 @@ class _LineChartState extends State<MyLineChart> {
     super.initState();
     stockDataCubit = StockDataCubit();
     marketsCubit = MarketsCubit();
-    connectToWebSocket(context,widget.isCandle, formatMarkets(widget.market));
+    connectToWebSocket(context: context,isCandle: widget.isCandle, market: formatMarkets(widget.market),);
   }
 
   @override
@@ -64,8 +65,8 @@ class _LineChartState extends State<MyLineChart> {
             SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: SizedBox(
-                height: MediaQuery.of(context).size.height * 0.5,
-                width: MediaQuery.of(context).size.width,
+                height: widget.isMini ? 100 : MediaQuery.of(context).size.height * 0.5,
+                width: widget.isMini ? 100: MediaQuery.of(context).size.width,
                 child: BlocBuilder<StockDataCubit, List<Map<String, dynamic>>>(
                   builder: (context, stockData) {
                     if (stockData.length >= 100) {
@@ -110,6 +111,7 @@ class _LineChartState extends State<MyLineChart> {
                             zoomMode: ZoomMode.xy,
                           ),
                           primaryXAxis: DateTimeAxis(
+                            isVisible: widget.isMini ? false : true,
                             majorGridLines: const MajorGridLines(width: 0),
                             dateFormat: DateFormat(
                                 'HH:mm'), // Specify the desired time format
@@ -138,7 +140,7 @@ class _LineChartState extends State<MyLineChart> {
                           primaryYAxis: NumericAxis(
                             edgeLabelPlacement: EdgeLabelPlacement.shift,
                             opposedPosition: true,
-                            isVisible: true,
+                            isVisible: widget.isMini ? false : true,
                             // minimum: minClose.floorToDouble(),
                             // maximum: maxClose.floorToDouble() + 1.5,
                             desiredIntervals: 3,
