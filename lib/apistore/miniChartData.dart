@@ -5,17 +5,42 @@ import 'package:flutter/material.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../components/formatMarkets.dart';
+
+// WebSocketChannel? miniSocket;
 WebSocketChannel? miniSocket;
-MiniChartCubit miniChartCubit = MiniChartCubit();
+final minichartCubit = MiniChartCubit();
+
 const String appId = '1089';
 final Uri url = Uri.parse(
     'wss://ws.binaryws.com/websockets/v3?app_id=$appId&l=EN&brand=deriv');
+late Map<String, Map<String, dynamic>> marketData = {};
+String? currentMarket;
+final List<String> items = [
+  'Volatility 10',
+  'Volatility 25',
+  'Volatility 50',
+  'Volatility 75',
+  'Volatility 100',
+  'Volatility 10 (1S)',
+  'Volatility 25 (1S)',
+  'Volatility 50 (1S)',
+  'Volatility 75 (1S)',
+  'Volatility 100 (1S)',
+  'Jump 10',
+  'Jump 25',
+  'Jump 50',
+  'Jump 75',
+  'Jump 100',
+  'Bear Market',
+  'Bull Market',
+];
 
 List<Map<String, dynamic>> mini = [];
 
 final unsubscribeRequest = {"forget_all": "ticks"};
 
-Map<String, dynamic> tickStream(String market, WebSocketChannel miniSocket) {
+Map<String, dynamic> tickStream(String market) {
   Map<String, dynamic> request = {"ticks": market, "subscribe": 1};
   return request;
 }
@@ -32,22 +57,13 @@ Map<String, dynamic> ticksHistoryRequest(String market) {
   return request;
 }
 
-WebSocketChannel connectWebSocketForMarket(
-  String market,
-  BuildContext context,
-  Map<String, Map<String, dynamic>> marketData,
-) {
-  final Uri url = Uri.parse(
-    'wss://ws.binaryws.com/websockets/v3?app_id=$appId&l=EN&brand=deriv&market=$market',
-  );
+Future<void> connectWebSocket(BuildContext context) async {
+  miniSocket = WebSocketChannel.connect(url);
 
-  WebSocketChannel miniSocket = WebSocketChannel.connect(url);
-
-  miniSocket.stream.listen(
+  miniSocket!.stream.listen(
     (dynamic message) {
       // Handle the received message
-      handleMiniResponse(message, context, miniSocket, market, marketData);
-      // print(message);
+      handleMiniResponse(message, context);
     },
     onError: (error) {
       // Handle the error
@@ -59,10 +75,14 @@ WebSocketChannel connectWebSocketForMarket(
     },
   );
 
-  // Subscribe to mini ticks for the specific market
-  subscribeMiniTicks(market, miniSocket);
+  // Subscribe to mini ticks for each market
+  for (final market in items) {
+    subscribeMiniTicks(formatMarkets(market), miniSocket!);
+  }
+}
 
-  return miniSocket;
+void closeMiniWebSocket() {
+  miniSocket?.sink.close();
 }
 
 Future<void> subscribeMiniTicks(
@@ -71,33 +91,21 @@ Future<void> subscribeMiniTicks(
   await miniTickSubscriber(market, miniSocket);
 }
 
-void closeMiniWebSocket() {
-  miniSocket?.sink.close();
-}
-
 Future<void> miniTickSubscriber(
     String market, WebSocketChannel miniSocket) async {
-  print("Now asking: $market");
-  final request = tickStream(market, miniSocket);
+  final request = tickStream(market);
   miniSocket.sink.add(jsonEncode(request));
 }
 
 Future<void> requestMiniTicksHistory(
     String market, WebSocketChannel miniSocket) async {
-  // print("Getting history: $market");
-
   final request = ticksHistoryRequest(market);
+  print("Reuqesting $market history");
   miniSocket.sink.add(jsonEncode(request));
 }
 
-void handleMiniResponse(
-    dynamic data,
-    BuildContext context,
-    WebSocketChannel miniSocket,
-    String market,
-    Map<String, Map<String, dynamic>> marketData) {
+void handleMiniResponse(dynamic data, BuildContext context) {
   final decodedData = jsonDecode(data);
-  // print("Here: $decodedData");
   if (decodedData['msg_type'] == 'history') {
     // Extract historical tick data
     final List<dynamic> prices = decodedData['history']['prices'];
@@ -119,9 +127,12 @@ void handleMiniResponse(
       });
     }
 
-    marketData[market] = {market: miniHistory};
+    // Update marketData for the specific market
+    currentMarket = decodedData['echo_req']['ticks_history'];
+    marketData[currentMarket!] = {currentMarket!: miniHistory};
 
     final List<Map<String, dynamic>> combinedData = marketData.values.toList();
+    print(combinedData);
     final minichartCubit = BlocProvider.of<MiniChartCubit>(context);
     minichartCubit.updateMiniChart(combinedData);
   } else if (decodedData['msg_type'] == 'tick') {
@@ -137,56 +148,20 @@ void handleMiniResponse(
       final tickEntry = {'close': price, 'epoch': utcTimeDouble};
 
       final String tickSymbol = tickData['symbol'];
+
       // Add tick entry to all market lists
-      for (var market in marketData.keys) {
-        // if (marketData[market] == null) {
-        //   marketData[market] = {};
-        // }
-        // if (marketData[market]![tickSymbol] == null) {
-        //   marketData[market]![tickSymbol] = [];
-        // } 
+      for (final market in marketData.keys) {
         if (marketData[market] != null &&
             marketData[market]![tickSymbol] != null) {
           marketData[market]![tickSymbol]!.add(tickEntry);
           marketData[market]![tickSymbol]!.removeAt(0);
           final List<Map<String, dynamic>> combinedData =
               marketData.values.toList();
-          final minichartCubit = BlocProvider.of<MiniChartCubit>(context);
           minichartCubit.updateMiniChart(combinedData);
         }
       }
-
-      // print(market);
-      // print(marketData[market]![tickSymbol].length);
     }
   }
-
-  // } else if (decodedData['msg_type'] == 'tick') {
-  //   // Handle tick data
-  //   final tickData = decodedData['tick'];
-  //   if (tickData != null) {
-  //     final double price = tickData['quote'].toDouble();
-  //     final int time = tickData['epoch'];
-  //     DateTime utcTime =
-  //         DateTime.fromMillisecondsSinceEpoch(time * 1000, isUtc: true);
-  //     double utcTimeDouble = utcTime.millisecondsSinceEpoch.toDouble() / 1000;
-
-  //     final String ticksHistory = tickData['symbol'];
-
-  //     final tickEntry = {'close': price, 'epoch': utcTimeDouble};
-
-  //     if (marketData.containsKey(ticksHistory)) {
-  //       marketData[ticksHistory]!.add(tickEntry);
-  //     } else {
-  //       marketData[ticksHistory] = [tickEntry];
-  //     }
-
-  // final List<List<Map<String, dynamic>>> combinedData =
-  //     marketData.values.toList();
-  // final minichartCubit = BlocProvider.of<MiniChartCubit>(context);
-  // minichartCubit.updateMiniChart(combinedData);
-  //   }
-  // }
 }
 
 void handleMiniError(dynamic error) {

@@ -15,7 +15,7 @@ class CarouselChart extends StatefulWidget {
 }
 
 class _CarouselChartState extends State<CarouselChart> {
-  late MiniChartCubit minichartCubit;
+  MiniChartCubit miniChartCubit = MiniChartCubit();
   late Map<String, Map<String, dynamic>> marketData;
   List<FlSpot> spots = [];
   late double last = 0.0;
@@ -45,23 +45,16 @@ class _CarouselChartState extends State<CarouselChart> {
   @override
   void initState() {
     super.initState();
-    minichartCubit = MiniChartCubit();
+    miniChartCubit = MiniChartCubit();
     marketData = {};
-
-    // Establish WebSocket connections for each market
-    for (final market in items) {
-      final miniSocket =
-          connectWebSocketForMarket(formatMarkets(market), context, marketData);
-      marketSockets[market] = miniSocket;
-    }
+    // Establish a WebSocket connection
+    connectWebSocket(context);
+    // Subscribe to tick data for each market
   }
 
   @override
   void dispose() {
-    for (final market in items) {
-      final miniSocket = marketSockets[market];
-      miniSocket?.sink.close();
-    }
+    closeMiniWebSocket();
     miniChartCubit.close();
     super.dispose();
   }
@@ -104,6 +97,7 @@ class _CarouselChartState extends State<CarouselChart> {
                             height: 120,
                             width: 120,
                             child: SfCartesianChart(
+                              plotAreaBorderColor: Colors.transparent,
                               borderWidth: 0,
                               primaryXAxis: DateTimeAxis(
                                 isVisible: false,
@@ -128,7 +122,8 @@ class _CarouselChartState extends State<CarouselChart> {
                               ],
                             ),
                           ),
-                          Container(padding: const EdgeInsets.all(5),
+                          Container(
+                            padding: const EdgeInsets.all(5),
                             decoration: BoxDecoration(
                               color: spots.isNotEmpty &&
                                       spots[spots.length - 2].y > spots.last.y

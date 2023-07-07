@@ -3,13 +3,15 @@ import 'package:url_launcher/url_launcher.dart';
 
 // ignore: must_be_immutable
 class NewsContainer extends StatelessWidget {
-  NewsContainer({super.key, required this.feeds, required this.scrollable});
+  NewsContainer({super.key, required this.feeds, required this.scrollable,required this.scrollController});
 
   List<dynamic>? feeds;
   bool scrollable;
+  ScrollController? scrollController;
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
+      controller: scrollController,
       shrinkWrap: true,
       physics: scrollable ? const AlwaysScrollableScrollPhysics() : const NeverScrollableScrollPhysics(),
       itemCount: feeds?.length,

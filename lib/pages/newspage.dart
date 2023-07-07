@@ -18,13 +18,13 @@ class NewsPage extends StatefulWidget {
 
 class _NewsPageState extends State<NewsPage> {
   Future<List<dynamic>>? _lazyFuture;
-  final controller = ScrollController();
   final TextEditingController _textEditingController = TextEditingController();
   List<dynamic> _NewsData = [];
   List<dynamic> _constantData = [];
   List<dynamic> _OriginalNewsList = [];
   List<dynamic> _newsList = [];
   bool isLoading = true;
+  ScrollController _scrollController = ScrollController();
 
   void displayProgressIndicator() {
     Future.delayed(const Duration(seconds: 5), () {
@@ -68,37 +68,6 @@ class _NewsPageState extends State<NewsPage> {
     final newsTabBarCubit = context.read<NewsTabBarCubit>();
     final selectedTopic = newsTabBarCubit.state;
     _lazyFuture = getLazyNews(selectedTopic);
-    controller.addListener(() {
-      if (controller.position.maxScrollExtent == controller.offset) {
-        fetch();
-      }
-    });
-  }
-
-  Future<void> fetch() async {
-    final int originalNewsListLength = _OriginalNewsList.length;
-    const int takeCount = 8;
-    final remainingNewsCount = _NewsData.length - originalNewsListLength;
-
-    if (remainingNewsCount > 0) {
-      final int newsToAddCount =
-          remainingNewsCount < takeCount ? remainingNewsCount : takeCount;
-      final newNewsList =
-          _NewsData.skip(originalNewsListLength).take(newsToAddCount).toList();
-      setState(() {
-        _OriginalNewsList.addAll(newNewsList);
-      });
-    } else {
-      setState(() {
-        isLoading = false;
-      });
-    }
-  }
-
-  @override
-  void dispose() {
-    controller.dispose();
-    super.dispose();
   }
 
   @override
@@ -170,19 +139,17 @@ class _NewsPageState extends State<NewsPage> {
                   if (_textEditingController.text.isNotEmpty) {
                     final filteredList =
                         _applyFilter(_NewsData, _textEditingController.text);
-                    return NewsContainer(feeds: filteredList, scrollable: false);
+                    return NewsContainer(
+                      feeds: filteredList,
+                      scrollable: true,
+                      scrollController: _scrollController,
+                    );
                   } else if (_textEditingController.text.isEmpty) {
-                    bool once = true;
-                    if (once) {
-                      final int originalNewsListLength =
-                          _OriginalNewsList.length;
-                      const int takeCount = 8;
-                      _OriginalNewsList.addAll(
-                          _NewsData.skip(originalNewsListLength)
-                              .take(takeCount));
-                      once =!once;
-                    }
-                    return NewsContainer(feeds: _OriginalNewsList, scrollable: true);
+                    return NewsContainer(
+                      feeds: _NewsData,
+                      scrollable: true,
+                      scrollController: _scrollController,
+                    );
                   }
                 }
                 return const Text('No News Available');
@@ -191,9 +158,42 @@ class _NewsPageState extends State<NewsPage> {
           ),
         ],
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          // Scroll to top when the button is pressed
+          _scrollController.animateTo(
+            0,
+            duration: const Duration(milliseconds: 500),
+            curve: Curves.easeInOut,
+          );
+        },
+        child: const Icon(Icons.arrow_upward),
+      ),
       bottomNavigationBar: const BottomNavBar(
         index: 1,
       ),
     );
   }
 }
+
+
+
+                    // bool once = true;
+                    // if (once) {
+                    //   final int originalNewsListLength =
+                    //       _OriginalNewsList.length;
+                    //   const int takeCount = 8;
+                    //   _OriginalNewsList.addAll(
+                    //       _NewsData.skip(originalNewsListLength)
+                    //           .take(takeCount));
+                    //   once = !once;
+                    // }
+                    // print(_OriginalNewsList.length);
+
+                        // scrollController.addListener(() {
+    //   if (scrollController.position.maxScrollExtent ==
+    //       scrollController.offset) {
+    //     print("yes");
+    //     fetch();
+    //   }
+    // });

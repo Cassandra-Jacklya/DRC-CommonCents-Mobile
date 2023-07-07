@@ -9,7 +9,7 @@ Future<List<dynamic>> getLazyNews(String topic) async {
   var data;
   if (isAllTopic) {
     Uri url = Uri.parse(
-        'https://www.alphavantage.co/query?function=NEWS_SENTIMENT&sort=LATEST&limit=200&apikey=$apiKey');
+        'https://www.alphavantage.co/query?function=NEWS_SENTIMENT&sort=LATEST&limit=1000&apikey=$apiKey');
     var response = await http.get(url);
     if (response.statusCode == 200) {
       data = jsonDecode(response.body);
@@ -23,7 +23,7 @@ Future<List<dynamic>> getLazyNews(String topic) async {
     }
   } else {
     Uri url = Uri.parse(
-        'https://www.alphavantage.co/query?function=NEWS_SENTIMENT&topics=$topic&limit=200&apikey=$apiKey');
+        'https://www.alphavantage.co/query?function=NEWS_SENTIMENT&topics=$topic&limit=1000&apikey=$apiKey');
     var response = await http.get(url);
     if (response.statusCode == 200) {
       data = jsonDecode(response.body);

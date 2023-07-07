@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 
 const apiKey = '2W7M76O2TLJVJQCQ';
 Uri url = Uri.parse(
-    'https://www.alphavantage.co/query?function=NEWS_SENTIMENT&sort=LATEST&limit=200&apikey=$apiKey');
+    'https://www.alphavantage.co/query?function=NEWS_SENTIMENT&sort=LATEST&limit=1000&apikey=$apiKey');
 
 Future<List<dynamic>> getNews() async {
   var response = await http.get(url);
