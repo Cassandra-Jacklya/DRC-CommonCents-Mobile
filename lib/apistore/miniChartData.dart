@@ -139,22 +139,25 @@ void handleMiniResponse(
       final String tickSymbol = tickData['symbol'];
       // Add tick entry to all market lists
       for (var market in marketData.keys) {
-        if (marketData[market] == null) {
-          marketData[market] = {};
+        // if (marketData[market] == null) {
+        //   marketData[market] = {};
+        // }
+        // if (marketData[market]![tickSymbol] == null) {
+        //   marketData[market]![tickSymbol] = [];
+        // } 
+        if (marketData[market] != null &&
+            marketData[market]![tickSymbol] != null) {
+          marketData[market]![tickSymbol]!.add(tickEntry);
+          marketData[market]![tickSymbol]!.removeAt(0);
+          final List<Map<String, dynamic>> combinedData =
+              marketData.values.toList();
+          final minichartCubit = BlocProvider.of<MiniChartCubit>(context);
+          minichartCubit.updateMiniChart(combinedData);
         }
-        if (marketData[market]![tickSymbol] == null) {
-          marketData[market]![tickSymbol] = [];
-        }
-        marketData[market]![tickSymbol]!.add(tickEntry);
       }
 
+      // print(market);
       // print(marketData[market]![tickSymbol].length);
-      marketData[market]![tickSymbol]!.removeAt(0);
-
-      final List<Map<String, dynamic>> combinedData =
-          marketData.values.toList();
-      final minichartCubit = BlocProvider.of<MiniChartCubit>(context);
-      minichartCubit.updateMiniChart(combinedData);
     }
   }
 

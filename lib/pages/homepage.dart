@@ -27,7 +27,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    // _newsFuture = getNews();
+    _newsFuture = getNews();
     
   }
   
@@ -196,33 +196,10 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ),
                     const SizedBox(height: 20),
-                    Container(width: double.infinity, height: 220, //220
+                    Container(width: double.infinity, height: 180, //220
                       // padding: const EdgeInsets.all(10),
                       color: Colors.white,
                       child: const CarouselChart(),
-                      // child: ListView.builder(
-                      //   scrollDirection: Axis.horizontal,
-                      //   itemCount: 8,
-                      //   itemBuilder: (context, index) {
-                      //     return Container(
-                      //       margin: const EdgeInsets.all(8),
-                      //       child: Column(
-                      //         children: [
-                      //           Container(
-                      //             decoration: BoxDecoration(
-                      //               borderRadius: BorderRadius.circular(50),
-                      //               color: Colors.grey,
-                      //             ),
-                      //             height: 75,
-                      //             width: 75,
-                      //           ),
-                      //           const SizedBox(height: 15),
-                      //           const Text("Stock price"),
-                      //         ],
-                      //       ),
-                      //     );
-                      //   },
-                      // ),
                     ),
                     Container(
                       padding: const EdgeInsets.all(10),
@@ -255,21 +232,21 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ),
                     const SizedBox(height: 10),
-                    // FutureBuilder<List<dynamic>>(
-                    //   future: _newsFuture,
-                    //   builder: (context, snapshot) {
-                    //     if (snapshot.connectionState == ConnectionState.waiting) {
-                    //       return const CircularProgressIndicator();
-                    //     } else if (snapshot.hasError) {
-                    //       return Text('Error: ${snapshot.error}');
-                    //     } else if (snapshot.hasData) {
-                    //       final newsList = snapshot.data;
-                    //       return NewsContainer(feeds: newsList, scrollable: false,);
-                    //     } else {
-                    //       return const Text('No news available.');
-                    //     }
-                    //   },
-                    // ),
+                    FutureBuilder<List<dynamic>>(
+                      future: _newsFuture,
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState == ConnectionState.waiting) {
+                          return const CircularProgressIndicator();
+                        } else if (snapshot.hasError) {
+                          return Text('Error: ${snapshot.error}');
+                        } else if (snapshot.hasData) {
+                          final newsList = snapshot.data;
+                          return NewsContainer(feeds: newsList, scrollable: false,);
+                        } else {
+                          return const Text('No news available.');
+                        }
+                      },
+                    ),
                   ],
                 ),
               );

@@ -81,6 +81,7 @@ class _CarouselChartState extends State<CarouselChart> {
               Text(formatMarkets(market)),
               BlocBuilder<MiniChartCubit, List<Map<String, dynamic>>>(
                 builder: (context, miniData) {
+                  // print(miniData);
                   if (miniData.isNotEmpty) {
                     var dataForMarket = miniData.firstWhere(
                       (entry) => entry.containsKey(formatMarkets(market)),
@@ -95,37 +96,53 @@ class _CarouselChartState extends State<CarouselChart> {
                         spots.add(FlSpot(x, y));
                       }
                     }
+                    // print(market);
                     if (spots.isNotEmpty) {
-                      print("Spots: $spots");
-                      print(spots.length);
-                      return Container(
-                        height: 120,
-                        width: 120,
-                        child: SfCartesianChart(
-                          borderWidth: 0,
-                          primaryXAxis: DateTimeAxis(
-                            isVisible: false,
-                          ),
-                          primaryYAxis: NumericAxis(isVisible: false),
-                          series: <ChartSeries>[
-                            LineSeries<FlSpot, DateTime>(
-                              dataSource: spots,
-                              xValueMapper: (FlSpot spot, _) =>
-                                  DateTime.fromMillisecondsSinceEpoch(
-                                      spot.x.toInt() * 1000,
-                                      isUtc: true),
-                              yValueMapper: (FlSpot spot, _) => spot.y,
-                              yAxisName: 'secondaryYAxis',
-                              width: 2.0,
-                              color: Colors.black
-                              // color: spots[spots].length > 1
-                              //     ? Colors.black
-                              //     : spots[spots.length - 2].y > spots.last.y
-                              //         ? Colors.redAccent
-                              //         : Colors.greenAccent,
+                      return Column(
+                        children: [
+                          SizedBox(
+                            height: 120,
+                            width: 120,
+                            child: SfCartesianChart(
+                              borderWidth: 0,
+                              primaryXAxis: DateTimeAxis(
+                                isVisible: false,
+                              ),
+                              primaryYAxis: NumericAxis(isVisible: false),
+                              series: <ChartSeries>[
+                                LineSeries<FlSpot, DateTime>(
+                                  dataSource: spots,
+                                  xValueMapper: (FlSpot spot, _) =>
+                                      DateTime.fromMillisecondsSinceEpoch(
+                                          spot.x.toInt() * 1000,
+                                          isUtc: true),
+                                  yValueMapper: (FlSpot spot, _) => spot.y,
+                                  yAxisName: 'secondaryYAxis',
+                                  width: 2.0,
+                                  color: spots.isNotEmpty &&
+                                          spots[spots.length - 2].y >
+                                              spots.last.y
+                                      ? Colors.redAccent
+                                      : Colors.greenAccent,
+                                ),
+                              ],
                             ),
-                          ],
-                        ),
+                          ),
+                          Container(padding: const EdgeInsets.all(5),
+                            decoration: BoxDecoration(
+                              color: spots.isNotEmpty &&
+                                      spots[spots.length - 2].y > spots.last.y
+                                  ? Colors.redAccent
+                                  : Colors.greenAccent,
+                              borderRadius:
+                                  const BorderRadius.all(Radius.circular(10)),
+                            ),
+                            child: Text(
+                              spots.last.y.toString(),
+                              // style: TextStyle(color: Colors.white),
+                            ),
+                          )
+                        ],
                       );
                     } else {
                       return Container();
