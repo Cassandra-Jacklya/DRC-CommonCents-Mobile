@@ -94,13 +94,14 @@ Future<void> subscribeMiniTicks(
 Future<void> miniTickSubscriber(
     String market, WebSocketChannel miniSocket) async {
   final request = tickStream(market);
+  // print("Streaming $market ");
   miniSocket.sink.add(jsonEncode(request));
 }
 
 Future<void> requestMiniTicksHistory(
     String market, WebSocketChannel miniSocket) async {
   final request = ticksHistoryRequest(market);
-  print("Reuqesting $market history");
+  // print("Reuqesting $market history");
   miniSocket.sink.add(jsonEncode(request));
 }
 
@@ -132,7 +133,7 @@ void handleMiniResponse(dynamic data, BuildContext context) {
     marketData[currentMarket!] = {currentMarket!: miniHistory};
 
     final List<Map<String, dynamic>> combinedData = marketData.values.toList();
-    print(combinedData);
+    // print(combinedData);
     final minichartCubit = BlocProvider.of<MiniChartCubit>(context);
     minichartCubit.updateMiniChart(combinedData);
   } else if (decodedData['msg_type'] == 'tick') {
@@ -157,6 +158,7 @@ void handleMiniResponse(dynamic data, BuildContext context) {
           marketData[market]![tickSymbol]!.removeAt(0);
           final List<Map<String, dynamic>> combinedData =
               marketData.values.toList();
+          // print(combinedData);
           minichartCubit.updateMiniChart(combinedData);
         }
       }

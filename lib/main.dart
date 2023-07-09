@@ -99,7 +99,7 @@ class _MainAppState extends State<MainApp> {
           BlocProvider<CandlestickCubit>(create: (context) => CandlestickCubit()),
           BlocProvider<MarketsCubit>(create: (context) => MarketsCubit()),
           BlocProvider<IsCandleCubit>(create: (content) => IsCandleCubit()),
-          BlocProvider<MiniChartCubit>(create: ((context) => MiniChartCubit()))
+          BlocProvider<MiniChartCubit>(create: (context) => MiniChartCubit())
         ],
         child: GestureDetector(
           onTap: () {

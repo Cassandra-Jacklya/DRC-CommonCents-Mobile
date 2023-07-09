@@ -19,37 +19,35 @@ class _CarouselChartState extends State<CarouselChart> {
   late Map<String, Map<String, dynamic>> marketData;
   List<FlSpot> spots = [];
   late double last = 0.0;
-
-  final List<String> items = [
-    'Volatility 10',
-    'Volatility 25',
-    'Volatility 50',
-    'Volatility 75',
-    'Volatility 100',
-    'Volatility 10 (1S)',
-    'Volatility 25 (1S)',
-    'Volatility 50 (1S)',
-    'Volatility 75 (1S)',
-    'Volatility 100 (1S)',
-    'Jump 10',
-    'Jump 25',
-    'Jump 50',
-    'Jump 75',
-    'Jump 100',
-    'Bear Market',
-    'Bull Market',
-  ];
-
-  Map<String, WebSocketChannel> marketSockets = {};
+  late List<String> items;
 
   @override
   void initState() {
     super.initState();
+
+    items = [
+      'Volatility 10',
+      'Volatility 25',
+      'Volatility 50',
+      'Volatility 75',
+      'Volatility 100',
+      'Volatility 10 (1S)',
+      'Volatility 25 (1S)',
+      'Volatility 50 (1S)',
+      'Volatility 75 (1S)',
+      'Volatility 100 (1S)',
+      'Jump 10',
+      'Jump 25',
+      'Jump 50',
+      'Jump 75',
+      'Jump 100',
+      'Bear Market',
+      'Bull Market',
+    ];
     miniChartCubit = MiniChartCubit();
     marketData = {};
     // Establish a WebSocket connection
     connectWebSocket(context);
-    // Subscribe to tick data for each market
   }
 
   @override
@@ -73,8 +71,8 @@ class _CarouselChartState extends State<CarouselChart> {
             children: [
               Text(formatMarkets(market)),
               BlocBuilder<MiniChartCubit, List<Map<String, dynamic>>>(
+                bloc: minichartCubit,
                 builder: (context, miniData) {
-                  // print(miniData);
                   if (miniData.isNotEmpty) {
                     var dataForMarket = miniData.firstWhere(
                       (entry) => entry.containsKey(formatMarkets(market)),
@@ -89,7 +87,6 @@ class _CarouselChartState extends State<CarouselChart> {
                         spots.add(FlSpot(x, y));
                       }
                     }
-                    // print(market);
                     if (spots.isNotEmpty) {
                       return Column(
                         children: [
