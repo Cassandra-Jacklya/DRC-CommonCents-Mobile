@@ -171,5 +171,5 @@ void handleMiniError(dynamic error) {
 }
 
 void handleMiniConnectionClosed() {
-  print("Connection closed");
+  // print("Connection closed");
 }

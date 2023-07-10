@@ -333,11 +333,39 @@ class _PasswordState extends State<Password> {
   }
 }
 
-class TradeDetails extends StatelessWidget {
-  const TradeDetails({super.key});
+class TradeDetails extends StatefulWidget {
+  late String status;
+  late double entry;
+  late double exit;
+  late double pNl;
+  late String marketType;
+  late int duration;
+  late String basis;
+  late double buyPrice;
+  late double payout;
+  late String strategy;
 
+  TradeDetails({
+    super.key,
+    required this.status,
+    required this.entry,
+    required this.exit,
+    required this.pNl,
+    required this.marketType,
+    required this.duration,
+    required this.basis,
+    required this.buyPrice,
+    required this.payout,
+    required this.strategy,
+  });
+  _TradeDetailsState createState() => _TradeDetailsState();
+}
+
+class _TradeDetailsState extends State<TradeDetails> {
   @override
   Widget build(BuildContext context) {
+    print(widget.strategy);
+
     return AlertDialog(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10),
@@ -346,7 +374,8 @@ class TradeDetails extends StatelessWidget {
       title: Container(
         height: 60,
         decoration: BoxDecoration(
-            color: Colors.grey[400],
+            color:
+                widget.status == 'Win' ? Colors.greenAccent : Colors.redAccent,
             borderRadius: const BorderRadius.only(
                 topLeft: Radius.circular(10), topRight: Radius.circular(10))),
         padding: const EdgeInsets.all(10),
@@ -355,11 +384,11 @@ class TradeDetails extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              'Trade Details',
+              widget.status == "Win" ? "WON" : "LOST",
               style: Theme.of(context).textTheme.displayLarge!.merge(
                     const TextStyle(
                       fontSize: 18,
-                      color: Colors.black,
+                      color: Colors.white,
                     ),
                   ),
             ),
@@ -367,97 +396,224 @@ class TradeDetails extends StatelessWidget {
         ),
       ),
       content: Container(
-          padding: const EdgeInsets.only(top: 10),
+          // padding: const EdgeInsets.only(top: 10),
           child: SizedBox(
-            height: MediaQuery.of(context).size.height * 0.28,
-            child: Column(
-              children: [
-                Container(
-                  child: Column(
+        height: MediaQuery.of(context).size.height * 0.4,
+        width: MediaQuery.of(context).size.width * 0.8,
+        child: Column(
+          children: [
+            Container(
+              child: Column(
+                children: [
+                  // const SizedBox(height: 10),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      const SizedBox(height: 10),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: const [
-                          Text("Stake"),
-                          Flexible(
-                            child: Text(
-                              "......................",
-                              overflow: TextOverflow.ellipsis,
+                      Stack(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(top: 20),
+                            child: Container(
+                              padding: const EdgeInsets.only(top: 10),
+                              height: MediaQuery.of(context).size.height * 0.08,
+                              width: MediaQuery.of(context).size.width * 0.3,
+                              decoration: BoxDecoration(
+                                border: Border.all(color: Colors.black26),
+                                borderRadius: BorderRadius.circular(10),
+                                boxShadow: const [
+                                  BoxShadow(
+                                    color: Colors.white,
+                                    spreadRadius: 2,
+                                    blurRadius: 5,
+                                    offset: Offset(0, 3),
+                                  ),
+                                ],
+                              ),
+                              child: Center(
+                                child: Text(widget.entry.toStringAsFixed(2)),
+                              ),
                             ),
                           ),
-                          Text("10.00 USD"),
+                          Positioned(
+                            top: 10,
+                            right: 17,
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 10, vertical: 5),
+                              decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  border: Border.all(color: Colors.black26)),
+                              child: const Text(
+                                "Entry spot",
+                                style: TextStyle(fontSize: 16),
+                              ),
+                            ),
+                          ),
                         ],
                       ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: const [
-                          Text("Payout"),
-                          Flexible(
-                            child: Text(
-                              "......................",
-                              overflow: TextOverflow.ellipsis,
+                      Stack(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(top: 20),
+                            child: Container(
+                              padding: const EdgeInsets.only(top: 10),
+                              height: MediaQuery.of(context).size.height * 0.08,
+                              width: MediaQuery.of(context).size.width * 0.3,
+                              decoration: BoxDecoration(
+                                border: Border.all(color: Colors.black26),
+                                borderRadius: BorderRadius.circular(10),
+                                boxShadow: const [
+                                  BoxShadow(
+                                    color: Colors.white,
+                                    spreadRadius: 2,
+                                    blurRadius: 5,
+                                    offset: Offset(0, 3),
+                                  ),
+                                ],
+                              ),
+                              child: Center(
+                                child: Text(widget.exit.toStringAsFixed(2)),
+                              ),
                             ),
                           ),
-                          Text("N/A"),
-                        ],
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: const [
-                          Text("Ticks"),
-                          Flexible(
-                            child: Text(
-                              "......................",
-                              overflow: TextOverflow.ellipsis,
+                          Positioned(
+                            top: 10,
+                            right: 17,
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 10, vertical: 5),
+                              decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  border: Border.all(color: Colors.black26)),
+                              child: const Text(
+                                "Entry spot",
+                                style: TextStyle(fontSize: 16),
+                              ),
                             ),
                           ),
-                          Text("6"),
                         ],
                       ),
                     ],
                   ),
-                ),
-                const SizedBox(height: 30),
-                Container(
-                  child: Column(
+                  SizedBox(height: MediaQuery.of(context).size.height * 0.03),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment
-                            .start, // Aligns "Strategy" text to the left
-                        children: const [
-                          Text("Strategy"),
-                          Spacer(), // Adds flexible space between elements
-                          Text("......................"),
-                          Text("Higher"),
-                        ],
+                      Text(
+                        "Profit/loss",
+                        style: TextStyle(
+                            color: widget.status == "Win"
+                                ? Colors.greenAccent
+                                : Colors.redAccent),
                       ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: const [
-                          Text("Total profit/loss"),
-                          Text("......................"),
-                          Text("-10.00"),
-                        ],
+                      const Flexible(
+                        child: Text(
+                          "......................",
+                        ),
+                      ),
+                      Text(
+                        widget.status == "Win"
+                            ? "+ ${widget.pNl.toStringAsFixed(2)}"
+                            : "-${widget.pNl.toStringAsFixed(2)}",
+                        style: TextStyle(
+                            color: widget.status == "Win"
+                                ? Colors.greenAccent
+                                : Colors.redAccent),
                       ),
                     ],
                   ),
-                ),
-                const SizedBox(height: 30),
-                GestureDetector(
-                  onTap: () {
-                    Navigator.pop(context);
-                  },
-                  child: Container(
-                    height: 50,
-                    width: 100,
-                    color: Colors.grey[300],
-                    child: const Center(child: Text("Close")),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      const Text(
+                        "Market Type",
+                      ),
+                      const Flexible(
+                        child: Text(
+                          "......................",
+                        ),
+                      ),
+                      Text(widget.marketType),
+                    ],
                   ),
-                )
-              ],
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      const Text(
+                        "Duration",
+                      ),
+                      const Flexible(
+                        child: Text(
+                          "......................",
+                        ),
+                      ),
+                      Text(widget.duration.toString()),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      const Text(
+                        "Basis",
+                      ),
+                      const Flexible(
+                        child: Text(
+                          "......................",
+                        ),
+                      ),
+                      Text(widget.basis),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      const Text(
+                        "Buy Price",
+                      ),
+                      const Flexible(
+                        child: Text(
+                          "......................",
+                        ),
+                      ),
+                      Text("${widget.buyPrice.toStringAsFixed(2)} USD"),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      const Text(
+                        "Payout limit",
+                      ),
+                      const Flexible(
+                        child: Text(
+                          "......................",
+                        ),
+                      ),
+                      Text("${widget.payout.toStringAsFixed(2)} USD"),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      const Text(
+                        "Strategy",
+                      ),
+                      const Flexible(
+                        child: Text(
+                          "......................",
+                        ),
+                      ),
+                      Text(widget.strategy),
+                    ],
+                  ),
+                ],
+              ),
             ),
-          )),
+            const SizedBox(height: 30),
+          ],
+        ),
+      )),
     );
   }
 }

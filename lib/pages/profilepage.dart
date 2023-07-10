@@ -21,6 +21,7 @@ class _ProfilePageState extends State<ProfilePage> {
   String displayName = ''; 
   double balance = 0.0; 
   String email = '';
+  late Map<String, dynamic> forTradeHisitory;
 
   @override
   void initState() {
@@ -38,6 +39,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
       if (docSnapshot.exists) {
         final data = docSnapshot.data();
+        forTradeHisitory = docSnapshot.data()!;
         if (data != null) {
           setState(() {
             photoUrl = data['photoURL'] ?? ''; // Get the photoURL if it exists

@@ -1,3 +1,4 @@
+import 'package:commoncents/pages/tradeHistory.dart';
 import 'package:flutter/material.dart';
 import '../pages/notifications.dart';
 import 'package:iconsax/iconsax.dart';
@@ -52,7 +53,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const NotificationPage()),
+                  MaterialPageRoute(builder: (context) => TradeHistory()),
                 );
               },
             ),

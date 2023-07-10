@@ -39,3 +39,45 @@ String formatMarkets(String market) {
       return market.toLowerCase().replaceAll(' ', '_');
   }
 }
+
+String reverseMarkets(String market) {
+  switch (market) {
+    case 'R_10':
+      return 'Volatility 10';
+    case 'R_25':
+      return 'Volatiltiy 25';
+    case 'R_50':
+      return 'Volatility 50';
+    case 'R_75':
+      return 'Volatility 75';
+    case 'R_100':
+      return 'Volatility 100';
+    case '1HZ10V':
+      return 'Volatility 10 (1S)';
+    case '1HZ25V':
+      return 'Volatility 25 (1S)';
+    case '1HZ50V':
+      return 'Volatility 50 (1S)';
+    case '1HZ75V':
+      return 'Volatility 75 (1S)';
+    case '1HZ100V':
+      return 'Volatility 100 (1S)';
+    case 'JD10':
+      return 'Jump 10';
+    case 'JD25':
+      return 'Jump 25';
+    case 'JD50':
+      return 'Jump 50';
+    case 'JD75':
+      return 'Jump 75';
+    case 'JD100':
+      return 'Jump 100';
+    case 'RDBEAR':
+      return 'Bear Market';
+    case 'RDBULL':
+      return 'Bull Market';
+
+    default:
+      return market.toLowerCase().replaceAll(' ', '_');
+  }
+}
