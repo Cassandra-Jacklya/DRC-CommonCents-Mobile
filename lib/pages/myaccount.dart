@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'citizenship.dart';
 import 'package:iconsax/iconsax.dart';
 import '../components/popup.dart';
 
@@ -22,37 +21,7 @@ class MyAccount extends StatefulWidget {
 }
 
 class _MyAccountState extends State<MyAccount> {
-  DateTime? _selectedDate;
-  String? _selectedCitizenship;
   TextEditingController textEditingController = TextEditingController();
-
-  void _navigateToCitizenship(BuildContext context) async {
-    final result = await Navigator.push<String>(
-      context,
-      MaterialPageRoute(builder: (context) => Citizenship()),
-    );
-
-    if (result != null) {
-      setState(() {
-        _selectedCitizenship = result;
-      });
-    }
-  }
-
-  Future<void> _selectDate(BuildContext context) async {
-    final DateTime? pickedDate = await showDatePicker(
-      context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime(1900),
-      lastDate: DateTime(2100),
-    );
-
-    if (pickedDate != null && pickedDate != _selectedDate) {
-      setState(() {
-        _selectedDate = pickedDate;
-      });
-    }
-  }
 
   @override
   Widget build(BuildContext context) {

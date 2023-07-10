@@ -3,7 +3,7 @@ import 'package:commoncents/components/popup.dart';
 import 'package:commoncents/pages/myaccount.dart';
 import 'package:commoncents/pages/security.dart';
 import 'package:commoncents/pages/leaderboard.dart';
-import 'package:commoncents/pages/recentTrades.dart';
+import 'package:commoncents/pages/tradeHistory.dart';
 import 'package:commoncents/pages/help_support.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -17,9 +17,9 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  String photoUrl = ''; // Initialize with an empty string
-  String displayName = ''; // Initialize with an empty string
-  double balance = 0.0; // Initialize with 0.0
+  String photoUrl = ''; 
+  String displayName = ''; 
+  double balance = 0.0; 
   String email = '';
 
   @override
@@ -103,10 +103,6 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    // FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
-    // User? user = FirebaseAuth.instance.currentUser;
-    // CollectionReference collectionReference =
-    //     firebaseFirestore.collection('users');
 
     return Scaffold(
       appBar: const CustomAppBar(
@@ -205,7 +201,7 @@ class _ProfilePageState extends State<ProfilePage> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => Leaderboard()));
+                                    builder: (context) => TradeHistory()));
                           },
                         ),
                         buildContainer(
@@ -216,7 +212,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) =>
-                                        const RecentTrades()));
+                                        TradeHistory()));
                           },
                         ),
                         buildContainer(

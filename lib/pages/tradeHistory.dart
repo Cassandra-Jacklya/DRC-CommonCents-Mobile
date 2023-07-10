@@ -1,31 +1,27 @@
 import 'package:flutter/material.dart';
 import '../components/popup.dart';
 
-class RecentTrades extends StatelessWidget {
-  const RecentTrades({super.key});
+class TradeHistory extends StatefulWidget{
+  
+  _TradeHistoryState createState() => _TradeHistoryState();
+}
+
+class _TradeHistoryState extends State<TradeHistory> {
 
   @override
   Widget build(BuildContext context) {
+    // print(data['photoUrl']);
     return Scaffold(
       appBar: AppBar(
         shadowColor: Colors.transparent,
         toolbarHeight: 60,
-        backgroundColor: Colors.grey[300],
-        title: const Text("Recent Trades"),
+        backgroundColor: Color(0XFF3366FF),
+        title: const Text("Recent Trades",style: TextStyle(color: Colors.white),),
         foregroundColor: Colors.black,
+        iconTheme: IconThemeData(color: Colors.white),
       ),
       body: ListView(
         children: [
-          Center(
-            child: Container(
-              margin: const EdgeInsets.only(top: 30),
-              width: MediaQuery.of(context).size.width * 0.9,
-              child: const Text(
-                "Last 5 trades...",
-                style: TextStyle(fontSize: 20),
-              ),
-            ),
-          ),
           ListView.builder(
             shrinkWrap: true,
             physics: NeverScrollableScrollPhysics(),
