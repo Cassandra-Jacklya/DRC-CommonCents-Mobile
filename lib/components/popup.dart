@@ -188,6 +188,32 @@ class Password extends StatefulWidget {
 class _PasswordState extends State<Password> {
   TextEditingController textEditingController = TextEditingController();
   late bool viewPass;
+  final _auth = FirebaseAuth.instance;
+
+  Future<void> checkPassword(BuildContext context) async {
+    final user = _auth.currentUser;
+    if (user != null) {
+      final credential = EmailAuthProvider.credential(
+        email: user.email!,
+        password: textEditingController.text,
+      );
+      final authResult = await user.reauthenticateWithCredential(credential);
+
+      if (authResult.user != null) {
+        // Password is correct, proceed with changing the password or any other actions
+        Navigator.of(context).pop();
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => ChangePassword()),
+        );
+      } else {
+        // Password is incorrect, display an error message
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Invalid password')),
+        );
+      }
+    }
+  }
 
   @override
   void initState() {
@@ -273,10 +299,9 @@ class _PasswordState extends State<Password> {
                     height: 50,
                     width: 120,
                     decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(10),
-                      border: Border.all(color: Colors.black)
-                    ),
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(10),
+                        border: Border.all(color: Colors.black)),
                     child: const Center(child: Text("Cancel")),
                   ),
                 ),
@@ -285,11 +310,7 @@ class _PasswordState extends State<Password> {
                 padding: const EdgeInsets.all(8.0),
                 child: GestureDetector(
                   onTap: () {
-                    Navigator.of(context).pop();
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => ChangePassword()),
-                    );
+                    checkPassword(context);
                   },
                   child: Container(
                     height: 50,
@@ -298,7 +319,9 @@ class _PasswordState extends State<Password> {
                       color: Color(0XFF3366FF),
                       borderRadius: BorderRadius.circular(10),
                     ),
-                    child: const Center(child: Text(style: TextStyle(color: Colors.white),"Yes")),
+                    child: const Center(
+                        child:
+                            Text(style: TextStyle(color: Colors.white), "Yes")),
                   ),
                 ),
               ),

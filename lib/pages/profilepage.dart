@@ -20,6 +20,7 @@ class _ProfilePageState extends State<ProfilePage> {
   String photoUrl = ''; // Initialize with an empty string
   String displayName = ''; // Initialize with an empty string
   double balance = 0.0; // Initialize with 0.0
+  String email = '';
 
   @override
   void initState() {
@@ -37,12 +38,13 @@ class _ProfilePageState extends State<ProfilePage> {
 
       if (docSnapshot.exists) {
         final data = docSnapshot.data();
-        if (data != null && data.containsKey('photoURL')) {
+        if (data != null) {
           setState(() {
             photoUrl = data['photoURL'] ?? ''; // Get the photoURL if it exists
             displayName = data['displayName'] ??
                 'nope'; // Get the displayName if it exists
             balance = data['balance'].toDouble() ?? 0.0; // Get the balance if it exists
+            email = data['email'];
           });
         }
       }
@@ -157,7 +159,7 @@ class _ProfilePageState extends State<ProfilePage> {
                             displayName,
                             style: const TextStyle(fontFamily: 'Roboto'),
                           ),
-                          Text(balance.toString(),
+                          Text(balance.toStringAsFixed(2),
                               style: const TextStyle(fontFamily: "Roboto"))
                         ],
                       ),
@@ -183,17 +185,7 @@ class _ProfilePageState extends State<ProfilePage> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => MyAccount(displayName: displayName,photoUrl: photoUrl,balance: balance,)));
-                          },
-                        ),
-                        buildContainer(
-                          title: "Security",
-                          icon: null,
-                          onPressed: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => Security(displayName: displayName,)));
+                                    builder: (context) => MyAccount(displayName: displayName,photoUrl: photoUrl,balance: balance,email: email ,)));
                           },
                         ),
                         buildContainer(
@@ -203,11 +195,21 @@ class _ProfilePageState extends State<ProfilePage> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => const Leaderboard()));
+                                    builder: (context) => Leaderboard()));
                           },
                         ),
                         buildContainer(
-                          title: "Recent Trades",
+                          title: "Trade History",
+                          icon: null,
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => Leaderboard()));
+                          },
+                        ),
+                        buildContainer(
+                          title: "Help and Support",
                           icon: null,
                           onPressed: () {
                             Navigator.push(
@@ -218,7 +220,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           },
                         ),
                         buildContainer(
-                          title: "Help and Support",
+                          title: "FAQs",
                           icon:null,
                           onPressed: () {
                             Navigator.push(
@@ -228,19 +230,22 @@ class _ProfilePageState extends State<ProfilePage> {
                           },
                           showBottomBorder: false,
                         ),
-                        buildContainer(
-                          title: "Logout",
-                          icon: const Icon(Iconsax.logout),
-                          onPressed: () {
-                            showDialog(
+                        GestureDetector(onTap: (){                            showDialog(
                               context: context,
                               builder: (BuildContext context) {
                                 return const LogOut();
                               },
-                            );
-                          },
-                          showBottomBorder: false,
-                        ),
+                            );},
+                          child: Container(padding: const EdgeInsets.all(15), height: MediaQuery.of(context).size.height*0.07,width: MediaQuery.of(context).size.width*0.9,decoration: const BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(10)), color: Color(0XFF3366FF)),
+                            child: Row(children:  [
+                              Icon(color: Colors.white, Iconsax.logout),
+                              SizedBox(width: MediaQuery.of(context).size.width*0.3),
+                              Text("Logout", style: TextStyle(fontSize:18, color: Colors.white),)
+                            ],
+                        
+                            ),
+                          ),
+                        )
                       ],
                     ),
                   ],
