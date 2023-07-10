@@ -149,7 +149,7 @@ class _TradeHistoryState extends State<TradeHistory> {
         ),
       );
     } else {
-      return Container();
+      return const CircularProgressIndicator();
     }
   }
 }
