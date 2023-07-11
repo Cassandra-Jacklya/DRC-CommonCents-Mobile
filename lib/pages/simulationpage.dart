@@ -4,6 +4,7 @@ import 'package:commoncents/cubit/isCandle_cubit.dart';
 import 'package:commoncents/cubit/markets_cubit.dart';
 import 'package:commoncents/cubit/numberpicker_cubit.dart';
 import 'package:commoncents/cubit/stake_payout_cubit.dart';
+import 'package:commoncents/pages/simulationpage_guest.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
