@@ -18,14 +18,17 @@ class RegisterView extends StatefulWidget {
   State<RegisterView> createState() => _RegisterViewState();
 }
 
-class _RegisterViewState extends State<RegisterView> with SingleTickerProviderStateMixin {
+class _RegisterViewState extends State<RegisterView>
+    with SingleTickerProviderStateMixin {
   bool viewPass = false;
   bool viewConfirmPass = false;
   late final TextEditingController _email;
   late final TextEditingController _password;
   late final TextEditingController _confirmPassword;
   late final Future<FirebaseApp> _firebaseInitialization;
-  late final AnimationController _controller = AnimationController(vsync: this, duration: const Duration(seconds: 3))..repeat();
+  late final AnimationController _controller =
+      AnimationController(vsync: this, duration: const Duration(seconds: 3))
+        ..repeat();
 
   Future<FirebaseApp> initializeFirebase() async {
     await Firebase.initializeApp(
@@ -35,15 +38,40 @@ class _RegisterViewState extends State<RegisterView> with SingleTickerProviderSt
   }
 
   void addDocument() async {
-     FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
-      User? user = FirebaseAuth.instance.currentUser;
-      CollectionReference collectionReference = firebaseFirestore.collection('users');
-      collectionReference.doc(user!.uid).set({
+    FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
+    User? user = FirebaseAuth.instance.currentUser;
+
+    if (user != null) {
+      CollectionReference collectionReference =
+          firebaseFirestore.collection('users');
+      DocumentReference userDocument = collectionReference.doc(user.uid);
+
+      // Create the 'tradeHistory' collection for the user
+      CollectionReference tradeHistoryCollection =
+          userDocument.collection('tradeHistory');
+
+      await userDocument.set({
         'balance': 100000,
         'displayName': user.email,
         'email': user.email,
         'photoUrl': '',
       });
+
+      // Create a new trade summary document within the 'tradeHistory' collection
+      DocumentReference tradeSummaryDoc =
+          tradeHistoryCollection.doc('tradeSummary');
+      await tradeSummaryDoc.set({
+        'netWorth': 0,
+        'timestamp': DateTime.now().millisecondsSinceEpoch,
+        'totalLoss': 0,
+        'totalProfit': 0,
+      });
+    }
+  }
+
+  void addTradeSummary() async {
+    FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
+    User? user = FirebaseAuth.instance.currentUser;
   }
 
   @override
@@ -68,7 +96,11 @@ class _RegisterViewState extends State<RegisterView> with SingleTickerProviderSt
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CustomAppBar(title: "Create an Account", logo: "", hasBell: false,),
+      appBar: const CustomAppBar(
+        title: "Create an Account",
+        logo: "",
+        hasBell: false,
+      ),
       body: FutureBuilder<FirebaseApp>(
         future: _firebaseInitialization,
         builder: (context, snapshot) {
@@ -83,26 +115,34 @@ class _RegisterViewState extends State<RegisterView> with SingleTickerProviderSt
                         padding: const EdgeInsets.fromLTRB(0, 100, 0, 0),
                         child: AnimatedBuilder(
                           animation: _controller,
-                          builder: (_, child) { 
+                          builder: (_, child) {
                             return Transform.rotate(
-                              angle: _controller.value * 2 * math.pi,
-                              child: child
-                            );
+                                angle: _controller.value * 2 * math.pi,
+                                child: child);
                           },
                           child: const Image(
-                            image: AssetImage("assets/images/commoncents-logo.png"),
+                            image: AssetImage(
+                                "assets/images/commoncents-logo.png"),
                             height: 100,
                             width: 100,
-                            ),
+                          ),
                         ),
                       ),
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: const [
-                        Text("C", style: TextStyle(color: Color(0xFF0E34CC), fontWeight: FontWeight.bold),),
+                        Text(
+                          "C",
+                          style: TextStyle(
+                              color: Color(0xFF0E34CC),
+                              fontWeight: FontWeight.bold),
+                        ),
                         Text("ommon"),
-                        Text("C", style: TextStyle(fontWeight: FontWeight.bold),),
+                        Text(
+                          "C",
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
                         Text("ents")
                       ],
                     ),
@@ -118,9 +158,9 @@ class _RegisterViewState extends State<RegisterView> with SingleTickerProviderSt
                           keyboardType: TextInputType.emailAddress,
                           decoration: InputDecoration(
                             border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              borderSide: const BorderSide(color: Color(0xFF5F5F5F))
-                            ),
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide:
+                                    const BorderSide(color: Color(0xFF5F5F5F))),
                             labelText: 'Email',
                           ),
                         ),
@@ -136,12 +176,14 @@ class _RegisterViewState extends State<RegisterView> with SingleTickerProviderSt
                         obscureText: true,
                         decoration: InputDecoration(
                           border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide: const BorderSide(color: Color(0xFF5F5F5F))
-                          ),
-                          labelText: 'Password',             
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide:
+                                  const BorderSide(color: Color(0xFF5F5F5F))),
+                          labelText: 'Password',
                           suffixIcon: GestureDetector(
-                            child: viewPass ? const Icon(Iconsax.eye) : const Icon(Iconsax.eye_slash),
+                            child: viewPass
+                                ? const Icon(Iconsax.eye)
+                                : const Icon(Iconsax.eye_slash),
                             onTap: () {
                               setState(() {
                                 viewPass = !viewPass;
@@ -163,18 +205,20 @@ class _RegisterViewState extends State<RegisterView> with SingleTickerProviderSt
                           obscureText: true,
                           decoration: InputDecoration(
                             border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              borderSide: const BorderSide(color: Color(0xFF5F5F5F))
-                            ),
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide:
+                                    const BorderSide(color: Color(0xFF5F5F5F))),
                             labelText: 'Confirm Password',
                             suffixIcon: GestureDetector(
-                            child: viewConfirmPass ? const Icon(Iconsax.eye) : const Icon(Iconsax.eye_slash),
-                            onTap: () {
-                              setState(() {
-                                viewConfirmPass = !viewConfirmPass;
-                              });
-                            },
-                          ),
+                              child: viewConfirmPass
+                                  ? const Icon(Iconsax.eye)
+                                  : const Icon(Iconsax.eye_slash),
+                              onTap: () {
+                                setState(() {
+                                  viewConfirmPass = !viewConfirmPass;
+                                });
+                              },
+                            ),
                           ),
                         ),
                       ),
@@ -184,7 +228,7 @@ class _RegisterViewState extends State<RegisterView> with SingleTickerProviderSt
                       if (state is RegisterStateInitial) {
                       } else if (state is RegisterStateDone) {
                         addDocument();
-                        //show dialog to show user is registered 
+                        //show dialog to show user is registered
                         showDialog<String>(
                             barrierDismissible: false,
                             context: context,
@@ -197,14 +241,16 @@ class _RegisterViewState extends State<RegisterView> with SingleTickerProviderSt
                                       'You have registered using ${state.email}'),
                                   actions: <Widget>[
                                     TextButton(
-
                                       //goes to log in page
                                       onPressed: () {
                                         Navigator.pushReplacement(
                                           context,
                                           PageRouteBuilder(
-                                              pageBuilder: (context, anim1, anim2) => const LoginView(),
-                                              transitionDuration: Duration.zero),
+                                              pageBuilder:
+                                                  (context, anim1, anim2) =>
+                                                      const LoginView(),
+                                              transitionDuration:
+                                                  Duration.zero),
                                         );
                                       },
                                       child: const Text('Login'),
@@ -212,7 +258,6 @@ class _RegisterViewState extends State<RegisterView> with SingleTickerProviderSt
                                   ],
                                 ));
                       } else if (state is RegisterStateError) {
-
                         //show error dialog upon registering
                         showDialog<String>(
                             barrierDismissible: false,
@@ -237,7 +282,8 @@ class _RegisterViewState extends State<RegisterView> with SingleTickerProviderSt
                         padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
                         child: ElevatedButton(
                           style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all<Color>(const Color(0xFF3366FF)),
+                            backgroundColor: MaterialStateProperty.all<Color>(
+                                const Color(0xFF3366FF)),
                             shape: MaterialStateProperty.all<
                                 RoundedRectangleBorder>(
                               RoundedRectangleBorder(
@@ -261,7 +307,6 @@ class _RegisterViewState extends State<RegisterView> with SingleTickerProviderSt
                           ),
                         ),
                       );
-
                     }),
                     Padding(
                       padding: const EdgeInsets.fromLTRB(0, 15, 0, 0),
@@ -271,22 +316,22 @@ class _RegisterViewState extends State<RegisterView> with SingleTickerProviderSt
                         children: [
                           const Text(
                             "Have an account? ",
-                            style: TextStyle(
-                              fontSize: 13
-                            ),
+                            style: TextStyle(fontSize: 13),
                           ),
                           GestureDetector(
                             onTap: () {
                               Navigator.pushReplacement(
                                 context,
-                                MaterialPageRoute(builder: (context) => const LoginView()),
+                                MaterialPageRoute(
+                                    builder: (context) => const LoginView()),
                               );
                             },
-                            child: const Text("Log In",
-                              style: TextStyle(fontSize: 13,
-                                color: Color(0XFF3366FF),
-                                decoration: TextDecoration.underline
-                              ),
+                            child: const Text(
+                              "Log In",
+                              style: TextStyle(
+                                  fontSize: 13,
+                                  color: Color(0XFF3366FF),
+                                  decoration: TextDecoration.underline),
                             ),
                           ),
                         ],

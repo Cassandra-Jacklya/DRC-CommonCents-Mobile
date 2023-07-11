@@ -100,7 +100,7 @@ class _SimulationPageState extends State<SimulationPage> {
                   final User? user = FirebaseAuth.instance.currentUser;
                   if (user == null) {
                     //not logged in
-                    return Container();
+                    return SimulationPageGuest();
                   } else {
                     //logged in
                     BlocProvider.of<LoginStateBloc>(context).initFirebase('', '');
