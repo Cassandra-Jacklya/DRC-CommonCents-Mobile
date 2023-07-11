@@ -1,8 +1,6 @@
 import 'package:commoncents/cubit/news_tabbar_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../pages/newspage.dart';
-import '../apistore/news_lazyLoading.dart';
 import '../components/formatString.dart';
 
 class NewsTabBar extends StatefulWidget {
@@ -77,7 +75,7 @@ class _NewsTabBarState extends State<NewsTabBar>
                 if (_animationController.status != AnimationStatus.forward) {
                   _animationController.forward(from: 0.0);
                 }
-
+    
                 final chosenTopic = formatTopicForAPI(topic);
                 widget.onTopicChanged(selectedTopic);
               },

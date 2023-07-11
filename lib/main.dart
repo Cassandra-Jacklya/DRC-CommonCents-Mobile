@@ -1,3 +1,4 @@
+import 'package:commoncents/components/carousel_chart.dart';
 import 'package:commoncents/cubit/candlestick_cubit.dart';
 import 'package:commoncents/cubit/isCandle_cubit.dart';
 import 'package:commoncents/cubit/markets_cubit.dart';
@@ -99,7 +100,7 @@ class _MainAppState extends State<MainApp> {
           BlocProvider<CandlestickCubit>(create: (context) => CandlestickCubit()),
           BlocProvider<MarketsCubit>(create: (context) => MarketsCubit()),
           BlocProvider<IsCandleCubit>(create: (content) => IsCandleCubit()),
-          BlocProvider<MiniChartCubit>(create: (context) => MiniChartCubit())
+          BlocProvider<MiniChartCubit>(create: (context) => MiniChartCubit(),)
         ],
         child: GestureDetector(
           onTap: () {

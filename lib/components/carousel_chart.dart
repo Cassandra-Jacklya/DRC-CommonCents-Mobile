@@ -52,8 +52,8 @@ class _CarouselChartState extends State<CarouselChart> {
 
   @override
   void dispose() {
-    closeMiniWebSocket();
     miniChartCubit.close();
+    closeMiniWebSocket();
     super.dispose();
   }
 

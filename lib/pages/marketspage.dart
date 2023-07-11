@@ -40,50 +40,59 @@ class _MarketsState extends State<Markets> {
 
   @override
   Widget build(BuildContext context) {
-    final marketsCubit = context.read<MarketsCubit>();
+    // final marketsCubit = context.read<MarketsCubit>();
 
-    return Scaffold(
-      appBar: AppBar(
-  shadowColor: Colors.transparent,
-  toolbarHeight: 60,
-  backgroundColor: Color(0xFF3366FF),
-  foregroundColor: Colors.black,
-  title: const Text("Markets"),
-  leading: IconButton(
-    icon: Icon(Icons.arrow_back),
-    onPressed: () {
-      marketsCubit.updateMarkets(marketsCubit.state);
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => SimulationPage()),
-      );
-    },
-  ),
-),
-      body: BlocBuilder<MarketsCubit, String>(
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<MarketsCubit>(create: (context) => MarketsCubit())
+      ],
+      child:BlocBuilder<MarketsCubit, String>(
         builder: (context, state) {
-          return ListView.builder(
-            itemCount: items.length,
-            itemBuilder: (context, index) {
-              final market = items[index];
-              final isSelected = (market == state);
-              return ListTile(
-                title: Text(
-                  market,
-                  style: TextStyle(
-                    color: isSelected ? Colors.blue : Colors.black,
-                  ),
-                ),
-                onTap: () {
-                  setState(() {
-                    marketsCubit.updateMarkets(market);
-                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => SimulationPage()));
-                  });
+          return Scaffold(
+            appBar: AppBar(
+              shadowColor: Colors.transparent,
+              toolbarHeight: 60,
+              backgroundColor: const Color(0xFF3366FF),
+              foregroundColor: Colors.black,
+              title: const Text("Markets"),
+              leading: IconButton(
+                icon: const Icon(Icons.arrow_back),
+                onPressed: () {
+                  marketsCubit.updateMarkets(state);
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => const SimulationPage()),
+                  );
                 },
-              );
-            },
+              ),
+            ),
+            body: BlocBuilder<MarketsCubit, String>(
+              builder: (context, state) {
+                return ListView.builder(
+                  itemCount: items.length,
+                  itemBuilder: (context, index) {
+                    final market = items[index];
+                    final isSelected = (market == state);
+                    return ListTile(
+                      title: Text(
+                        market,
+                        style: TextStyle(
+                          color: isSelected ? Colors.blue : Colors.black,
+                        ),
+                      ),
+                      onTap: () {
+                        setState(() {
+                          marketsCubit.updateMarkets(market);
+                          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const SimulationPage()));
+                        });
+                      },
+                    );
+                  },
+                );
+              },
+            ),
           );
-        },
+        }
       ),
     );
   }

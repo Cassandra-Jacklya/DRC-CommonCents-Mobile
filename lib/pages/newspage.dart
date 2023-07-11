@@ -64,113 +64,125 @@ class _NewsPageState extends State<NewsPage> {
 
   @override
   void initState() {
+    // BlocProvider<NewsTabBarCubit>.value(value: BlocProvider.of<NewsTabBarCubit>(context));
+    // final newsTabBarCubit = context.read<NewsTabBarCubit>();
+    // final selectedTopic = newsTabBarCubit;
+    // _lazyFuture = getLazyNews(selectedTopic);
     super.initState();
-    final newsTabBarCubit = context.read<NewsTabBarCubit>();
-    final selectedTopic = newsTabBarCubit.state;
-    _lazyFuture = getLazyNews(selectedTopic);
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: const CustomAppBar(
-        title: "News",
-        logo: "assets/images/commoncents-logo.png",
-        hasBell: true,
-      ),
-      body: Column(
-        children: [
-          const SizedBox(height: 10),
-          Row(
-            children: [
-              Expanded(
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(20),
-                    border: Border.all(color: Colors.grey),
-                  ),
-                  padding: const EdgeInsets.only(left: 20),
-                  margin: const EdgeInsets.only(
-                    top: 10,
-                    left: 10,
-                    right: 10,
-                    bottom: 20,
-                  ),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: TextField(
-                          controller: _textEditingController,
-                          onChanged: _handleFilterChanged,
-                          decoration: const InputDecoration(
-                            border: InputBorder.none,
-                          ),
-                          style: const TextStyle(
-                            fontSize: 23,
-                          ),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<NewsTabBarCubit>(create: (context) => NewsTabBarCubit())
+      ],
+      child: BlocBuilder<NewsTabBarCubit, String>(
+        builder: (context, state) {
+          // print(state);
+          _lazyFuture = getLazyNews(state);
+          return Scaffold(
+            appBar: const CustomAppBar(
+              title: "News",
+              logo: "assets/images/commoncents-logo.png",
+              hasBell: true,
+            ),
+            body: Column(
+              children: [
+                const SizedBox(height: 10),
+                Row(
+                  children: [
+                    Expanded(
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(20),
+                          border: Border.all(color: Colors.grey),
+                        ),
+                        padding: const EdgeInsets.only(left: 20),
+                        margin: const EdgeInsets.only(
+                          top: 10,
+                          left: 10,
+                          right: 10,
+                          bottom: 20,
+                        ),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: TextField(
+                                controller: _textEditingController,
+                                onChanged: _handleFilterChanged,
+                                decoration: const InputDecoration(
+                                  border: InputBorder.none,
+                                ),
+                                style: const TextStyle(
+                                  fontSize: 23,
+                                ),
+                              ),
+                            ),
+                            Container(
+                              padding: const EdgeInsets.all(8),
+                              child: IconButton(
+                                onPressed: () {},
+                                icon: const Icon(Icons.search),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                      Container(
-                        padding: const EdgeInsets.all(8),
-                        child: IconButton(
-                          onPressed: () {},
-                          icon: const Icon(Icons.search),
-                        ),
-                      ),
-                    ],
+                    ),
+                  ],
+                ),
+                NewsTabBar(onTopicChanged: _handleTopicChanged),
+                const SizedBox(height: 30),
+                Expanded(
+                  child: FutureBuilder<List<dynamic>>(
+                    future: _lazyFuture,
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const CircularProgressIndicator();
+                      } else if (snapshot.hasError) {
+                        return Text('Error: ${snapshot.error}');
+                      } else if (snapshot.hasData) {
+                        _NewsData = snapshot.data as List<dynamic>;
+                        if (_textEditingController.text.isNotEmpty) {
+                          final filteredList =
+                              _applyFilter(_NewsData, _textEditingController.text);
+                          return NewsContainer(
+                            feeds: filteredList,
+                            scrollable: true,
+                            scrollController: _scrollController,
+                          );
+                        } else if (_textEditingController.text.isEmpty) {
+                          return NewsContainer(
+                            feeds: _NewsData,
+                            scrollable: true,
+                            scrollController: _scrollController,
+                          );
+                        }
+                      }
+                      return const Text('No News Available');
+                    },
                   ),
                 ),
-              ),
-            ],
-          ),
-          NewsTabBar(onTopicChanged: _handleTopicChanged),
-          const SizedBox(height: 30),
-          Expanded(
-            child: FutureBuilder<List<dynamic>>(
-              future: _lazyFuture,
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const CircularProgressIndicator();
-                } else if (snapshot.hasError) {
-                  return Text('Error: ${snapshot.error}');
-                } else if (snapshot.hasData) {
-                  _NewsData = snapshot.data as List<dynamic>;
-                  if (_textEditingController.text.isNotEmpty) {
-                    final filteredList =
-                        _applyFilter(_NewsData, _textEditingController.text);
-                    return NewsContainer(
-                      feeds: filteredList,
-                      scrollable: true,
-                      scrollController: _scrollController,
-                    );
-                  } else if (_textEditingController.text.isEmpty) {
-                    return NewsContainer(
-                      feeds: _NewsData,
-                      scrollable: true,
-                      scrollController: _scrollController,
-                    );
-                  }
-                }
-                return const Text('No News Available');
-              },
+              ],
             ),
-          ),
-        ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // Scroll to top when the button is pressed
-          _scrollController.animateTo(
-            0,
-            duration: const Duration(milliseconds: 500),
-            curve: Curves.easeInOut,
+            floatingActionButton: FloatingActionButton(
+              onPressed: () {
+                // Scroll to top when the button is pressed
+                _scrollController.animateTo(
+                  0,
+                  duration: const Duration(milliseconds: 500),
+                  curve: Curves.easeInOut,
+                );
+              },
+              child: const Icon(Icons.arrow_upward),
+            ),
+            bottomNavigationBar: const BottomNavBar(
+              index: 1,
+            ),
           );
-        },
-        child: const Icon(Icons.arrow_upward),
-      ),
-      bottomNavigationBar: const BottomNavBar(
-        index: 1,
+        }
       ),
     );
   }

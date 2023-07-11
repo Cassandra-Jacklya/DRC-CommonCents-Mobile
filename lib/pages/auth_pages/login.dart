@@ -10,6 +10,17 @@ import 'package:iconsax/iconsax.dart';
 import 'dart:math' as math;
 
 import '../../components/appbar.dart';
+import '../../cubit/candlestick_cubit.dart';
+import '../../cubit/isCandle_cubit.dart';
+import '../../cubit/markets_cubit.dart';
+import '../../cubit/miniChart_cubit.dart';
+import '../../cubit/navbar_cubit.dart';
+import '../../cubit/news_tabbar_cubit.dart';
+import '../../cubit/numberpicker_cubit.dart';
+import '../../cubit/register_cubit.dart';
+import '../../cubit/stake_payout_cubit.dart';
+import '../../cubit/stock_data_cubit.dart';
+import '../../cubit/ticks_cubit.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});

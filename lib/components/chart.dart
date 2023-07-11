@@ -19,13 +19,13 @@ class CandleStickChart extends StatefulWidget {
 
 class _CandleStickChartState extends State<CandleStickChart> {
   late CandlestickCubit candleStickCubit;
-  late MarketsCubit marketsCubit;
+  // late MarketsCubit marketsCubit;
 
   @override
   void initState() {
     super.initState();
     candleStickCubit = CandlestickCubit();
-    marketsCubit = MarketsCubit();
+    // marketsCubit = MarketsCubit();
     connectToWebSocket(context: context, isCandle: widget.isCandle,market: formatMarkets(widget.market));
   }
 

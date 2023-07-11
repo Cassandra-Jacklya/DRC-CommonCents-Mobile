@@ -7,6 +7,7 @@ import 'package:commoncents/pages/tradeHistory.dart';
 import 'package:commoncents/pages/help_support.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iconsax/iconsax.dart';
 
 import '../components/appbar.dart';
@@ -232,11 +233,10 @@ class _ProfilePageState extends State<ProfilePage> {
                           },
                           showBottomBorder: false,
                         ),
-                        GestureDetector(
-                          onTap: () {
-                            showDialog(
+                        GestureDetector(onTap: (){                            
+                          showDialog(
                               context: context,
-                              builder: (BuildContext context) {
+                              builder: (BuildContext logoutDialog) {
                                 return const LogOut();
                               },
                             );

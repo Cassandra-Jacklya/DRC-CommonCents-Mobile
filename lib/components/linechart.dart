@@ -21,7 +21,7 @@ class MyLineChart extends StatefulWidget {
 
 class _LineChartState extends State<MyLineChart> {
   late StockDataCubit stockDataCubit;
-  late MarketsCubit marketsCubit;
+  // late MarketsCubit marketsCubit;
   List<FlSpot> spots = [];
   int initial = 50;
   Widget bottomTitleWidgets(double value, TitleMeta meta, double chartWidth) {
@@ -46,7 +46,7 @@ class _LineChartState extends State<MyLineChart> {
   void initState() {
     super.initState();
     stockDataCubit = StockDataCubit();
-    marketsCubit = MarketsCubit();
+    // marketsCubit = MarketsCubit();
     connectToWebSocket(context: context,isCandle: widget.isCandle, market: formatMarkets(widget.market),);
   }
 

@@ -1,9 +1,22 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../components/appbar.dart';
 import '../components/navbar.dart';
+import '../cubit/candlestick_cubit.dart';
+import '../cubit/isCandle_cubit.dart';
+import '../cubit/login_cubit.dart';
+import '../cubit/markets_cubit.dart';
+import '../cubit/miniChart_cubit.dart';
+import '../cubit/navbar_cubit.dart';
+import '../cubit/news_tabbar_cubit.dart';
+import '../cubit/numberpicker_cubit.dart';
+import '../cubit/register_cubit.dart';
+import '../cubit/stake_payout_cubit.dart';
+import '../cubit/stock_data_cubit.dart';
+import '../cubit/ticks_cubit.dart';
 
 class ForumPage extends StatefulWidget {
   const ForumPage({super.key});

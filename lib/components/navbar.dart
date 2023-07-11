@@ -4,7 +4,9 @@ import 'package:commoncents/pages/newspage.dart';
 import 'package:commoncents/pages/profilepage.dart';
 import 'package:commoncents/pages/simulationpage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iconsax/iconsax.dart';
+import '../cubit/news_tabbar_cubit.dart';
 
 class BottomNavBar extends StatefulWidget {
   const BottomNavBar({super.key, required this.index});
@@ -66,7 +68,6 @@ class _BottomNavBarState extends State<BottomNavBar> {
 
   @override
   Widget build(BuildContext context) {
-    // final bottomNavBarCubit = context.watch<BottomNavBarCubit>();
     final Size size = MediaQuery.of(context).size;
 
     return Container(
