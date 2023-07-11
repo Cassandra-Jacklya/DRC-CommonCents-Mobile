@@ -11,15 +11,16 @@ import 'package:iconsax/iconsax.dart';
 
 import '../components/appbar.dart';
 import '../components/navbar.dart';
+import 'faq.dart';
 
 class ProfilePage extends StatefulWidget {
   _ProfilePageState createState() => _ProfilePageState();
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  String photoUrl = ''; 
-  String displayName = ''; 
-  double balance = 0.0; 
+  String photoUrl = '';
+  String displayName = '';
+  double balance = 0.0;
   String email = '';
   late Map<String, dynamic> forTradeHisitory;
 
@@ -45,7 +46,8 @@ class _ProfilePageState extends State<ProfilePage> {
             photoUrl = data['photoURL'] ?? ''; // Get the photoURL if it exists
             displayName = data['displayName'] ??
                 'nope'; // Get the displayName if it exists
-            balance = data['balance'].toDouble() ?? 0.0; // Get the balance if it exists
+            balance = data['balance'].toDouble() ??
+                0.0; // Get the balance if it exists
             email = data['email'];
           });
         }
@@ -66,7 +68,6 @@ class _ProfilePageState extends State<ProfilePage> {
         height: 80,
         padding: const EdgeInsets.all(10),
         decoration: BoxDecoration(
-
           border: showBottomBorder
               ? const Border(
                   bottom: BorderSide(
@@ -105,7 +106,6 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       appBar: const CustomAppBar(
         title: "Profile",
@@ -183,7 +183,12 @@ class _ProfilePageState extends State<ProfilePage> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => MyAccount(displayName: displayName,photoUrl: photoUrl,balance: balance,email: email ,)));
+                                    builder: (context) => MyAccount(
+                                          displayName: displayName,
+                                          photoUrl: photoUrl,
+                                          balance: balance,
+                                          email: email,
+                                        )));
                           },
                         ),
                         buildContainer(
@@ -213,34 +218,49 @@ class _ProfilePageState extends State<ProfilePage> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) =>
-                                        TradeHistory()));
+                                    builder: (context) => HelpSupport()));
                           },
                         ),
                         buildContainer(
                           title: "FAQs",
-                          icon:null,
+                          icon: null,
                           onPressed: () {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => const HelpSupport()));
+                                    builder: (context) => FAQ()));
                           },
                           showBottomBorder: false,
                         ),
-                        GestureDetector(onTap: (){                            showDialog(
+                        GestureDetector(
+                          onTap: () {
+                            showDialog(
                               context: context,
                               builder: (BuildContext context) {
                                 return const LogOut();
                               },
-                            );},
-                          child: Container(padding: const EdgeInsets.all(15), height: MediaQuery.of(context).size.height*0.07,width: MediaQuery.of(context).size.width*0.9,decoration: const BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(10)), color: Color(0XFF3366FF)),
-                            child: Row(children:  [
-                              Icon(color: Colors.white, Iconsax.logout),
-                              SizedBox(width: MediaQuery.of(context).size.width*0.3),
-                              Text("Logout", style: TextStyle(fontSize:18, color: Colors.white),)
-                            ],
-                        
+                            );
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.all(15),
+                            height: MediaQuery.of(context).size.height * 0.07,
+                            width: MediaQuery.of(context).size.width * 0.9,
+                            decoration: const BoxDecoration(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10)),
+                                color: Color(0XFF3366FF)),
+                            child: Row(
+                              children: [
+                                Icon(color: Colors.white, Iconsax.logout),
+                                SizedBox(
+                                    width: MediaQuery.of(context).size.width *
+                                        0.3),
+                                Text(
+                                  "Logout",
+                                  style: TextStyle(
+                                      fontSize: 18, color: Colors.white),
+                                )
+                              ],
                             ),
                           ),
                         )

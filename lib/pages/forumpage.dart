@@ -16,6 +16,7 @@ class _ForumPageState extends State<ForumPage> {
   late List<Map<String, dynamic>> postsList = [];
   final user = FirebaseAuth.instance.currentUser;
   late bool isExpanded; // Track the expansion state
+  late bool hasNewPost = true;
 
   Future<List<Map<String, dynamic>>> loadPosts() async {
     if (user != null) {
@@ -110,26 +111,46 @@ class _ForumPageState extends State<ForumPage> {
                             return Container(
                               margin: const EdgeInsets.all(10),
                               width: MediaQuery.of(context).size.width * 0.5,
-                              height: MediaQuery.of(context).size.height * 0.15,
+                              padding: const EdgeInsets.all(10),
+                              // height: MediaQuery.of(context).size.height * 0.15,
                               decoration: BoxDecoration(
                                   color: Colors.white,
                                   borderRadius: BorderRadius.circular(10),
                                   border: Border.all(color: Colors.black26)),
                               child: Column(
                                 children: [
-                                  Row(children: [
-                                    CircleAvatar(
-                                      backgroundImage: NetworkImage(
-                                        post['authorImage'] ??
-                                            'https://static01.nyt.com/newsgraphics/2019/08/01/candidate-pages/3b31eab6a3fd70444f76f133924ae4317567b2b5/trump-circle.png',
-                                      ),
-                                      radius: 40,
-                                    ),
-                                    Text(post['author']),
-                                  ]),
-                                  Row(children: [
-                                    Text(post['details'])
-                                  ],)
+                                  Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Container(
+                                          child: CircleAvatar(
+                                            backgroundImage: NetworkImage(
+                                              post['authorImage'] ??
+                                                  'https://static01.nyt.com/newsgraphics/2019/08/01/candidate-pages/3b31eab6a3fd70444f76f133924ae4317567b2b5/trump-circle.png',
+                                            ),
+                                            radius: 40,
+                                          ),
+                                        ),
+                                        Container(
+                                          margin: const EdgeInsets.all(10),
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                post['author'],
+                                                style: const TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.w800),
+                                              ),
+                                              Text(post['details'])
+                                            ],
+                                          ),
+                                        )
+                                      ]),
                                 ],
                               ),
                             );
@@ -142,64 +163,88 @@ class _ForumPageState extends State<ForumPage> {
               ],
             )
           : const Center(child: CircularProgressIndicator()),
+      floatingActionButton: Stack(
+        children: [
+          FloatingActionButton(
+            onPressed: () {
+              // Handle the button's onPressed event here
+            },
+            child: Icon(Icons.add),
+            backgroundColor: Colors.blue,
+          ),
+          if (hasNewPost)
+            Positioned(
+              top: 0,
+              right: 0,
+              child: Container(
+                width: 15,
+                height: 15,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Colors.red,
+                ),
+              ),
+            ),
+        ],
+      ),
       bottomNavigationBar: const BottomNavBar(index: 3),
     );
   }
 }
 
-      // Column(
-      //   children: [
-      //     const SizedBox(height: 10),
-      //     Row(
-      //       mainAxisAlignment: MainAxisAlignment.center,
-      //       children: [
-      //         Container(
-      //           padding: const EdgeInsets.all(5),
-      //           height: MediaQuery.of(context).size.height * 0.1,
-      //           width: MediaQuery.of(context).size.width * 0.95,
-      //           decoration: BoxDecoration(
-      //               color: Colors.grey[400],
-      //               borderRadius: BorderRadius.circular(10)),
-      //           child: Row(
-      //             children: [
-      //               CircleAvatar(
-      //                 backgroundImage: NetworkImage(
-      //                   user!.photoURL ??
-      //                       'https://static01.nyt.com/newsgraphics/2019/08/01/candidate-pages/3b31eab6a3fd70444f76f133924ae4317567b2b5/trump-circle.png',
-      //                 ),
-      //                 radius: 40, // Adjust the radius as needed
-      //               ),
-      //               Container(
-      //                 color: Colors.white,
-      //                 height: MediaQuery.of(context).size.height * 0.05,
-      //                 width: MediaQuery.of(context).size.width * 0.7,
-      //               ),
-      //             ],
-      //           ),
-      //         ),
-      //       ],
-      //     ),
-      //     Expanded(
-      //       child: SingleChildScrollView(
-      //         child: Column(
-      //           children: [
-      //             ListView.builder(
-      //               shrinkWrap: true,
-      //               physics: const NeverScrollableScrollPhysics(),
-      //               itemCount: postsList.length,
-      //               itemBuilder: (BuildContext context, int index) {
-      //                 final post = postsList[index];
-      //                 return Container(
-      //                   margin: const EdgeInsets.all(10),
-      //                   width: MediaQuery.of(context).size.width * 0.5,
-      //                   height: MediaQuery.of(context).size.height * 0.15,
-      //                   color: Colors.red,
-      //                 );
-      //               },
-      //             ),
-      //           ],
-      //         ),
-      //       ),
-      //     ),
-      //   ],
-      // ),
+// Column(
+//   children: [
+//     const SizedBox(height: 10),
+//     Row(
+//       mainAxisAlignment: MainAxisAlignment.center,
+//       children: [
+//         Container(
+//           padding: const EdgeInsets.all(5),
+//           height: MediaQuery.of(context).size.height * 0.1,
+//           width: MediaQuery.of(context).size.width * 0.95,
+//           decoration: BoxDecoration(
+//               color: Colors.grey[400],
+//               borderRadius: BorderRadius.circular(10)),
+//           child: Row(
+//             children: [
+//               CircleAvatar(
+//                 backgroundImage: NetworkImage(
+//                   user!.photoURL ??
+//                       'https://static01.nyt.com/newsgraphics/2019/08/01/candidate-pages/3b31eab6a3fd70444f76f133924ae4317567b2b5/trump-circle.png',
+//                 ),
+//                 radius: 40, // Adjust the radius as needed
+//               ),
+//               Container(
+//                 color: Colors.white,
+//                 height: MediaQuery.of(context).size.height * 0.05,
+//                 width: MediaQuery.of(context).size.width * 0.7,
+//               ),
+//             ],
+//           ),
+//         ),
+//       ],
+//     ),
+//     Expanded(
+//       child: SingleChildScrollView(
+//         child: Column(
+//           children: [
+//             ListView.builder(
+//               shrinkWrap: true,
+//               physics: const NeverScrollableScrollPhysics(),
+//               itemCount: postsList.length,
+//               itemBuilder: (BuildContext context, int index) {
+//                 final post = postsList[index];
+//                 return Container(
+//                   margin: const EdgeInsets.all(10),
+//                   width: MediaQuery.of(context).size.width * 0.5,
+//                   height: MediaQuery.of(context).size.height * 0.15,
+//                   color: Colors.red,
+//                 );
+//               },
+//             ),
+//           ],
+//         ),
+//       ),
+//     ),
+//   ],
+// ),

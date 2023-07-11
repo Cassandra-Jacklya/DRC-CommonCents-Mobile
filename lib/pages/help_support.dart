@@ -1,82 +1,69 @@
+import 'package:commoncents/pages/sendEnquiry.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:mailer/mailer.dart';
+import 'package:mailer/smtp_server.dart';
 
-class HelpSupport extends StatelessWidget {
-  const HelpSupport({super.key});
+
+class HelpSupport extends StatefulWidget {
+  _HelpSupportState createState() => _HelpSupportState();
+}
+
+class _HelpSupportState extends State<HelpSupport> {
+  final user = FirebaseAuth.instance.currentUser;
+  final TextEditingController _email = TextEditingController();
+  final TextEditingController _enquiry = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          toolbarHeight: 60,
-          backgroundColor: Colors.grey[300],
           title: const Text("Help and Support"),
-          foregroundColor: Colors.black,
+          backgroundColor: const Color(0XFF3366FF),
+          shadowColor: Colors.transparent,
         ),
         body: SingleChildScrollView(
           scrollDirection: Axis.vertical,
           child: Center(
             child: Column(
               children: [
-                Stack(
-                  children: [
-                    Container(
-                      margin: const EdgeInsets.only(top: 30, bottom: 25),
-                      width: MediaQuery.of(context).size.width * 0.9,
-                      child: TextField(
-                        obscureText: false,
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(0),
-                              borderSide: BorderSide.none),
-                          labelText: 'Username',
-                          filled: true,
-                          fillColor: Colors.grey, // Set the fill color to grey
-                        ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 80, 0, 0),
+                  child: SizedBox(
+                    height: 70,
+                    width: 311,
+                    child: TextFormField(
+                      controller: _email,
+                      enableSuggestions: false,
+                      autocorrect: false,
+                      keyboardType: TextInputType.emailAddress,
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide:
+                                const BorderSide(color: Color(0xFF5F5F5F))),
+                        labelText: user!.email,
                       ),
-                    ),
-                    Positioned(
-                      top: 10,
-                      left: 15,
-                      child: Container(
-                        padding: const EdgeInsets.all(10),
-                        height: 40,
-                        color: Colors.white,
-                        child: const Center(
-                          child: Text("Username"),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                Container(
-                  margin: const EdgeInsets.only(bottom: 30),
-                  width: MediaQuery.of(context).size.width * 0.9,
-                  child: TextField(
-                    obscureText: false,
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(0),
-                          borderSide: BorderSide.none),
-                      labelText: 'Email',
-                      filled: true,
-                      fillColor: Colors.grey, // Set the fill color to grey
                     ),
                   ),
                 ),
-                Container(
-                  margin: const EdgeInsets.only(bottom: 20),
-                  width: MediaQuery.of(context).size.width * 0.9,
-                  child: const TextField(
-                    obscureText: false,
-                    maxLines: null, // Allows multiple lines
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: 'Enquiry',
-                      filled: true,
-                      fillColor: Colors.grey,
-                      contentPadding: EdgeInsets.symmetric(
-                          vertical:
-                              150.0), // Set the vertical padding to achieve the desired height
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 30, 0, 0),
+                  child: SizedBox(
+                    height: 80,
+                    width: 311,
+                    child: TextFormField(
+                      controller: _enquiry,
+                      enableSuggestions: false,
+                      autocorrect: false,
+                      keyboardType: TextInputType.emailAddress,
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide:
+                                const BorderSide(color: Color(0xFF5F5F5F))),
+                        labelText: 'Enquiry',
+                      ),
                     ),
                   ),
                 ),
@@ -86,12 +73,24 @@ class HelpSupport extends StatelessWidget {
                     Column(
                       children: [
                         GestureDetector(
-                          onTap: () {Navigator.pop(context);},
-                          child: Container(decoration: BoxDecoration(color: Colors.grey[500], borderRadius: BorderRadius.circular(10)),
-                              margin: const EdgeInsets.only(right: 25),
-                              height: 50,
-                              width: 120,
-                              child: const Center(child: Text("Submit")),),
+                          onTap: () { 
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => SendEnquiry()));
+                          },
+                          child: Container(
+                            decoration: BoxDecoration(
+                                color: const Color(0XFF3366FF),
+                                borderRadius: BorderRadius.circular(10)),
+                            margin: const EdgeInsets.only(right: 25),
+                            height: 50,
+                            width: 120,
+                            child: const Center(
+                              child: Text("Submit",
+                                  style: TextStyle(color: Colors.white)),
+                            ),
+                          ),
                         )
                       ],
                     )
