@@ -70,7 +70,7 @@ class _SecurityState extends State<Security> {
             onTap: () {
               showDialog(
                 context: context,
-                builder: (BuildContext context) {
+                builder: (BuildContext securityDialog) {
                   return Password();
                 },
               );
@@ -80,7 +80,7 @@ class _SecurityState extends State<Security> {
               height: 50,
               width: MediaQuery.of(context).size.width * 0.4,
               decoration: BoxDecoration(
-                color: Color(0XFF3366FF),
+                color: const Color(0XFF3366FF),
                 borderRadius: BorderRadius.circular(10),
               ),
               child: const Center(child: Text(style: TextStyle(color: Colors.white),"Change Password")),

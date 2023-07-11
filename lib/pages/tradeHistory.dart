@@ -83,7 +83,7 @@ class _TradeHistoryState extends State<TradeHistory> {
                             onTap: () {
                               showDialog(
                                 context: context,
-                                builder: (BuildContext context) {
+                                builder: (BuildContext tradeDialog) {
                                   return TradeDetails(
                                     status: trade['status'],
                                     entry: trade['previousSpot'],

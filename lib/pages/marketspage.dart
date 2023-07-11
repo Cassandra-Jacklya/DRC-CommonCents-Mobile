@@ -12,7 +12,7 @@ class Markets extends StatefulWidget {
 }
 
 class _MarketsState extends State<Markets> {
-  late MarketsCubit marketsCubit;
+  // late MarketsCubit marketsCubit;
   final List<String> items = [
     'Volatility 10',
     'Volatility 25',
@@ -40,7 +40,7 @@ class _MarketsState extends State<Markets> {
 
   @override
   Widget build(BuildContext context) {
-    // final marketsCubit = context.read<MarketsCubit>();
+    // marketsCubit = context.read<MarketsCubit>();
 
     return MultiBlocProvider(
       providers: [
@@ -48,6 +48,8 @@ class _MarketsState extends State<Markets> {
       ],
       child:BlocBuilder<MarketsCubit, String>(
         builder: (context, state) {
+          print("test");
+          print(state);
           return Scaffold(
             appBar: AppBar(
               shadowColor: Colors.transparent,
@@ -58,10 +60,11 @@ class _MarketsState extends State<Markets> {
               leading: IconButton(
                 icon: const Icon(Icons.arrow_back),
                 onPressed: () {
-                  marketsCubit.updateMarkets(state);
+                  BlocProvider.of<MarketsCubit>(context).updateMarkets(state);
+                  // marketsCubit.updateMarkets(state);
                   Navigator.pushReplacement(
                     context,
-                    MaterialPageRoute(builder: (context) => const SimulationPage()),
+                    MaterialPageRoute(builder: (context) => SimulationPage(market: state)),
                   );
                 },
               ),
@@ -82,8 +85,9 @@ class _MarketsState extends State<Markets> {
                       ),
                       onTap: () {
                         setState(() {
-                          marketsCubit.updateMarkets(market);
-                          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const SimulationPage()));
+                          print(market);
+                          BlocProvider.of<MarketsCubit>(context).updateMarkets(market);
+                          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => SimulationPage(market: market,)));
                         });
                       },
                     );

@@ -26,7 +26,9 @@ import '../firebase_options.dart';
 import '../pages/marketspage.dart';
 
 class SimulationPage extends StatefulWidget {
-  const SimulationPage({super.key});
+  final String market;
+
+  const SimulationPage({super.key, required this.market});
 
   @override
   _SimulationPageState createState() => _SimulationPageState();
@@ -39,7 +41,6 @@ class _SimulationPageState extends State<SimulationPage> {
   late String stakePayout;
   late int currentAmount;
   late bool isCandle;
-  late String market;
 
   // @override
   // void initState() {
@@ -131,7 +132,7 @@ class _SimulationPageState extends State<SimulationPage> {
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
                                       children: [
-                                        Text(market),
+                                        Text(widget.market),
                                         const IconButton(
                                           onPressed: null,
                                           icon: Icon(
@@ -219,14 +220,14 @@ class _SimulationPageState extends State<SimulationPage> {
                                       builder: (context, market) {
                                       return CandleStickChart(
                                         isCandle: isCandle,
-                                        market: market,
+                                        market: widget.market,
                                       );
                                     })
                                   : BlocBuilder<MarketsCubit, String>(
                                       builder: (context, market) {
                                         return MyLineChart(isMini: false,
                                           isCandle: isCandle,
-                                          market: market,
+                                          market: widget.market,
                                         );
                                       },
                                     ),

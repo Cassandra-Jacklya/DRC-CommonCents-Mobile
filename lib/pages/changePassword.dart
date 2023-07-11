@@ -27,13 +27,13 @@ class _ChangePasswordState extends State<ChangePassword> {
         // ignore: use_build_context_synchronously
         showDialog(
           context: context,
-          builder: (BuildContext context) {
+          builder: (BuildContext passwordDialog) {
             return AlertDialog(
               title: const Text("Cannot use existing password as new password"),
               actions: [
                 TextButton(
                   onPressed: () {
-                    Navigator.of(context).pop();
+                    Navigator.of(passwordDialog).pop();
                   },
                   child: const Text("OK"),
                 ),
