@@ -364,8 +364,6 @@ class TradeDetails extends StatefulWidget {
 class _TradeDetailsState extends State<TradeDetails> {
   @override
   Widget build(BuildContext context) {
-    print(widget.strategy);
-
     return AlertDialog(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10),

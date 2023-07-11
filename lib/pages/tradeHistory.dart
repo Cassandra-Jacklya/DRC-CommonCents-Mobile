@@ -3,6 +3,7 @@ import 'package:commoncents/components/formatMarkets.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../components/popup.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class TradeHistory extends StatefulWidget {
   _TradeHistoryState createState() => _TradeHistoryState();
@@ -125,9 +126,13 @@ class _TradeHistoryState extends State<TradeHistory> {
                                     height: 80,
                                     width: 80,
                                     decoration: BoxDecoration(
-                                      color: Colors.white,
                                       borderRadius: BorderRadius.circular(10),
                                     ),
+                                    // child: SvgPicture.asset(
+                                    //   'assets/images/market/${trade['marketType']}.svg',
+                                    //   fit: BoxFit
+                                    //       .contain, // Adjust the fit based on your requirements
+                                    // ),
                                   ),
                                   Container(
                                     padding: const EdgeInsets.all(15),
