@@ -85,7 +85,7 @@ class _NewsPageState extends State<NewsPage> {
             appBar: const CustomAppBar(
               title: "News",
               logo: "assets/images/commoncents-logo.png",
-              hasBell: true,
+              isTradingPage: false,
             ),
             body: Column(
               children: [
@@ -140,7 +140,14 @@ class _NewsPageState extends State<NewsPage> {
                     future: _lazyFuture,
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
-                        return const CircularProgressIndicator();
+                        return const Scaffold(
+                          body: Center(
+                            child: SizedBox(
+                              height: 20,
+                              width: 20,
+                              child: CircularProgressIndicator()),
+                          ),
+                        );
                       } else if (snapshot.hasError) {
                         return Text('Error: ${snapshot.error}');
                       } else if (snapshot.hasData) {

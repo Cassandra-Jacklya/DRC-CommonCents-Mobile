@@ -28,7 +28,10 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   void initState() {
     super.initState();
-    loadData();
+    forTradeHisitory = {};
+    if (mounted) {
+      loadData();
+    }
   }
 
   Future<void> loadData() async {
@@ -114,7 +117,7 @@ class _ProfilePageState extends State<ProfilePage> {
       appBar: const CustomAppBar(
         title: "Profile",
         logo: "assets/images/commoncents-logo.png",
-        hasBell: true,
+        isTradingPage: false,
       ),
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,

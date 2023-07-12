@@ -23,6 +23,13 @@ class _IntegerExampleState extends State<IntegerExample> {
   }
 
   @override
+  void dispose() {
+    currentAmountCubit.close();
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Row(
       children: [

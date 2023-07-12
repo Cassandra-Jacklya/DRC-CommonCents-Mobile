@@ -77,6 +77,13 @@ class _ChangePasswordState extends State<ChangePassword> {
   }
 
   @override
+  void dispose() {
+    textEditingController.dispose();
+    textEditingController2.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(

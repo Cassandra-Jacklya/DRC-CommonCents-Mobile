@@ -7,9 +7,9 @@ import 'package:iconsax/iconsax.dart';
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
   final String logo;
-  final bool hasBell;
+  final bool isTradingPage;
 
-  const CustomAppBar({super.key, required this.title, required this.logo, required this.hasBell});
+  const CustomAppBar({super.key, required this.title, required this.logo, required this.isTradingPage});
 
   @override
   Widget build(BuildContext context) {
@@ -44,12 +44,12 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         ),
         actions: [
           Visibility(
-            visible: hasBell ? true : false,
+            visible: isTradingPage ? true : false,
             child: IconButton(
               color: Colors.white,
               padding: const EdgeInsets.only(top: 5, right: 20),
               iconSize: 25,
-              icon: const Icon(Iconsax.notification),
+              icon: const Icon(Iconsax.receipt_item5),
               onPressed: () {
                 Navigator.push(
                   context,

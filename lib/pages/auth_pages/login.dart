@@ -62,7 +62,7 @@ class _LoginViewState extends State<LoginView> with SingleTickerProviderStateMix
           ),
       ],
       child: Scaffold(
-        appBar: const CustomAppBar(title: "Log In", logo: "", hasBell: false,),
+        appBar: const CustomAppBar(title: "Log In", logo: "", isTradingPage: false,),
         body: FutureBuilder(
           future: _firebaseInitialization,
           builder: (context, snapshot) {

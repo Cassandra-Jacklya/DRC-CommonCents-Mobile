@@ -162,7 +162,12 @@ class _LineChartState extends State<MyLineChart> {
                       );
                     }
                     else{
-                      return const CircularProgressIndicator();
+                      return Center(
+                        child: SizedBox(
+                          height: 20,
+                          width: 20,
+                          child: CircularProgressIndicator()),
+                      );
                     }
                   },
                 ),

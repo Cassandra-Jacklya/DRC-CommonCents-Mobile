@@ -100,7 +100,7 @@ class _RegisterViewState extends State<RegisterView>
       appBar: const CustomAppBar(
         title: "Create an Account",
         logo: "",
-        hasBell: false,
+        isTradingPage: false,
       ),
       body: FutureBuilder<FirebaseApp>(
         future: _firebaseInitialization,
