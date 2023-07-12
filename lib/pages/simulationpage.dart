@@ -277,7 +277,7 @@ class _SimulationPageState extends State<SimulationPage> {
                                             .read<CurrentAmountCubit>()
                                             .state;
                                         handleBuy(context, ticks.toInt(),
-                                            stakePayout, currentAmount);
+                                            stakePayout, currentAmount, "high");
                                       },
                                       child: Container(
                                         padding:
@@ -316,7 +316,7 @@ class _SimulationPageState extends State<SimulationPage> {
                                             .read<CurrentAmountCubit>()
                                             .state;
                                         handleBuy(context, ticks.toInt(),
-                                            stakePayout, currentAmount);
+                                            stakePayout, currentAmount,"low");
                                       },
                                       child: Container(
                                         padding:

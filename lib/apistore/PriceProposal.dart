@@ -7,8 +7,17 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../apistore/stockdata.dart';
 
+// ignore: non_constant_identifier_names
+bool Highstrategy = false;
+
 Future<void> handleBuy(BuildContext context, int ticks, String stakePayout,
-    int currentAmount) async {
+    int currentAmount, String? strategy) async {
+  if (strategy == 'high') {
+    Highstrategy = true;
+  } else if(strategy =='low'){
+    Highstrategy = false;
+  }
+
   final PriceProposalRequest = {
     "proposal": 1,
     "amount": currentAmount,
@@ -61,7 +70,8 @@ Future<double> getUpdatedBalance(String userId, double capital) async {
   return 0;
 }
 
-void handleBuyResponse(BuildContext context,Map<String, dynamic> decodedData) async {
+void handleBuyResponse(
+    BuildContext context, Map<String, dynamic> decodedData) async {
   late double buyingPrice;
   late double sellingPrice;
   late double capital;
@@ -86,13 +96,31 @@ void handleBuyResponse(BuildContext context,Map<String, dynamic> decodedData) as
   await Future.delayed(const Duration(seconds: 3));
   sellingPrice = ticks.last['close'];
 
-  if (buyingPrice < sellingPrice) {
-    updatedBalance = balance + proposal['payout'];
-    collectionReference.doc(user.uid).update({'balance': updatedBalance});
-   final loginStateBloc = BlocProvider.of<LoginStateBloc>(context as BuildContext, listen: false);
-    loginStateBloc.updateBalance(userData['displayName'], updatedBalance.toString());
-    print("You Won");
+  print(Highstrategy);
+
+  if (Highstrategy) {
+    if (buyingPrice < sellingPrice) {
+      //strategy = high
+      updatedBalance = balance + proposal['payout'];
+      collectionReference.doc(user.uid).update({'balance': updatedBalance});
+      final loginStateBloc = BlocProvider.of<LoginStateBloc>(
+          context as BuildContext,
+          listen: false);
+      loginStateBloc.updateBalance(
+          userData['displayName'], updatedBalance.toString());
+      print("You Won");
+    }
   } else {
-    print("Buying: $buyingPrice\nSelling: $sellingPrice\nSo: you lost :(");
+    if (buyingPrice > sellingPrice) {
+      //strategy = high
+      updatedBalance = balance + proposal['payout'];
+      collectionReference.doc(user.uid).update({'balance': updatedBalance});
+      final loginStateBloc = BlocProvider.of<LoginStateBloc>(
+          context as BuildContext,
+          listen: false);
+      loginStateBloc.updateBalance(
+          userData['displayName'], updatedBalance.toString());
+      print("You Won");
+    }
   }
 }
