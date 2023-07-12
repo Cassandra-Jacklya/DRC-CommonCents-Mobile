@@ -14,13 +14,13 @@ class SimulationPageGuest extends StatefulWidget {
 }
 
 class _SimulationPageGuestState extends State<SimulationPageGuest> {
-  late IsCandleCubit isCandleCubit;
-  late MarketsCubit marketType;
-  late double ticks;
-  late String stakePayout;
-  late int currentAmount;
-  late bool isCandle;
-  late String market;
+  IsCandleCubit isCandleCubit = IsCandleCubit();
+  MarketsCubit marketType = MarketsCubit();
+  double ticks = 0.0;
+  String stakePayout = '';
+  int currentAmount = 100000;
+  bool isCandle = false ;
+  String market = '';
 
   @override
   void initState() {
@@ -35,6 +35,8 @@ class _SimulationPageGuestState extends State<SimulationPageGuest> {
   @override
   void dispose() {
     closeWebSocket();
+    marketType.close();
+    isCandleCubit.close();
     super.dispose();
   }
 

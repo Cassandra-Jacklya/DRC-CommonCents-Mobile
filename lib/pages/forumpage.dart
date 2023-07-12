@@ -132,23 +132,37 @@ class _ForumPageState extends State<ForumPage> {
   @override
   void initState() {
     super.initState();
+    print(mounted);
     fetchFavoritedPostIds().then((result) {
+      
+    if (mounted) {
+      
       setState(() {
-        favouritePosts = result;
+      favouritePosts = result;
       });
-    });
+    }
+  });
 
-    loadPosts().then((result) {
+  loadPosts().then((result) {
+    if (mounted) {
       setState(() {
         postsList = result;
       });
-    });
-    isExpanded = false;
-  }
+    }
+  });
+  isExpanded = false;
+}
+
+@override
+void dispose() {
+  textController.dispose();
+  super.dispose();
+}
+
 
   @override
   Widget build(BuildContext context) {
-    print(favouritePosts);
+    // print(favouritePosts);
     return Scaffold(
       appBar: AppBar(
         shadowColor: Colors.transparent,
@@ -203,7 +217,7 @@ class _ForumPageState extends State<ForumPage> {
                               onTap: () {
                                 showDialog(
                                   context: context,
-                                  builder: (BuildContext context) {
+                                  builder: (BuildContext postDialog) {
                                     return FullPost(
                                       post: post,
                                       formattedDate: formattedDate,
@@ -230,33 +244,35 @@ class _ForumPageState extends State<ForumPage> {
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        Column(
-                                          children: [
-                                            CircleAvatar(
-                                              backgroundImage: NetworkImage(
-                                                post['authorImage'] ??
-                                                    'https://static01.nyt.com/newsgraphics/2019/08/01/candidate-pages/3b31eab6a3fd70444f76f133924ae4317567b2b5/trump-circle.png',
+                                        Flexible(
+                                          child: Column(
+                                            children: [
+                                              CircleAvatar(
+                                                backgroundImage: NetworkImage(
+                                                  post['authorImage'] ??
+                                                      'https://static01.nyt.com/newsgraphics/2019/08/01/candidate-pages/3b31eab6a3fd70444f76f133924ae4317567b2b5/trump-circle.png',
+                                                ),
+                                                radius: 40,
                                               ),
-                                              radius: 40,
-                                            ),
-                                            const SizedBox(height: 10),
-                                            SizedBox(
-                                              width: MediaQuery.of(context)
-                                                      .size
-                                                      .width *
-                                                  0.15,
-                                              child: Center(
-                                                child: Text(
-                                                  post['author'],
-                                                  style: const TextStyle(
-                                                    fontSize: 13,
+                                              const SizedBox(height: 10),
+                                              SizedBox(
+                                                width: MediaQuery.of(context)
+                                                        .size
+                                                        .width *
+                                                    0.15,
+                                                child: Center(
+                                                  child: Text(
+                                                    post['author'],
+                                                    style: const TextStyle(
+                                                      fontSize: 13,
+                                                    ),
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
                                                   ),
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
                                                 ),
                                               ),
-                                            ),
-                                          ],
+                                            ],
+                                          ),
                                         ),
                                         Container(
                                           margin: const EdgeInsets.all(10),
@@ -329,7 +345,7 @@ class _ForumPageState extends State<ForumPage> {
                                               const EdgeInsets.only(left: 5),
                                           child: Text(
                                             hoursAgo,
-                                            style: TextStyle(
+                                            style: const TextStyle(
                                                 fontSize: 13,
                                                 fontWeight: FontWeight.w300),
                                           ),
@@ -390,8 +406,8 @@ class _ForumPageState extends State<ForumPage> {
                 },
               );
             },
-            child: Icon(Icons.add),
             backgroundColor: Colors.blue,
+            child: Icon(Icons.add),
           ),
         ],
       ),

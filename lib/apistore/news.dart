@@ -14,8 +14,9 @@ Future<List<dynamic>> getNews() async {
   if (response.statusCode == 200) {
     data = jsonDecode(response.body);
     final feed = data['feed'];
-    news = feed.sublist(0, 8);
-
+    if (feed != null) {
+      news = feed.sublist(0, 8);
+    }
     return news;
   } else {
     throw Exception('Failed to load data');

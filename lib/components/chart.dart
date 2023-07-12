@@ -1,9 +1,7 @@
 import 'package:commoncents/components/formatMarkets.dart';
 import 'package:commoncents/cubit/candlestick_cubit.dart';
-import 'package:commoncents/cubit/markets_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
-import '../cubit/stock_data_cubit.dart';
 import '../apistore/stockdata.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
@@ -18,20 +16,19 @@ class CandleStickChart extends StatefulWidget {
 }
 
 class _CandleStickChartState extends State<CandleStickChart> {
-  late CandlestickCubit candleStickCubit;
+  CandlestickCubit candleStickCubit = CandlestickCubit();
   // late MarketsCubit marketsCubit;
 
   @override
   void initState() {
     super.initState();
-    candleStickCubit = CandlestickCubit();
+    // candleStickCubit = CandlestickCubit();
     // marketsCubit = MarketsCubit();
     connectToWebSocket(context: context, isCandle: widget.isCandle,market: formatMarkets(widget.market));
   }
 
   @override
   void dispose() {
-    candleStickCubit.clearStockData();
     candleStickCubit.close();
     super.dispose();
   }
@@ -48,7 +45,7 @@ class _CandleStickChartState extends State<CandleStickChart> {
               child: BlocBuilder<CandlestickCubit, List<Map<String, dynamic>>>(
                 builder: (context, candleData) {
                   if (candleData.isNotEmpty) {
-                    print(candleData.length);
+                    // print(candleData.length);
                     List<ChartData> chartData = candleData.map((data) {
                       double x = data['epoch'];
                       double open = data['open'];
@@ -96,7 +93,15 @@ class _CandleStickChartState extends State<CandleStickChart> {
                       ),
                     );
                   } else {
-                    return const CircularProgressIndicator();
+                    return const Scaffold(
+                      body: Center(
+                        child: SizedBox(
+                          height: 20,
+                          width: 20,
+                          child: CircularProgressIndicator(),
+                        ),
+                      ),
+                    );
                   }
                 },
               ),

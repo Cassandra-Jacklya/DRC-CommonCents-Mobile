@@ -90,7 +90,7 @@ class _SimulationPageState extends State<SimulationPage> {
         appBar: const CustomAppBar(
           title: "Trading Simulation",
           logo: "assets/images/commoncents-logo.png",
-          hasBell: true,
+          isTradingPage: true,
         ),
         body: FutureBuilder(
             future: Firebase.initializeApp(

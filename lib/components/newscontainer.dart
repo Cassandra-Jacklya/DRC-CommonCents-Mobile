@@ -8,6 +8,7 @@ class NewsContainer extends StatelessWidget {
   List<dynamic>? feeds;
   bool scrollable;
   ScrollController? scrollController;
+
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
@@ -19,7 +20,7 @@ class NewsContainer extends StatelessWidget {
         final news = feeds?[index];
         return GestureDetector(
           onTap: () async {
-            print(news['url']);
+            // print(news['url']);
             Uri url = Uri.parse(news['url']);
             launchUrl(url);
           },

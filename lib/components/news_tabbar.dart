@@ -51,6 +51,7 @@ class _NewsTabBarState extends State<NewsTabBar>
   @override
   void dispose() {
     _animationController.dispose();
+    _animation.removeListener(() { });
     super.dispose();
   }
 

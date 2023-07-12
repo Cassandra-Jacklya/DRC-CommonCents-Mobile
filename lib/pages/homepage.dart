@@ -6,26 +6,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:iconsax/iconsax.dart';
 import '../apistore/news.dart';
 import '../components/appbar.dart';
 import '../components/card.dart';
 import '../components/newscontainer.dart';
-import '../cubit/candlestick_cubit.dart';
-import '../cubit/isCandle_cubit.dart';
 import '../cubit/login_cubit.dart';
-import '../cubit/markets_cubit.dart';
 import '../cubit/miniChart_cubit.dart';
-import '../cubit/navbar_cubit.dart';
-import '../cubit/news_tabbar_cubit.dart';
-import '../cubit/numberpicker_cubit.dart';
-import '../cubit/register_cubit.dart';
-import '../cubit/stake_payout_cubit.dart';
-import '../cubit/stock_data_cubit.dart';
-import '../cubit/ticks_cubit.dart';
 import '../firebase_options.dart';
-import 'auth_pages/login.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -56,7 +43,7 @@ class _HomePageState extends State<HomePage> {
       appBar: const CustomAppBar(
         title: "CommonCents",
         logo: "assets/images/commoncents-logo.png",
-        hasBell: true,
+        isTradingPage: false,
       ),
       body: FutureBuilder(
         future:  Firebase.initializeApp(
@@ -224,21 +211,6 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ),
                   ),
-                  // FutureBuilder<List<dynamic>>(
-                  //   future: _newsFuture,
-                  //   builder: (context, snapshot) {
-                  //     if (snapshot.connectionState == ConnectionState.waiting) {
-                  //       return const CircularProgressIndicator();
-                  //     } else if (snapshot.hasError) {
-                  //       return Text('Error: ${snapshot.error}');
-                  //     } else if (snapshot.hasData) {
-                  //       final newsList = snapshot.data;
-                  //       return NewsContainer(feeds: newsList, scrollable: false,);
-                  //     } else {
-                  //       return const Text('No news available.');
-                  //     }
-                  //   },
-                  // ),
                 ],
               ),
             );
