@@ -4,7 +4,10 @@ import 'package:commoncents/main.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:commoncents/pages/changePassword.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iconsax/iconsax.dart';
+
+import '../cubit/login_cubit.dart';
 
 class AccountSettings extends StatelessWidget {
   const AccountSettings({super.key});
@@ -748,7 +751,9 @@ class _PostSomethingState extends State<PostSomething> {
 }
 
 class ResetBalance extends StatelessWidget {
-  late String balance;
+  final LoginStateBloc loginStateBloc;
+
+  ResetBalance({required this.loginStateBloc});
 
   Future<void> resetBalance() async {
     FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
@@ -759,14 +764,22 @@ class ResetBalance extends StatelessWidget {
           firebaseFirestore.collection('users');
       DocumentReference userDocument = collectionReference.doc(user.uid);
 
+      double updatedBalance = 100000.0; // Set the updated balance value
+
       await userDocument.update({
-        'balance': 100000,
+        'balance': updatedBalance,
       });
+
+      // Retrieve the user data from Firestore to get the displayName
+      DocumentSnapshot<Object?> userDataSnapshot = await userDocument.get();
+      Map<String, dynamic> userData =
+          userDataSnapshot.data() as Map<String, dynamic>;
+      String displayName = userData['displayName'];
+
+      loginStateBloc.updateBalance(displayName, updatedBalance.toString());
       print("Balance reset");
     }
   }
-
-  ResetBalance({required this.balance});
 
   @override
   Widget build(BuildContext context) {
@@ -777,17 +790,22 @@ class ResetBalance extends StatelessWidget {
         child: Column(
           children: [
             Row(
-              children: [const Text("Current Balance: "), Text(balance)],
+              children: [
+                const Text("Current Balance: "),
+              ],
             ),
             const SizedBox(height: 10),
-            GestureDetector( onTap: (){
-              resetBalance();
-            },
+            GestureDetector(
+              onTap: () {
+                Navigator.of(context).pop();
+                resetBalance();
+              },
               child: Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: const Color(0XFF3366FF)),
+                  borderRadius: BorderRadius.circular(10),
+                  color: const Color(0XFF3366FF),
+                ),
                 child: const Text(
                   "Click to reset balance",
                   style: TextStyle(color: Colors.white),

@@ -88,22 +88,7 @@ class _HomePageState extends State<HomePage> {
                             fontWeight: FontWeight.bold
                             ),
                           ),
-                          BlocBuilder<LoginStateBloc, LoginState>(
-                            builder: ((context, state) {
-                              if (state is AppStateInitial) {}
-                              else if (state is AppStateLoggedIn) {
-                                return Row(
-                                  children: [
-                                    WalletButton(balance: state.balance)
-                                  ],
-                                );
-                              }
-                              else if (state is AppStateError){
-                                return const Text("null");
-                              }
-                              return const CircularProgressIndicator();
-                            })
-                          )
+                          WalletButton(loginStateBloc: LoginStateBloc(),)
                         ],
                       ),
                     ),

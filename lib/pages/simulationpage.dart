@@ -179,33 +179,7 @@ class _SimulationPageState extends State<SimulationPage> {
                             //     size: 24,
                             //   ),
                             // ),
-                            BlocConsumer<LoginStateBloc, LoginState>(
-                              builder: (context, state) {
-                                if (state is AppStateLoggedIn) {
-                                  return Container(
-                                    // margin: const EdgeInsets.only(left: 5),
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.end,
-                                      children: [
-                                        WalletButton(
-                                            balance: double.parse(state.balance)
-                                                .toStringAsFixed(2))
-                                      ],
-                                    ),
-                                  );
-                                }
-                                return const SizedBox();
-                              },
-                              listenWhen: (previous, current) {
-                                return current is AppStateLoggedIn;
-                              },
-                              listener: (context, state) {
-                                if (state is AppStateLoggedIn) {}
-                              },
-                            )
+                            WalletButton(loginStateBloc: LoginStateBloc(),),
                           ],
                         ),
                         Container(

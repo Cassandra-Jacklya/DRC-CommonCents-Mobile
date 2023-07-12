@@ -32,8 +32,9 @@ class LoginStateBloc extends Cubit<LoginState> {
     return AuthError.from(code);
   }
 
-  void updateBalance(String email, String newBalance){
-    emit(AppStateLoggedIn(email: email, password: "", balance: newBalance));
+  void updateBalance(String? email, String newBalance){
+    print(newBalance);
+    emit(AppStateLoggedIn(email: email!, password: "", balance: newBalance));
   }
 }
 
