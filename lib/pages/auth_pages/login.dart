@@ -1,8 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:commoncents/cubit/login_cubit.dart';
 import 'package:commoncents/firebase_options.dart';
-import 'package:commoncents/main.dart';
 import 'package:commoncents/pages/auth_pages/register.dart';
 import 'package:commoncents/pages/homepage.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -10,6 +11,7 @@ import 'package:iconsax/iconsax.dart';
 import 'dart:math' as math;
 
 import '../../components/appbar.dart';
+import '../../components/google_sign_in.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
@@ -21,6 +23,7 @@ class LoginView extends StatefulWidget {
 class _LoginViewState extends State<LoginView> with SingleTickerProviderStateMixin {
 
   bool viewPass = false;
+  bool googleSignIn = false;
   late final TextEditingController _email;
   late final TextEditingController _password;
   late final Future<FirebaseApp> _firebaseInitialization;
@@ -71,7 +74,7 @@ class _LoginViewState extends State<LoginView> with SingleTickerProviderStateMix
                     children: [
                       SizedBox(
                         child: Padding(
-                          padding: const EdgeInsets.fromLTRB(0, 100, 0, 0),
+                          padding: const EdgeInsets.fromLTRB(0, 80, 0, 0),
                           child: AnimatedBuilder(
                             animation: _controller,
                             builder: (_, child) { 
@@ -98,9 +101,9 @@ class _LoginViewState extends State<LoginView> with SingleTickerProviderStateMix
                         ],
                       ),
                       Padding(
-                        padding: const EdgeInsets.fromLTRB(0, 80, 0, 0),
+                        padding: const EdgeInsets.fromLTRB(0, 40, 0, 0),
                         child: SizedBox(
-                          height: 70,
+                          height: 51,
                           width: 311,
                           child: TextFormField(
                             controller: _email,
@@ -118,15 +121,15 @@ class _LoginViewState extends State<LoginView> with SingleTickerProviderStateMix
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.fromLTRB(0, 0, 0, 85),
+                        padding: const EdgeInsets.fromLTRB(0, 20, 0, 10),
                         child: SizedBox(
-                          height: 70,
+                          height: 51,
                           width: 311,
                           child: TextFormField(
                             controller: _password,
                             enableSuggestions: false,
                             autocorrect: false,
-                            obscureText: true,
+                            obscureText: viewPass ? false : true,
                             decoration: InputDecoration(
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(10),
@@ -142,6 +145,28 @@ class _LoginViewState extends State<LoginView> with SingleTickerProviderStateMix
                                 },
                               ), //Icon at the end
                             ),
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(0, 0, 0, 20),
+                        child: SizedBox(
+                          width: 311,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              GestureDetector(
+                                onTap: () {
+                                  
+                                },
+                                child: const Text("Forgot Password?",
+                                  style: TextStyle(fontSize: 13,
+                                    color: Color(0XFF3366FF),
+                                    decoration: TextDecoration.underline
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       ),
@@ -162,11 +187,6 @@ class _LoginViewState extends State<LoginView> with SingleTickerProviderStateMix
                                   actions: <Widget>[
                                     TextButton(
                                       onPressed: () {
-                                        // Navigator.push(
-                                        //   context,
-                                        //   MaterialPageRoute(builder: (BuildContext context) { return const HomePage(); }
-                                        //       ),
-                                        // );
                                         Navigator.pushReplacement(
                                           context,
                                           PageRouteBuilder(
@@ -186,32 +206,62 @@ class _LoginViewState extends State<LoginView> with SingleTickerProviderStateMix
                         builder: (context, state) {
                           return Padding(
                           padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
-                          child:ElevatedButton(
-                            style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.all<Color>(const Color(0xFF3366FF)),
-                              shape: MaterialStateProperty.all<
-                                  RoundedRectangleBorder>(
-                                RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(5.0),
+                          child:SizedBox(
+                            height: 42,
+                            width: 311,
+                            child: ElevatedButton(
+                              style: ButtonStyle(
+                                backgroundColor: MaterialStateProperty.all<Color>(const Color(0xFF3366FF)),
+                                shape: MaterialStateProperty.all<
+                                    RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10.0),
+                                  ),
                                 ),
                               ),
-                            ),
-                            onPressed: () async {
-                              final email = _email.text;
-                              final password = _password.text;
-                              BlocProvider.of<LoginStateBloc>(context).initFirebase(email, password);
-                            },
-                            child: const Text(
-                              "Login",
-                              style: TextStyle(
-                                  fontFamily: 'Raleway',
-                                  fontWeight: FontWeight.w800,
-                                  fontSize: 16,
-                                  color: Colors.white),
+                              onPressed: () async {
+                                final email = _email.text;
+                                final password = _password.text;
+                                BlocProvider.of<LoginStateBloc>(context).initFirebase(email, password);
+                              },
+                              child: const Text(
+                                "Login",
+                                style: TextStyle(
+                                    fontFamily: 'Raleway',
+                                    fontWeight: FontWeight.normal,
+                                    fontSize: 16,
+                                    color: Colors.white),
+                              ),
                             ),
                           ),
                         );
                         },
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(0, 30, 0, 0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: const [
+                            SizedBox(
+                              width: 125,
+                              child: Divider(color: Color(0xFFD9D9D9),
+                              endIndent: 10,
+                              ),
+                            ),
+                            Text("or",
+                              style: TextStyle(color: Color(0xFFD9D9D9)),
+                            ),
+                            SizedBox(width: 125,
+                              child: Divider(color: Color(0xFFD9D9D9),
+                                indent: 10,
+                              ), 
+                            )
+                          ],
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
+                        child: GoogleSignInButton(),
                       ),
                       Padding(
                         padding: const EdgeInsets.fromLTRB(0, 15, 0, 0),

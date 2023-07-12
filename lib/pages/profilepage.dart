@@ -44,7 +44,7 @@ class _ProfilePageState extends State<ProfilePage> {
         forTradeHisitory = docSnapshot.data()!;
         if (data != null) {
           setState(() {
-            photoUrl = data['photoURL'] ?? ''; // Get the photoURL if it exists
+            photoUrl = data['photoURL'] ?? user.photoURL; // Get the photoURL if it exists
             displayName = data['displayName'] ??
                 'nope'; // Get the displayName if it exists
             balance = data['balance'].toDouble() ??

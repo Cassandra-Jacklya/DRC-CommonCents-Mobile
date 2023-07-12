@@ -15,12 +15,12 @@ class LoginStateBloc extends Cubit<LoginState> {
       }
       CollectionReference collectionReference = FirebaseFirestore.instance.collection('users');
       DocumentSnapshot<Object?> doc = await collectionReference.doc(FirebaseAuth.instance.currentUser!.uid).get();
-      // if (doc.data() != null) {
+      if (doc.data() != null) {
         Map<String,dynamic> objData = doc.data() as Map<String, dynamic>;
         double roundedBalance = objData['balance'].toDouble();
         final String data = roundedBalance.toStringAsFixed(2);
         emit(AppStateLoggedIn(email: email, password: password, balance: data));
-      // }
+      }
     } on FirebaseAuthException catch (e) {
       emit(AppStateError(error: authError(e.code)));
     }

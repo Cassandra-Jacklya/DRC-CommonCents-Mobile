@@ -6,6 +6,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iconsax/iconsax.dart';
+import '../../components/google_sign_in.dart';
 import '../../cubit/register_cubit.dart';
 import '../../firebase_options.dart';
 import 'login.dart';
@@ -112,7 +113,7 @@ class _RegisterViewState extends State<RegisterView>
                   children: [
                     SizedBox(
                       child: Padding(
-                        padding: const EdgeInsets.fromLTRB(0, 100, 0, 0),
+                        padding: const EdgeInsets.fromLTRB(0, 80, 0, 0),
                         child: AnimatedBuilder(
                           animation: _controller,
                           builder: (_, child) {
@@ -147,9 +148,9 @@ class _RegisterViewState extends State<RegisterView>
                       ],
                     ),
                     Padding(
-                      padding: const EdgeInsets.fromLTRB(0, 80, 0, 0),
+                      padding: const EdgeInsets.fromLTRB(0, 40, 0, 0),
                       child: SizedBox(
-                        height: 70,
+                        height: 51,
                         width: 311,
                         child: TextFormField(
                           controller: _email,
@@ -166,43 +167,46 @@ class _RegisterViewState extends State<RegisterView>
                         ),
                       ),
                     ),
-                    SizedBox(
-                      height: 70,
-                      width: 311,
-                      child: TextFormField(
-                        controller: _password,
-                        enableSuggestions: false,
-                        autocorrect: false,
-                        obscureText: true,
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              borderSide:
-                                  const BorderSide(color: Color(0xFF5F5F5F))),
-                          labelText: 'Password',
-                          suffixIcon: GestureDetector(
-                            child: viewPass
-                                ? const Icon(Iconsax.eye)
-                                : const Icon(Iconsax.eye_slash),
-                            onTap: () {
-                              setState(() {
-                                viewPass = !viewPass;
-                              });
-                            },
-                          ), //Icon at the end
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
+                      child: SizedBox(
+                        height: 51,
+                        width: 311,
+                        child: TextFormField(
+                          controller: _password,
+                          enableSuggestions: false,
+                          autocorrect: false,
+                          obscureText: viewPass ? false : true,
+                          decoration: InputDecoration(
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide:
+                                    const BorderSide(color: Color(0xFF5F5F5F))),
+                            labelText: 'Password',
+                            suffixIcon: GestureDetector(
+                              child: viewPass
+                                  ? const Icon(Iconsax.eye)
+                                  : const Icon(Iconsax.eye_slash),
+                              onTap: () {
+                                setState(() {
+                                  viewPass = !viewPass;
+                                });
+                              },
+                            ), //Icon at the end
+                          ),
                         ),
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.fromLTRB(0, 0, 0, 45),
+                      padding: const EdgeInsets.fromLTRB(0, 20, 0, 10),
                       child: SizedBox(
-                        height: 70,
+                        height: 51,
                         width: 311,
                         child: TextFormField(
                           controller: _confirmPassword,
                           enableSuggestions: false,
                           autocorrect: false,
-                          obscureText: true,
+                          obscureText: viewConfirmPass ? false : true,
                           decoration: InputDecoration(
                             border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(10),
@@ -280,34 +284,64 @@ class _RegisterViewState extends State<RegisterView>
                     }, builder: (context, state) {
                       return Padding(
                         padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
-                        child: ElevatedButton(
-                          style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all<Color>(
-                                const Color(0xFF3366FF)),
-                            shape: MaterialStateProperty.all<
-                                RoundedRectangleBorder>(
-                              RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(5.0),
+                        child: SizedBox(
+                          height: 42,
+                          width: 92,
+                          child: ElevatedButton(
+                            style: ButtonStyle(
+                              backgroundColor: MaterialStateProperty.all<Color>(
+                                  const Color(0xFF3366FF)),
+                              shape: MaterialStateProperty.all<
+                                  RoundedRectangleBorder>(
+                                RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10.0),
+                                ),
                               ),
                             ),
-                          ),
-                          onPressed: () async {
-                            final email = _email.text;
-                            final password = _password.text;
-                            BlocProvider.of<SignUpStateBloc>(context)
-                                .signUp(email, password);
-                          },
-                          child: const Text(
-                            'Sign Up',
-                            style: TextStyle(
-                                fontFamily: 'Roboto',
-                                fontWeight: FontWeight.normal,
-                                fontSize: 16,
-                                color: Colors.white),
+                            onPressed: () async {
+                              final email = _email.text;
+                              final password = _password.text;
+                              BlocProvider.of<SignUpStateBloc>(context)
+                                  .signUp(email, password);
+                            },
+                            child: const Text(
+                              'Sign Up',
+                              style: TextStyle(
+                                  fontFamily: 'Roboto',
+                                  fontWeight: FontWeight.normal,
+                                  fontSize: 16,
+                                  color: Colors.white),
+                            ),
                           ),
                         ),
                       );
                     }),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: const [
+                          SizedBox(
+                            width: 125,
+                            child: Divider(color: Color(0xFFD9D9D9),
+                            endIndent: 10,
+                            ),
+                          ),
+                          Text("or",
+                            style: TextStyle(color: Color(0xFFD9D9D9)),
+                          ),
+                          SizedBox(width: 125,
+                            child: Divider(color: Color(0xFFD9D9D9),
+                              indent: 10,
+                            ), 
+                          )
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
+                      child: GoogleSignInButton(),
+                    ),
                     Padding(
                       padding: const EdgeInsets.fromLTRB(0, 15, 0, 0),
                       child: Row(
