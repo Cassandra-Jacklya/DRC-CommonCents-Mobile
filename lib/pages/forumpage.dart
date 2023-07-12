@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:commoncents/components/popup.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -66,6 +67,8 @@ class _ForumPageState extends State<ForumPage> {
 
   @override
   Widget build(BuildContext context) {
+    print(user!.email);
+    print("Here: ${user!.displayName}");
     return Scaffold(
       appBar: AppBar(
         shadowColor: Colors.transparent,
@@ -85,30 +88,30 @@ class _ForumPageState extends State<ForumPage> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Container(
-                      padding: const EdgeInsets.all(5),
-                      height: MediaQuery.of(context).size.height * 0.1,
-                      width: MediaQuery.of(context).size.width * 0.95,
-                      decoration: BoxDecoration(
-                          color: Colors.grey[400],
-                          borderRadius: BorderRadius.circular(10)),
-                      child: Row(
-                        children: [
-                          CircleAvatar(
-                            backgroundImage: NetworkImage(
-                              user!.photoURL ??
-                                  'https://static01.nyt.com/newsgraphics/2019/08/01/candidate-pages/3b31eab6a3fd70444f76f133924ae4317567b2b5/trump-circle.png',
-                            ),
-                            radius: 40,
-                          ),
-                          Container(
-                            color: Colors.white,
-                            height: MediaQuery.of(context).size.height * 0.05,
-                            width: MediaQuery.of(context).size.width * 0.7,
-                          ),
-                        ],
-                      ),
-                    ),
+                    // Container(
+                    //   padding: const EdgeInsets.all(5),
+                    //   height: MediaQuery.of(context).size.height * 0.1,
+                    //   width: MediaQuery.of(context).size.width * 0.95,
+                    //   decoration: BoxDecoration(
+                    //       color: Colors.grey[400],
+                    //       borderRadius: BorderRadius.circular(10)),
+                    //   child: Row(
+                    //     children: [
+                    //       CircleAvatar(
+                    //         backgroundImage: NetworkImage(
+                    //           user!.photoURL ??
+                    //               'https://static01.nyt.com/newsgraphics/2019/08/01/candidate-pages/3b31eab6a3fd70444f76f133924ae4317567b2b5/trump-circle.png',
+                    //         ),
+                    //         radius: 40,
+                    //       ),
+                    //       Container(
+                    //         color: Colors.white,
+                    //         height: MediaQuery.of(context).size.height * 0.05,
+                    //         width: MediaQuery.of(context).size.width * 0.7,
+                    //       ),
+                    //     ],
+                    //   ),
+                    // ),
                   ],
                 ),
                 Expanded(
@@ -153,13 +156,36 @@ class _ForumPageState extends State<ForumPage> {
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.start,
                                             children: [
-                                              Text(
-                                                post['author'],
-                                                style: const TextStyle(
-                                                    fontWeight:
-                                                        FontWeight.w800),
+                                              Container(
+                                                width: MediaQuery.of(context)
+                                                        .size
+                                                        .width *
+                                                    0.63,
+                                                padding:
+                                                    const EdgeInsets.all(1),
+                                                child: Text(
+                                                  post['author'],
+                                                  style: const TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.w800),
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                ),
                                               ),
-                                              Text(post['details'])
+                                              Container(
+                                                width: MediaQuery.of(context)
+                                                        .size
+                                                        .width *
+                                                    0.63,
+                                                padding:
+                                                    const EdgeInsets.all(1),
+                                                child: Text(
+                                                  post['details'],
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  maxLines: 3,
+                                                ),
+                                              ),
                                             ],
                                           ),
                                         )
@@ -180,7 +206,10 @@ class _ForumPageState extends State<ForumPage> {
         children: [
           FloatingActionButton(
             onPressed: () {
-              // Handle the button's onPressed event here
+              showDialog(context: context, builder: (BuildContext context) {
+                print("Here: ${user!.displayName}");
+                return PostSomething();
+              });
             },
             child: Icon(Icons.add),
             backgroundColor: Colors.blue,

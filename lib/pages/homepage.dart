@@ -1,5 +1,6 @@
 import 'package:commoncents/components/carousel_chart.dart';
 import 'package:commoncents/components/navbar.dart';
+import 'package:commoncents/components/walletbutton.dart';
 import 'package:commoncents/pages/homepage_guest.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -80,7 +81,7 @@ class _HomePageState extends State<HomePage> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           const Text(
-                          "MARKET OVERVIEW",
+                          "SYNTHETIC INDICES",
                           style: TextStyle(
                             fontSize: 15, 
                             fontFamily: 'Roboto',
@@ -93,13 +94,7 @@ class _HomePageState extends State<HomePage> {
                               else if (state is AppStateLoggedIn) {
                                 return Row(
                                   children: [
-                                    const Padding(
-                                      padding: EdgeInsets.fromLTRB(0, 0, 5, 0),
-                                      child: FaIcon(FontAwesomeIcons.wallet,
-                                        size: 15,
-                                      ),
-                                    ),
-                                    Text(state.balance),
+                                    WalletButton(balance: state.balance)
                                   ],
                                 );
                               }

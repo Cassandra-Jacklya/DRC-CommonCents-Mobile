@@ -28,7 +28,7 @@ class _HomePageGuestState extends State<HomePageGuest> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: const [
                   Text(
-                    "MARKET OVERVIEW",
+                    "SYNTHETIC INDICES",
                     style: TextStyle(
                         fontSize: 15,
                         fontFamily: 'Roboto',

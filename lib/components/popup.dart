@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:commoncents/authStore/authentication.dart';
 import 'package:commoncents/main.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -614,6 +615,188 @@ class _TradeDetailsState extends State<TradeDetails> {
           ],
         ),
       )),
+    );
+  }
+}
+
+class PostSomething extends StatefulWidget {
+  _PostSomethingState createState() => _PostSomethingState();
+}
+
+class _PostSomethingState extends State<PostSomething> {
+  TextEditingController _postController = TextEditingController();
+  TextEditingController _titleController = TextEditingController();
+  final user = FirebaseAuth.instance.currentUser;
+
+  Future<void> createPost(String? author, String? authorImage, String? details,
+      int? timestamp, String? title) async {
+    try {
+      await FirebaseFirestore.instance.collection('posts').add({
+        'author': author,
+        'authorImage': authorImage,
+        'details': details,
+        'timestamp': timestamp,
+        'title': title,
+      });
+      print('Post created successfully!');
+    } catch (e) {
+      print('Error creating post: $e');
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _postController = TextEditingController();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10),
+      ),
+      titlePadding: EdgeInsets.zero,
+      title: Container(
+        height: 60,
+        decoration: BoxDecoration(
+            color: Color(0XFF3366FF),
+            borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(10), topRight: Radius.circular(10))),
+        padding: const EdgeInsets.all(10),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              'Share Something',
+              style: Theme.of(context).textTheme.displayLarge!.merge(
+                    const TextStyle(
+                      fontSize: 18,
+                      color: Colors.white,
+                    ),
+                  ),
+            ),
+          ],
+        ),
+      ),
+      content: Container(
+        height: MediaQuery.of(context).size.height * 0.4,
+        padding: const EdgeInsets.only(top: 10),
+        child: Column(children: [
+          TextFormField(
+            controller: _titleController,
+            decoration: InputDecoration(
+              labelText: "Title",
+              border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                  borderSide: const BorderSide(color: Color(0xFF5F5F5F))),
+            ),
+            maxLength: 100,
+            maxLines: 1,
+          ),
+          TextFormField(
+            controller: _postController,
+            decoration: InputDecoration(
+              labelText: "Post",
+              border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                  borderSide: const BorderSide(color: Color(0xFF5F5F5F))),
+            ),
+            maxLength: 300,
+            maxLines: 5,
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+          GestureDetector(
+            onTap: () {
+              _postController.text == "" ? {} : print(user!.displayName);
+              Navigator.of(context).pop();
+              createPost(
+                  user!.displayName,
+                  user!.photoURL,
+                  _postController.text,
+                  DateTime.now().millisecondsSinceEpoch,
+                  _titleController.text);
+            },
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Container(
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: _postController.text == ""
+                          ? Colors.grey[400]
+                          : const Color(0XFF3366FF)),
+                  width: MediaQuery.of(context).size.width * 0.4,
+                  height: MediaQuery.of(context).size.height * 0.05,
+                  child: Center(
+                    child: const Text(
+                      "Post",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ]),
+      ),
+    );
+  }
+}
+
+class ResetBalance extends StatelessWidget {
+  late String balance;
+
+  Future<void> resetBalance() async {
+    FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
+    User? user = FirebaseAuth.instance.currentUser;
+
+    if (user != null) {
+      CollectionReference collectionReference =
+          firebaseFirestore.collection('users');
+      DocumentReference userDocument = collectionReference.doc(user.uid);
+
+      await userDocument.update({
+        'balance': 100000,
+      });
+      print("Balance reset");
+    }
+  }
+
+  ResetBalance({required this.balance});
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      content: Container(
+        height: MediaQuery.of(context).size.height * 0.12,
+        padding: const EdgeInsets.all(10),
+        child: Column(
+          children: [
+            Row(
+              children: [const Text("Current Balance: "), Text(balance)],
+            ),
+            const SizedBox(height: 10),
+            GestureDetector( onTap: (){
+              resetBalance();
+            },
+              child: Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: const Color(0XFF3366FF)),
+                child: const Text(
+                  "Click to reset balance",
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
