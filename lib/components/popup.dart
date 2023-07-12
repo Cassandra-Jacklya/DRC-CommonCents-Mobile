@@ -623,6 +623,9 @@ class _TradeDetailsState extends State<TradeDetails> {
 }
 
 class PostSomething extends StatefulWidget {
+  final Function refreshPosts; // Add the parameter
+
+  PostSomething({required this.refreshPosts});
   _PostSomethingState createState() => _PostSomethingState();
 }
 
@@ -717,11 +720,15 @@ class _PostSomethingState extends State<PostSomething> {
               _postController.text == "" ? {} : print(user!.displayName);
               Navigator.of(context).pop();
               createPost(
-                  user!.displayName,
-                  user!.photoURL,
-                  _postController.text,
-                  DateTime.now().millisecondsSinceEpoch,
-                  _titleController.text);
+                user!.displayName,
+                user!.photoURL,
+                _postController.text,
+                DateTime.now().millisecondsSinceEpoch,
+                _titleController.text,
+              );
+
+              // Call the refreshPosts callback function
+              widget.refreshPosts();
             },
             child: Row(
               mainAxisAlignment: MainAxisAlignment.end,

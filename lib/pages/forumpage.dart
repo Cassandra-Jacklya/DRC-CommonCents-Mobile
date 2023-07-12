@@ -2,7 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:commoncents/components/popup.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
+import '../components/fullPost.dart';
 import '../components/navbar.dart';
 
 class ForumPage extends StatefulWidget {
@@ -13,6 +15,7 @@ class ForumPage extends StatefulWidget {
 
 class _ForumPageState extends State<ForumPage> {
   User? user = FirebaseAuth.instance.currentUser;
+  void refreshPosts() {}
   void savePost(Map<String, dynamic> post) async {
     try {
       final userId = user!.uid;
@@ -92,8 +95,33 @@ class _ForumPageState extends State<ForumPage> {
         for (final postDoc in postsDocs) {
           final post = postDoc.data();
           post['id'] = postDoc.id;
+
+          // Retrieve comments for the post
+          final commentsSnapshot =
+              await postDoc.reference.collection('comments').get();
+          final List<Map<String, dynamic>> commentsList = [];
+
+          if (commentsSnapshot.docs.isNotEmpty) {
+            for (final commentDoc in commentsSnapshot.docs) {
+              final commentData = commentDoc.data();
+              final comment = {
+                'id': commentDoc.id,
+                'author': commentData['author'],
+                'authorImage': commentData['authorImage'],
+                'content': commentData['content'],
+                'postId': commentData['postId'],
+                'timestamp': commentData['timestamp'],
+              };
+
+              commentsList.add(comment);
+            }
+          }
+
+          post['comments'] = commentsList;
+
           postsList.add(post);
         }
+
         return postsList;
       }
     } else {
@@ -133,7 +161,7 @@ class _ForumPageState extends State<ForumPage> {
         foregroundColor: Colors.black,
         iconTheme: const IconThemeData(color: Colors.white),
       ),
-      body: postsList.isNotEmpty 
+      body: postsList.isNotEmpty
           ? Column(
               children: [
                 const SizedBox(height: 10),
@@ -146,119 +174,195 @@ class _ForumPageState extends State<ForumPage> {
                           physics: const NeverScrollableScrollPhysics(),
                           itemCount: postsList.length,
                           itemBuilder: (BuildContext context, int index) {
-                            final post = postsList[index];
+                            final sortedPosts = postsList
+                              ..sort((a, b) =>
+                                  b['timestamp'].compareTo(a['timestamp']));
+                            final post = sortedPosts[index];
                             final bool isFavorite = favouritePosts.any(
                                 (favoritePost) =>
                                     favoritePost['title'] == post['title'] &&
                                     favoritePost['details'] == post['details']);
 
-                            return Container(
-                              margin: const EdgeInsets.all(10),
-                              width: MediaQuery.of(context).size.width * 0.5,
-                              padding: const EdgeInsets.all(10),
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(10),
-                                border: Border.all(color: Colors.black26),
-                              ),
-                              child: Column(
-                                children: [
-                                  Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Container(
-                                        child: CircleAvatar(
-                                          backgroundImage: NetworkImage(
-                                            post['authorImage'] ??
-                                                'https://static01.nyt.com/newsgraphics/2019/08/01/candidate-pages/3b31eab6a3fd70444f76f133924ae4317567b2b5/trump-circle.png',
-                                          ),
-                                          radius: 40,
-                                        ),
-                                      ),
-                                      Container(
-                                        margin: const EdgeInsets.all(10),
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
+                            final timestamp = post['timestamp'] as int;
+                            final date =
+                                DateTime.fromMillisecondsSinceEpoch(timestamp);
+                            final formattedDate =
+                                DateFormat('yyyy-MM-dd').format(date);
+
+                            final now = DateTime.now();
+                            final difference = now.difference(date);
+                            String hoursAgo;
+
+                            if (difference.inHours < 1) {
+                              hoursAgo = 'less than an hour ago';
+                            } else {
+                              hoursAgo = '${difference.inHours} hours ago';
+                            }
+
+                            return GestureDetector(
+                              onTap: () {
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return FullPost(
+                                      post: post,
+                                      formattedDate: formattedDate,
+                                      isFavorite: isFavorite,
+                                      hoursAgo: hoursAgo,
+                                      savePostCallback: savePost,
+                                    );
+// Pass the post to the FullPost dialog
+                                  },
+                                );
+                              },
+                              child: Container(
+                                margin: const EdgeInsets.all(10),
+                                width: MediaQuery.of(context).size.width * 0.5,
+                                padding: const EdgeInsets.all(10),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(10),
+                                  border: Border.all(color: Colors.black26),
+                                ),
+                                child: Column(
+                                  children: [
+                                    Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Column(
                                           children: [
-                                            Container(
-                                              width: MediaQuery.of(context)
-                                                      .size
-                                                      .width *
-                                                  0.63,
-                                              padding: const EdgeInsets.all(1),
-                                              child: Text(
-                                                post['author'],
-                                                style: const TextStyle(
-                                                  fontSize: 18,
-                                                  fontWeight: FontWeight.w800,
-                                                ),
-                                                overflow: TextOverflow.ellipsis,
+                                            CircleAvatar(
+                                              backgroundImage: NetworkImage(
+                                                post['authorImage'] ??
+                                                    'https://static01.nyt.com/newsgraphics/2019/08/01/candidate-pages/3b31eab6a3fd70444f76f133924ae4317567b2b5/trump-circle.png',
                                               ),
+                                              radius: 40,
                                             ),
-                                            Container(
+                                            const SizedBox(height: 10),
+                                            SizedBox(
                                               width: MediaQuery.of(context)
                                                       .size
                                                       .width *
-                                                  0.63,
-                                              padding: const EdgeInsets.all(1),
-                                              child: Text(
-                                                post['title'],
-                                                style: const TextStyle(
-                                                  fontSize: 15,
-                                                  fontWeight: FontWeight.w700,
+                                                  0.15,
+                                              child: Center(
+                                                child: Text(
+                                                  post['author'],
+                                                  style: const TextStyle(
+                                                    fontSize: 13,
+                                                  ),
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
                                                 ),
-                                                overflow: TextOverflow.ellipsis,
-                                                maxLines: 3,
-                                              ),
-                                            ),
-                                            Container(
-                                              width: MediaQuery.of(context)
-                                                      .size
-                                                      .width *
-                                                  0.63,
-                                              padding: const EdgeInsets.all(1),
-                                              child: Text(
-                                                post['details'],
-                                                style: const TextStyle(
-                                                    fontSize: 13),
-                                                overflow: TextOverflow.ellipsis,
-                                                maxLines: 3,
                                               ),
                                             ),
                                           ],
                                         ),
-                                      ),
-                                    ],
-                                  ),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.end,
-                                    children: [
-                                      IconButton(
-                                        icon: Icon(Icons.comment),
-                                        onPressed: () {},
-                                      ),
-                                      IconButton(
-                                        icon: Icon(
-                                          isFavorite
-                                              ? Icons.favorite
-                                              : Icons.favorite_border,
-                                          color: isFavorite ? Colors.red : null,
+                                        Container(
+                                          margin: const EdgeInsets.all(10),
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Row(
+                                                children: [
+                                                  Container(
+                                                    width:
+                                                        MediaQuery.of(context)
+                                                                .size
+                                                                .width *
+                                                            0.5,
+                                                    padding:
+                                                        const EdgeInsets.all(1),
+                                                    child: Text(
+                                                      post['title'],
+                                                      style: const TextStyle(
+                                                        fontSize: 20,
+                                                        fontWeight:
+                                                            FontWeight.w800,
+                                                      ),
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                    ),
+                                                  ),
+                                                  Container(
+                                                    child: Text(
+                                                      formattedDate,
+                                                      style: const TextStyle(
+                                                        fontSize: 12,
+                                                        color: Colors.black,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                              const SizedBox(height: 5),
+                                              Container(
+                                                width: MediaQuery.of(context)
+                                                        .size
+                                                        .width *
+                                                    0.63,
+                                                padding:
+                                                    const EdgeInsets.all(1),
+                                                child: Text(
+                                                  post['details'],
+                                                  style: const TextStyle(
+                                                      fontSize: 15),
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  maxLines: 3,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
                                         ),
-                                        onPressed: () {
-                                          savePost(post);
-                                        },
-                                      ),
-                                    ],
-                                  ),
-                                ],
+                                      ],
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Container(
+                                          margin:
+                                              const EdgeInsets.only(left: 5),
+                                          child: Text(
+                                            hoursAgo,
+                                            style: TextStyle(
+                                                fontSize: 13,
+                                                fontWeight: FontWeight.w300),
+                                          ),
+                                        ),
+                                        Row(
+                                          children: [
+                                            IconButton(
+                                              icon: const Icon(Icons.comment),
+                                              onPressed: () {},
+                                            ),
+                                            IconButton(
+                                              icon: Icon(
+                                                isFavorite
+                                                    ? Icons.favorite
+                                                    : Icons.favorite_border,
+                                                color: isFavorite
+                                                    ? Colors.red
+                                                    : null,
+                                              ),
+                                              onPressed: () {
+                                                savePost(post);
+                                              },
+                                            ),
+                                          ],
+                                        )
+                                      ],
+                                    ),
+                                  ],
+                                ),
                               ),
                             );
                           },
-                        ),
+                        )
                       ],
                     ),
                   ),
@@ -271,11 +375,20 @@ class _ForumPageState extends State<ForumPage> {
           FloatingActionButton(
             onPressed: () {
               showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    print("Here: ${user!.displayName}");
-                    return PostSomething();
-                  });
+                context: context,
+                builder: (BuildContext context) {
+                  return PostSomething(
+                    // Pass the callback function to the PostSomething dialog
+                    refreshPosts: () {
+                      loadPosts().then((result) {
+                        setState(() {
+                          postsList = result;
+                        });
+                      });
+                    },
+                  );
+                },
+              );
             },
             child: Icon(Icons.add),
             backgroundColor: Colors.blue,
@@ -286,18 +399,3 @@ class _ForumPageState extends State<ForumPage> {
     );
   }
 }
-
-// if (hasNewPost)
-//   Positioned(
-//     top: 0,
-//     right: 0,
-//     child: Container(
-//       width: 15,
-//       height: 15,
-//       decoration: BoxDecoration(
-//         shape: BoxShape.circle,
-//         color: Colors.red,
-//       ),
-//     ),
-//   ),
-

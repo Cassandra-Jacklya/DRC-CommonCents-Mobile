@@ -44,12 +44,15 @@ class _ProfilePageState extends State<ProfilePage> {
         forTradeHisitory = docSnapshot.data()!;
         if (data != null) {
           setState(() {
-            photoUrl = data['photoURL'] ?? user.photoURL; // Get the photoURL if it exists
+            photoUrl = data['photoURL'] ??
+                user.photoURL ??
+                ''; // Provide a default value if 'photoURL' is null
             displayName = data['displayName'] ??
-                'nope'; // Get the displayName if it exists
-            balance = data['balance'].toDouble() ??
-                0.0; // Get the balance if it exists
-            email = data['email'];
+                user.displayName ??
+                'nope'; // Provide a default value if 'displayName' is null
+            balance = data['balance']?.toDouble() ??
+                0.0; // Provide a default value if 'balance' is null
+            email = data['email'] ?? '';
           });
         }
       }
@@ -226,15 +229,14 @@ class _ProfilePageState extends State<ProfilePage> {
                           title: "FAQs",
                           icon: null,
                           onPressed: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => FAQ()));
+                            Navigator.push(context,
+                                MaterialPageRoute(builder: (context) => FAQ()));
                           },
                           showBottomBorder: false,
                         ),
-                        GestureDetector(onTap: (){                            
-                          showDialog(
+                        GestureDetector(
+                          onTap: () {
+                            showDialog(
                               context: context,
                               builder: (BuildContext logoutDialog) {
                                 return const LogOut();
