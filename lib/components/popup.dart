@@ -623,7 +623,7 @@ class _TradeDetailsState extends State<TradeDetails> {
 }
 
 class PostSomething extends StatefulWidget {
-  final Function refreshPosts; // Add the parameter
+  final Function refreshPosts; // this is for likes
 
   PostSomething({required this.refreshPosts});
   _PostSomethingState createState() => _PostSomethingState();

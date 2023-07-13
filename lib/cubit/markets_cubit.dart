@@ -5,6 +5,7 @@ class MarketsCubit extends Cubit<String> {
 
   void updateMarkets(String market) {
     emit(market);
+    print("Here: $market");
   }
 
 }

@@ -65,7 +65,7 @@ class _LineChartState extends State<MyLineChart> {
             SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: SizedBox(
-                height: widget.isMini ? 100 : MediaQuery.of(context).size.height * 0.4,
+                height: widget.isMini ? 100 : MediaQuery.of(context).size.height * 0.3,
                 width: widget.isMini ? 100: MediaQuery.of(context).size.width,
                 child: BlocBuilder<StockDataCubit, List<Map<String, dynamic>>>(
                   builder: (context, stockData) {

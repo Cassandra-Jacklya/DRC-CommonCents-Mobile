@@ -1,6 +1,12 @@
 import 'package:commoncents/apistore/stockdata.dart';
 import 'package:commoncents/components/chart.dart';
+import 'package:commoncents/components/chartTime.dart';
+import 'package:commoncents/components/liveLinePrice.dart';
+import 'package:commoncents/cubit/candlePrice_cubit.dart';
+import 'package:commoncents/cubit/chartTime_cubit.dart';
 import 'package:commoncents/cubit/isCandle_cubit.dart';
+import 'package:commoncents/cubit/lineTime_cubit.dart';
+import 'package:commoncents/cubit/livelinePrice_cubit.dart';
 import 'package:commoncents/cubit/markets_cubit.dart';
 import 'package:commoncents/cubit/numberpicker_cubit.dart';
 import 'package:commoncents/cubit/stake_payout_cubit.dart';
@@ -11,6 +17,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:toggle_switch/toggle_switch.dart';
 import '../components/appbar.dart';
+import '../components/chartPrice.dart';
+import '../components/formatMarkets.dart';
+import '../components/lineTime.dart';
 import '../components/navbar.dart';
 import '../components/numberPIcker.dart';
 import '../components/linechart.dart';
@@ -37,25 +46,16 @@ class SimulationPage extends StatefulWidget {
 
 class _SimulationPageState extends State<SimulationPage> {
   late IsCandleCubit isCandleCubit;
-  late MarketsCubit marketType;
+  late String markettype;
   late double ticks;
   late String stakePayout;
   late int currentAmount;
   late bool isCandle;
 
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   marketType = context.read<MarketsCubit>();
-  //   isCandleCubit =
-  //       context.read<IsCandleCubit>(); // Initialize the isCandleCubit
-  //   isCandle = isCandleCubit.state;
-  //   market = marketType.state;
-  // }
-
   @override
   void initState() {
     isCandle = false;
+    // markettype = context.read<MarketsCubit>().state;
   }
 
   @override
@@ -85,6 +85,11 @@ class _SimulationPageState extends State<SimulationPage> {
         BlocProvider<CandlestickCubit>(create: (context) => CandlestickCubit()),
         BlocProvider<MarketsCubit>(create: (context) => MarketsCubit()),
         BlocProvider<IsCandleCubit>(create: (content) => IsCandleCubit()),
+        BlocProvider<LineTimeCubit>(create: (context) => LineTimeCubit()),
+        BlocProvider<ChartTimeCubit>(create: (context) => ChartTimeCubit()),
+        BlocProvider<LiveLinePriceCubit>(
+            create: (context) => LiveLinePriceCubit()),
+        BlocProvider<candlePriceCubit>(create: (context) => candlePriceCubit())
       ],
       child: Scaffold(
         appBar: const CustomAppBar(
@@ -113,7 +118,7 @@ class _SimulationPageState extends State<SimulationPage> {
                         Row(
                           children: [
                             BlocBuilder<MarketsCubit, String>(
-                                builder: (context, market) {
+                                builder: (context, state) {
                               return GestureDetector(
                                 onTap: () {
                                   unsubscribe();
@@ -133,7 +138,7 @@ class _SimulationPageState extends State<SimulationPage> {
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
                                     children: [
-                                      Text(widget.market),
+                                      Text(state),
                                       const IconButton(
                                         onPressed: null,
                                         icon: Icon(
@@ -164,27 +169,14 @@ class _SimulationPageState extends State<SimulationPage> {
                                 ),
                               ),
                             ),
-                            // Container(
-                            //   margin:
-                            //       const EdgeInsets.only(left: 3),
-                            //   width: 25,
-                            //   height: 25,
-                            //   decoration: const BoxDecoration(
-                            //     shape: BoxShape.circle,
-                            //     color: Colors.blue,
-                            //   ),
-                            //   child: const Icon(
-                            //     Icons.info,
-                            //     color: Colors.white,
-                            //     size: 24,
-                            //   ),
-                            // ),
-                            WalletButton(loginStateBloc: LoginStateBloc(),),
+                            WalletButton(
+                              loginStateBloc: LoginStateBloc(),
+                            ),
                           ],
                         ),
                         Container(
                           margin: const EdgeInsets.symmetric(vertical: 10),
-                          height: MediaQuery.of(context).size.height * 0.4,
+                          height: MediaQuery.of(context).size.height * 0.3,
                           color: Colors.grey[300],
                           child: Center(
                             child: isCandle
@@ -211,6 +203,11 @@ class _SimulationPageState extends State<SimulationPage> {
                             scrollDirection: Axis.vertical,
                             child: Column(
                               children: [
+                                Container(
+                                    child: isCandle
+                                        ? ChartPrice()
+                                        : LiveLinePrice()),
+                                // Center(child: isCandle ? ChartTime() : LineTime()),
                                 BlocBuilder<TicksCubit, double>(
                                     builder: (context, selectedValue) {
                                   return Row(
@@ -260,6 +257,8 @@ class _SimulationPageState extends State<SimulationPage> {
                                   children: [
                                     GestureDetector(
                                       onTap: () {
+                                        markettype =
+                                            formatMarkets(widget.market);
                                         ticks =
                                             context.read<TicksCubit>().state;
                                         if (BlocProvider.of<StakePayoutCubit>(
@@ -276,8 +275,13 @@ class _SimulationPageState extends State<SimulationPage> {
                                         currentAmount = context
                                             .read<CurrentAmountCubit>()
                                             .state;
-                                        handleBuy(context, ticks.toInt(),
-                                            stakePayout, currentAmount, "high");
+                                        handleBuy(
+                                            context,
+                                            ticks.toInt(),
+                                            stakePayout,
+                                            currentAmount,
+                                            "high",
+                                            markettype);
                                       },
                                       child: Container(
                                         padding:
@@ -299,6 +303,8 @@ class _SimulationPageState extends State<SimulationPage> {
                                     ),
                                     GestureDetector(
                                       onTap: () {
+                                        markettype =
+                                            formatMarkets(widget.market);
                                         ticks =
                                             context.read<TicksCubit>().state;
                                         if (BlocProvider.of<StakePayoutCubit>(
@@ -315,8 +321,14 @@ class _SimulationPageState extends State<SimulationPage> {
                                         currentAmount = context
                                             .read<CurrentAmountCubit>()
                                             .state;
-                                        handleBuy(context, ticks.toInt(),
-                                            stakePayout, currentAmount,"low");
+                                        handleBuy(
+                                            context,
+                                            ticks.toInt(),
+                                            stakePayout,
+                                            currentAmount,
+                                            "low",
+                                            markettype);
+                                        print(widget.market);
                                       },
                                       child: Container(
                                         padding:

@@ -15,7 +15,17 @@ class ForumPage extends StatefulWidget {
 
 class _ForumPageState extends State<ForumPage> {
   User? user = FirebaseAuth.instance.currentUser;
-  void refreshPosts() {}
+   Future<void> refreshPosts() async {
+    setState(() {
+      postsList = []; // Clear the existing posts list
+    });
+
+    await loadPosts().then((result) {
+      setState(() {
+        postsList = result;
+      });
+    });
+  }
   void savePost(Map<String, dynamic> post) async {
     try {
       final userId = user!.uid;

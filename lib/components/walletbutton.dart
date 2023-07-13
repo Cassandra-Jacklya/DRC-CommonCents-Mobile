@@ -43,7 +43,7 @@ class _WalletButtonState extends State<WalletButton> {
                   } else if (state is AppStateLoggedIn) {
                     return Row(
                       children: [
-                        Text(state.balance),
+                        Text(double.parse(state.balance).toStringAsFixed(2)),
                       ],
                     );
                   } else if (state is AppStateError) {

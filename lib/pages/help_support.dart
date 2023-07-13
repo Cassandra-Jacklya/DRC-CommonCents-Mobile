@@ -53,6 +53,7 @@ class _HelpSupportState extends State<HelpSupport> {
                     height: 80,
                     width: 311,
                     child: TextFormField(
+                      maxLines: 15,
                       controller: _enquiry,
                       enableSuggestions: false,
                       autocorrect: false,
@@ -67,6 +68,7 @@ class _HelpSupportState extends State<HelpSupport> {
                     ),
                   ),
                 ),
+                const SizedBox(height: 20),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [

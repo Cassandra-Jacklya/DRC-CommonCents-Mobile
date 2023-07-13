@@ -11,10 +11,10 @@ import '../apistore/stockdata.dart';
 bool Highstrategy = false;
 
 Future<void> handleBuy(BuildContext context, int ticks, String stakePayout,
-    int currentAmount, String? strategy) async {
+    int currentAmount, String? strategy, String market) async {
   if (strategy == 'high') {
     Highstrategy = true;
-  } else if(strategy =='low'){
+  } else if (strategy == 'low') {
     Highstrategy = false;
   }
 
@@ -26,7 +26,7 @@ Future<void> handleBuy(BuildContext context, int ticks, String stakePayout,
     "currency": "USD",
     "duration": ticks,
     "duration_unit": "t",
-    "symbol": "R_100"
+    "symbol": market
   };
   socket?.sink.add(jsonEncode(PriceProposalRequest));
 
@@ -46,7 +46,7 @@ Future<void> handleBuy(BuildContext context, int ticks, String stakePayout,
     await collectionReference.doc(user.uid).update({'balance': updatedBalance});
     context
         .read<LoginStateBloc>()
-        .updateBalance(userData['displayName'], updatedBalance.toString());
+        .updateBalance(userData['email'], updatedBalance.toString());
   }
 }
 
@@ -77,9 +77,12 @@ void handleBuyResponse(
   late double capital;
   late double currentBalance;
   late double updatedBalance;
+  late String tradeStatus;
+  late int duration;
 
   final Map<String, dynamic> proposal = decodedData['proposal'];
   capital = decodedData['echo_req']['amount'].toDouble();
+  duration = decodedData['echo_req']['duration'];
 
   FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
   User? user = FirebaseAuth.instance.currentUser;
@@ -93,10 +96,8 @@ void handleBuyResponse(
   double balance = userData!['balance'].toDouble() ?? 0;
 
   buyingPrice = ticks.last['close'];
-  await Future.delayed(const Duration(seconds: 3));
+  await Future.delayed(Duration(seconds: duration));
   sellingPrice = ticks.last['close'];
-
-  print(Highstrategy);
 
   if (Highstrategy) {
     if (buyingPrice < sellingPrice) {
@@ -107,20 +108,42 @@ void handleBuyResponse(
           context as BuildContext,
           listen: false);
       loginStateBloc.updateBalance(
-          userData['displayName'], updatedBalance.toString());
-      print("You Won");
+          userData['email'], updatedBalance.toString());
+      tradeStatus = "Won";
+    } else {
+      tradeStatus = "Lost";
     }
   } else {
     if (buyingPrice > sellingPrice) {
-      //strategy = high
+      //strategy = low
       updatedBalance = balance + proposal['payout'];
       collectionReference.doc(user.uid).update({'balance': updatedBalance});
       final loginStateBloc = BlocProvider.of<LoginStateBloc>(
           context as BuildContext,
           listen: false);
       loginStateBloc.updateBalance(
-          userData['displayName'], updatedBalance.toString());
-      print("You Won");
+          userData['email'], updatedBalance.toString());
+      tradeStatus = "Won";
+    } else {
+      tradeStatus = "Lost";
     }
   }
+
+  CollectionReference tradeHistoryCollection =
+      collectionReference.doc(user.uid).collection('tradeHistory');
+  DocumentReference tradeDocRef = tradeHistoryCollection.doc();
+  Map<String, dynamic> tradeData = {
+    'additionalAmount': proposal['payout'],
+    'askPrice': capital,
+    'basis': decodedData['echo_req']['basis'],
+    'currentSpot': sellingPrice,
+    'marketType': decodedData['echo_req']['symbol'],
+    'payoutValue': capital,
+    'perviousSpot': buyingPrice,
+    'status': tradeStatus,
+    'strategy': Highstrategy ? "Higher" : "Lower",
+    'tickDuration': duration,
+    'timestamp': proposal['date_start']
+  };
+  await tradeDocRef.set(tradeData);
 }

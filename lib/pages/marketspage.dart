@@ -49,7 +49,6 @@ class _MarketsState extends State<Markets> {
       child:BlocBuilder<MarketsCubit, String>(
         builder: (context, state) {
           print("test");
-          print(state);
           return Scaffold(
             appBar: AppBar(
               shadowColor: Colors.transparent,
@@ -57,17 +56,17 @@ class _MarketsState extends State<Markets> {
               backgroundColor: const Color(0xFF3366FF),
               foregroundColor: Colors.black,
               title: const Text("Markets"),
-              leading: IconButton(
-                icon: const Icon(Icons.arrow_back),
-                onPressed: () {
-                  BlocProvider.of<MarketsCubit>(context).updateMarkets(state);
-                  // marketsCubit.updateMarkets(state);
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(builder: (context) => SimulationPage(market: state)),
-                  );
-                },
-              ),
+              // leading: IconButton(
+              //   icon: const Icon(Icons.arrow_back),
+              //   // onPressed: () {
+              //   //   print("Here: ${state}");
+              //   //   BlocProvider.of<MarketsCubit>(context).updateMarkets(state);
+              //   //   Navigator.pushReplacement(
+              //   //     context,
+              //   //     MaterialPageRoute(builder: (context) => SimulationPage(market: state)),
+              //   //   );
+              //   // },
+              // ),
             ),
             body: BlocBuilder<MarketsCubit, String>(
               builder: (context, state) {
@@ -85,7 +84,7 @@ class _MarketsState extends State<Markets> {
                       ),
                       onTap: () {
                         setState(() {
-                          print(market);
+                          print("There:${market}");
                           BlocProvider.of<MarketsCubit>(context).updateMarkets(market);
                           Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => SimulationPage(market: market,)));
                         });
