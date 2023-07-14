@@ -1,3 +1,4 @@
+import 'package:commoncents/apistore/news_lazyLoading.dart';
 import 'package:commoncents/components/carousel_chart.dart';
 import 'package:commoncents/components/navbar.dart';
 import 'package:commoncents/components/walletbutton.dart';
@@ -27,7 +28,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    _newsFuture = getNews();
+    _newsFuture =getNews();
   }
 
   @override
@@ -156,34 +157,7 @@ class _HomePageState extends State<HomePage> {
                       ],
                     ),
                   ),
-                  Container(
-                    padding: const EdgeInsets.all(10),
-                    color: Colors.white,
-                    height: 160,
-                    child: ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      itemCount: 8,
-                      itemBuilder: (context, index) {
-                        return Container(
-                          margin: const EdgeInsets.all(8),
-                          child: Column(
-                            children: [
-                              Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(50),
-                                  color: Colors.grey,
-                                ),
-                                height: 75,
-                                width: 75,
-                              ),
-                              const SizedBox(height: 15),
-                              const Text("Stock price"),
-                            ],
-                          ),
-                        );
-                      },
-                    ),
-                  ),
+                  const Center(child: CircularProgressIndicator()),
                   Container(
                     padding: const EdgeInsets.all(10),
                     color: Colors.white,

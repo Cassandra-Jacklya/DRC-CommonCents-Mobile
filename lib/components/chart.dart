@@ -29,7 +29,7 @@ class _CandleStickChartState extends State<CandleStickChart> {
 
   @override
   void dispose() {
-    candleStickCubit.close();
+    // candleStickCubit.close();
     super.dispose();
   }
 
@@ -40,8 +40,10 @@ class _CandleStickChartState extends State<CandleStickChart> {
         child: Column(
           children: [
             SizedBox(
-              height: MediaQuery.of(context).size.height * 0.3,
-              width: MediaQuery.of(context).size.width,
+              // height: MediaQuery.of(context).size.height * 0.3,
+              // width: MediaQuery.of(context).size.width,
+              height: 400,
+              width: double.infinity,
               child: BlocBuilder<CandlestickCubit, List<Map<String, dynamic>>>(
                 builder: (context, candleData) {
                   if (candleData.isNotEmpty) {
@@ -54,7 +56,7 @@ class _CandleStickChartState extends State<CandleStickChart> {
                       double close = data['close'];
                       DateTime time =
                           DateTime.fromMillisecondsSinceEpoch(x.toInt());
-  
+            
                       return ChartData(
                         time: time,
                         open: open,
@@ -63,7 +65,7 @@ class _CandleStickChartState extends State<CandleStickChart> {
                         close: close,
                       );
                     }).toList();
-
+            
                     return SfCartesianChart(
                       zoomPanBehavior: ZoomPanBehavior(
                         enablePinching: true,

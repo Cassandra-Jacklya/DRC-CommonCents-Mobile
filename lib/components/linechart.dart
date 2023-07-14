@@ -65,7 +65,7 @@ class _LineChartState extends State<MyLineChart> {
 
   @override
   void dispose() {
-    stockDataCubit.close();
+    // stockDataCubit.close();
     super.dispose();
   }
 
@@ -79,10 +79,10 @@ class _LineChartState extends State<MyLineChart> {
             SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: SizedBox(
-                height: widget.isMini
-                    ? 100
-                    : MediaQuery.of(context).size.height * 0.3,
-                width: widget.isMini ? 100 : MediaQuery.of(context).size.width,
+                // height: widget.isMini ? 100 : MediaQuery.of(context).size.height * 0.3,
+                // width: widget.isMini ? 100: MediaQuery.of(context).size.width,
+                height: 400,
+                width: 380,
                 child: BlocBuilder<StockDataCubit, List<Map<String, dynamic>>>(
                   builder: (context, stockData) {
                     if (stockData.length >= 100) {
@@ -92,14 +92,15 @@ class _LineChartState extends State<MyLineChart> {
                         double y = entry['close'];
                         spots.add(FlSpot(x, y));
                       }
-
+              
                       if (stockData.length > 100) {
                         stockData.removeRange(0, stockData.length - 100);
                       }
-
+              
+              
                       double minClose = stockData[initial]['close'];
                       double maxClose = stockData[initial]['close'];
-
+              
                       for (int i = initial; i < stockData.length; i++) {
                         double close = stockData[i]['close'];
                         if (close < minClose) {
@@ -109,7 +110,7 @@ class _LineChartState extends State<MyLineChart> {
                           maxClose = close;
                         }
                       }
-
+              
                       if (minClose == maxClose) {
                         maxClose += 1;
                       }

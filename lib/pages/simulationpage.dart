@@ -196,33 +196,33 @@ class _SimulationPageState extends State<SimulationPage> {
                             ),
                           ],
                         ),
-                        Container(
-                          margin: const EdgeInsets.symmetric(vertical: 10),
-                          height: MediaQuery.of(context).size.height * 0.3,
-                          color: Colors.grey[300],
-                          child: Center(
-                            child: isCandle
-                                ? BlocBuilder<MarketsCubit, String>(
-                                    builder: (context, market) {
-                                    return CandleStickChart(
-                                      isCandle: isCandle,
-                                      market: widget.market,
-                                    );
-                                  })
-                                : BlocBuilder<MarketsCubit, String>(
-                                    builder: (context, market) {
-                                    return MyLineChart(
-                                      isMini: false,
-                                      isCandle: isCandle,
-                                      market: widget.market,
-                                    );
-                                  }),
-                            // MyLineChart(
-                            //   isMini: false,
-                            //   isCandle: isCandle,
-                            //   market: widget.market,
-                            //   timeunit: "lol",
-                            // ),
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(0, 0, 15, 0),
+                          child: Container(
+                            margin: const EdgeInsets.symmetric(vertical: 10),
+                            // height: MediaQuery.of(context).size.height * 0.3,
+                            height: 400,
+                            width: double.infinity,
+                            color: Colors.grey[300],
+                            child: Center(
+                              child: isCandle
+                                  ? BlocBuilder<MarketsCubit, String>(
+                                      builder: (context, market) {
+                                      return CandleStickChart(
+                                        isCandle: isCandle,
+                                        market: widget.market,
+                                      );
+                                    })
+                                  : BlocBuilder<MarketsCubit, String>(
+                                      builder: (context, market) {
+                                        return MyLineChart(
+                                          isMini: false,
+                                          isCandle: isCandle,
+                                          market: widget.market,
+                                        );
+                                      },
+                                    ),
+                            ),
                           ),
                         ),
                         Expanded(

@@ -21,7 +21,6 @@ class _LazyContainerState extends State<LazyContainer> {
     super.initState();
     lazyFeeds = widget.feeds!.sublist(0,8);
     controller.addListener(() {
-      print("here");
       print(controller.position.maxScrollExtent);
       print(controller.offset);
       if(controller.position.maxScrollExtent == controller.offset){
@@ -86,8 +85,8 @@ class _LazyContainerState extends State<LazyContainer> {
                     child: Text(
                       news[
                           'title'], // Update this with the appropriate key for the news title
-                      style: TextStyle(
-                        color: Theme.of(context).primaryColor,
+                      style: const TextStyle(
+                        color: Color(0xFF3366FF),
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
                       ),

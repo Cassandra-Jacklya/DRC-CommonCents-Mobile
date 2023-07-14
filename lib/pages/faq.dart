@@ -133,7 +133,7 @@ class _FAQState extends State<FAQ> {
                                   border: Border.all(color: Colors.black),
                                   borderRadius: BorderRadius.circular(10)),
                               height: MediaQuery.of(context).size.height * 0.1,
-                              width: MediaQuery.of(context).size.width * 0.9,
+                              width: MediaQuery.of(context).size.width * 0.8,
                               padding: const EdgeInsets.all(10),
                               // color: Colors.green,
                               child: Row(
@@ -163,7 +163,7 @@ class _FAQState extends State<FAQ> {
                       },
                       child: _isExpanded2
                           ? Container(
-                              width: MediaQuery.of(context).size.width * 0.9,
+                              width: MediaQuery.of(context).size.width * 0.8,
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(10),
                                   border: Border.all(color: Colors.black)),
@@ -172,7 +172,7 @@ class _FAQState extends State<FAQ> {
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(10),
                                 ),
-                                width: MediaQuery.of(context).size.width * 0.9,
+                                width: MediaQuery.of(context).size.width * 0.8,
                                 padding: const EdgeInsets.all(0),
                                 // height: MediaQuery.of(context).size.height * 0.23,
                                 child: Column(
@@ -188,7 +188,7 @@ class _FAQState extends State<FAQ> {
                                           MediaQuery.of(context).size.height *
                                               0.1,
                                       width: MediaQuery.of(context).size.width *
-                                          0.9,
+                                          0.8,
                                       padding: const EdgeInsets.all(10),
                                       // color: Colors.green,
                                       child: Row(
@@ -252,7 +252,7 @@ class _FAQState extends State<FAQ> {
                                   border: Border.all(color: Colors.black),
                                   borderRadius: BorderRadius.circular(10)),
                               height: MediaQuery.of(context).size.height * 0.1,
-                              width: MediaQuery.of(context).size.width * 0.9,
+                              width: MediaQuery.of(context).size.width * 0.8,
                               padding: const EdgeInsets.all(10),
                               // color: Colors.green,
                               child: Row(
@@ -270,7 +270,11 @@ class _FAQState extends State<FAQ> {
                                                     .width *
                                                 0.6,
                                             child: const Text(
-                                                "I'm not familiar with trading, how can I get started with CommonCents?"),
+                                                "I'm not familiar with trading, how can I get started with CommonCents?",
+                                                style: TextStyle(
+                                                  overflow: TextOverflow.visible
+                                                ),
+                                                ),
                                           )),
                                     ],
                                   ),
@@ -289,7 +293,7 @@ class _FAQState extends State<FAQ> {
                       },
                       child: _isExpanded3
                           ? Container(
-                              width: MediaQuery.of(context).size.width * 0.9,
+                              width: MediaQuery.of(context).size.width * 0.8,
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(10),
                                   border: Border.all(color: Colors.black)),
@@ -298,7 +302,7 @@ class _FAQState extends State<FAQ> {
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(10),
                                 ),
-                                width: MediaQuery.of(context).size.width * 0.9,
+                                width: MediaQuery.of(context).size.width * 0.8,
                                 padding: const EdgeInsets.all(0),
                                 // height: MediaQuery.of(context).size.height * 0.23,
                                 child: Column(
@@ -314,7 +318,7 @@ class _FAQState extends State<FAQ> {
                                           MediaQuery.of(context).size.height *
                                               0.1,
                                       width: MediaQuery.of(context).size.width *
-                                          0.9,
+                                          0.8,
                                       padding: const EdgeInsets.all(10),
                                       // color: Colors.green,
                                       child: Row(
@@ -334,7 +338,11 @@ class _FAQState extends State<FAQ> {
                                                           .width *
                                                       0.6,
                                                   child: Text(
-                                                      "What trading market is CommonCents \nfocused on?"),
+                                                      "What trading market is CommonCents \nfocused on?",
+                                                      style: TextStyle(
+                                                    overflow: TextOverflow.visible
+                                                  ),
+                                                      ),
                                                 ),
                                               ),
                                             ],
@@ -376,7 +384,7 @@ class _FAQState extends State<FAQ> {
                                   border: Border.all(color: Colors.black),
                                   borderRadius: BorderRadius.circular(10)),
                               height: MediaQuery.of(context).size.height * 0.1,
-                              width: MediaQuery.of(context).size.width * 0.9,
+                              width: MediaQuery.of(context).size.width * 0.8,
                               padding: const EdgeInsets.all(10),
                               // color: Colors.green,
                               child: Row(
@@ -414,7 +422,7 @@ class _FAQState extends State<FAQ> {
                       },
                       child: _isExpanded4
                           ? Container(
-                              width: MediaQuery.of(context).size.width * 0.9,
+                              width: MediaQuery.of(context).size.width * 0.8,
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(10),
                                   border: Border.all(color: Colors.black)),
@@ -423,7 +431,7 @@ class _FAQState extends State<FAQ> {
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(10),
                                 ),
-                                width: MediaQuery.of(context).size.width * 0.9,
+                                width: MediaQuery.of(context).size.width * 0.8,
                                 padding: const EdgeInsets.all(0),
                                 // height: MediaQuery.of(context).size.height * 0.23,
                                 child: Column(
@@ -439,7 +447,7 @@ class _FAQState extends State<FAQ> {
                                           MediaQuery.of(context).size.height *
                                               0.1,
                                       width: MediaQuery.of(context).size.width *
-                                          0.9,
+                                          0.8,
                                       padding: const EdgeInsets.all(10),
                                       // color: Colors.green,
                                       child: Row(
@@ -495,7 +503,7 @@ class _FAQState extends State<FAQ> {
                                   border: Border.all(color: Colors.black),
                                   borderRadius: BorderRadius.circular(10)),
                               height: MediaQuery.of(context).size.height * 0.1,
-                              width: MediaQuery.of(context).size.width * 0.9,
+                              width: MediaQuery.of(context).size.width * 0.8,
                               padding: const EdgeInsets.all(10),
                               // color: Colors.green,
                               child: Row(
@@ -527,7 +535,7 @@ class _FAQState extends State<FAQ> {
                       },
                       child: _isExpanded5
                           ? Container(
-                              width: MediaQuery.of(context).size.width * 0.9,
+                              width: MediaQuery.of(context).size.width * 0.8,
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(10),
                                   border: Border.all(color: Colors.black)),
@@ -536,7 +544,7 @@ class _FAQState extends State<FAQ> {
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(10),
                                 ),
-                                width: MediaQuery.of(context).size.width * 0.9,
+                                width: MediaQuery.of(context).size.width * 0.8,
                                 padding: const EdgeInsets.all(0),
                                 // height: MediaQuery.of(context).size.height * 0.23,
                                 child: Column(
@@ -552,7 +560,7 @@ class _FAQState extends State<FAQ> {
                                           MediaQuery.of(context).size.height *
                                               0.1,
                                       width: MediaQuery.of(context).size.width *
-                                          0.9,
+                                          0.8,
                                       padding: const EdgeInsets.all(10),
                                       // color: Colors.green,
                                       child: Row(
@@ -608,25 +616,27 @@ class _FAQState extends State<FAQ> {
                                   border: Border.all(color: Colors.black),
                                   borderRadius: BorderRadius.circular(10)),
                               height: MediaQuery.of(context).size.height * 0.1,
-                              width: MediaQuery.of(context).size.width * 0.9,
+                              width: MediaQuery.of(context).size.width * 0.8,
                               padding: const EdgeInsets.all(10),
                               // color: Colors.green,
-                              child: Row(
-                                children: [
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: const [
-                                      Icon(FontAwesomeIcons.userSecret),
-                                      Padding(
-                                        padding: EdgeInsets.symmetric(
-                                            horizontal: 5),
-                                        child: Text(
-                                            "I forgot my password, what should I do now?"),
-                                      ),
-                                    ],
-                                  ),
-                                  const Icon(Icons.expand_more),
-                                ],
+                              child: Flexible(
+                                child: Row(
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: const [
+                                        Icon(FontAwesomeIcons.userSecret),
+                                        Padding(
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: 5),
+                                          child: Text(
+                                              "I forgot my password, what should I do now?"),
+                                        ),
+                                      ],
+                                    ),
+                                    const Icon(Icons.expand_more),
+                                  ],
+                                ),
                               ),
                             )),
                 ],

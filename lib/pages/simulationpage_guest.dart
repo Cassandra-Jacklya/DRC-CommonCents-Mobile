@@ -35,8 +35,8 @@ class _SimulationPageGuestState extends State<SimulationPageGuest> {
   @override
   void dispose() {
     closeWebSocket();
-    marketType.close();
-    isCandleCubit.close();
+    // marketType.close();
+    // isCandleCubit.close();
     super.dispose();
   }
 

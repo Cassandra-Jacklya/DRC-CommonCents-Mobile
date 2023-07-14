@@ -64,10 +64,6 @@ class _NewsPageState extends State<NewsPage> {
 
   @override
   void initState() {
-    // BlocProvider<NewsTabBarCubit>.value(value: BlocProvider.of<NewsTabBarCubit>(context));
-    // final newsTabBarCubit = context.read<NewsTabBarCubit>();
-    // final selectedTopic = newsTabBarCubit;
-    // _lazyFuture = getLazyNews(selectedTopic);
     super.initState();
   }
 
@@ -79,7 +75,6 @@ class _NewsPageState extends State<NewsPage> {
       ],
       child: BlocBuilder<NewsTabBarCubit, String>(
         builder: (context, state) {
-          // print(state);
           _lazyFuture = getLazyNews(state);
           return Scaffold(
             appBar: const CustomAppBar(

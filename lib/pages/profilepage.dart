@@ -1,14 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:commoncents/components/popup.dart';
 import 'package:commoncents/pages/favourites.dart';
+import 'package:commoncents/pages/favourites.dart';
 import 'package:commoncents/pages/myaccount.dart';
-import 'package:commoncents/pages/security.dart';
 import 'package:commoncents/pages/leaderboard.dart';
 import 'package:commoncents/pages/tradeHistory.dart';
 import 'package:commoncents/pages/help_support.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iconsax/iconsax.dart';
 
 import '../components/appbar.dart';
@@ -147,7 +146,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           child: photoUrl.isNotEmpty
                               ? Image.network(photoUrl, fit: BoxFit.cover)
                               : Image.network(
-                                  'https://static01.nyt.com/newsgraphics/2019/08/01/candidate-pages/3b31eab6a3fd70444f76f133924ae4317567b2b5/trump-circle.png',
+                                  'https://www.seekpng.com/png/detail/966-9665493_my-profile-icon-blank-profile-image-circle.png',
                                   fit: BoxFit.cover,
                                 ),
                         ),

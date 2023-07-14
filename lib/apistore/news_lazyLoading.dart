@@ -28,8 +28,10 @@ Future<List<dynamic>> getLazyNews(String topic) async {
     if (response.statusCode == 200) {
       data = jsonDecode(response.body);
       final feed = data['feed'];
-      // news = feed.sublist(0, 8);
-      news = feed;
+      if (feed != null) {
+        // news = feed;
+        news = feed.sublist(0, 8);
+      }
       return news;
     } else {
       throw Exception('Failed to load data');

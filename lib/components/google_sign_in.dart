@@ -16,8 +16,6 @@ class _GoogleSignInButtonState extends State<GoogleSignInButton> {
   void addDocument() async {
     FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
     User? user = FirebaseAuth.instance.currentUser;
-    print("please find here");
-    print(user);
 
     if (user != null) {
       CollectionReference collectionReference =
@@ -52,9 +50,7 @@ class _GoogleSignInButtonState extends State<GoogleSignInButton> {
     return Padding(
       padding: const EdgeInsets.only(bottom: 16.0),
       child: _isSigningIn
-          ? const CircularProgressIndicator(
-              valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-            )
+          ? const CircularProgressIndicator()
           : OutlinedButton(
               style: ButtonStyle(
                 backgroundColor: MaterialStateProperty.all(Colors.white),

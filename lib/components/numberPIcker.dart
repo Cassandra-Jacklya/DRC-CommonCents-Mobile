@@ -24,7 +24,7 @@ class _IntegerExampleState extends State<IntegerExample> {
 
   @override
   void dispose() {
-    currentAmountCubit.close();
+    // currentAmountCubit.close();
     _controller.dispose();
     super.dispose();
   }

@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:commoncents/components/appbar.dart';
 import 'package:commoncents/components/popup.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -123,7 +124,6 @@ class _ForumPageState extends State<ForumPage> {
                 'postId': commentData['postId'],
                 'timestamp': commentData['timestamp'],
               };
-
               commentsList.add(comment);
             }
           }
@@ -143,7 +143,7 @@ class _ForumPageState extends State<ForumPage> {
   @override
   void initState() {
     super.initState();
-    print(mounted);
+    // print(mounted);
     fetchFavoritedPostIds().then((result) {
       if (mounted) {
         setState(() {
@@ -172,17 +172,7 @@ class _ForumPageState extends State<ForumPage> {
   Widget build(BuildContext context) {
     // print(favouritePosts);
     return Scaffold(
-      appBar: AppBar(
-        shadowColor: Colors.transparent,
-        toolbarHeight: 60,
-        backgroundColor: const Color(0XFF3366FF),
-        title: const Text(
-          "Forum",
-          style: TextStyle(color: Colors.white),
-        ),
-        foregroundColor: Colors.black,
-        iconTheme: const IconThemeData(color: Colors.white),
-      ),
+      appBar: CustomAppBar(title: "Forum", logo: "assets/images/commoncents-logo.png", isTradingPage: false),
       body: postsList.isNotEmpty
           ? Column(
               children: [
@@ -258,7 +248,7 @@ class _ForumPageState extends State<ForumPage> {
                                               CircleAvatar(
                                                 backgroundImage: NetworkImage(
                                                   post['authorImage'] ??
-                                                      'https://static01.nyt.com/newsgraphics/2019/08/01/candidate-pages/3b31eab6a3fd70444f76f133924ae4317567b2b5/trump-circle.png',
+                                                      'https://www.seekpng.com/png/detail/966-9665493_my-profile-icon-blank-profile-image-circle.png',
                                                 ),
                                                 radius: 40,
                                               ),

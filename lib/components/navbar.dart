@@ -106,7 +106,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
                                 Iconsax.home_2,
                                 size: 25,
                                 color: widget.index == 0
-                                    ? Theme.of(context).primaryColor
+                                    ? const Color(0xFF3366FF)
                                     : Colors.grey,
                               ),
                             ),
@@ -140,7 +140,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
                                 Iconsax.search_normal_1,
                                 size: 25,
                                 color: widget.index == 1
-                                    ? Theme.of(context).primaryColor
+                                    ? const Color(0xFF3366FF)
                                     : Colors.grey,
                               ),
                             ),
@@ -172,7 +172,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
                                 Iconsax.messages_2,
                                 size: 25,
                                 color: widget.index == 3
-                                    ? Theme.of(context).primaryColor
+                                    ? const Color(0xFF3366FF)
                                     : Colors.grey,
                               ),
                             ),
@@ -206,7 +206,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
                                 Iconsax.profile_circle,
                                 size: 25,
                                 color: widget.index == 4
-                                    ? Theme.of(context).primaryColor
+                                    ? const Color(0xFF3366FF)
                                     : Colors.grey,
                               ),
                             ),
@@ -238,9 +238,9 @@ class _BottomNavBarState extends State<BottomNavBar> {
                 height: 80,
                 decoration: BoxDecoration(
                   border: Border.all(
-                      color: Theme.of(context).primaryColorLight, width: 6.0),
+                      color: const Color(0xFF6699FF), width: 6.0),
                   shape: BoxShape.circle,
-                  color: Theme.of(context).primaryColor,
+                  color: const Color(0xFF3366FF),
                 ),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,

@@ -665,9 +665,9 @@ class _PostSomethingState extends State<PostSomething> {
       titlePadding: EdgeInsets.zero,
       title: Container(
         height: 60,
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
             color: Color(0XFF3366FF),
-            borderRadius: const BorderRadius.only(
+            borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(10), topRight: Radius.circular(10))),
         padding: const EdgeInsets.all(10),
         child: Row(

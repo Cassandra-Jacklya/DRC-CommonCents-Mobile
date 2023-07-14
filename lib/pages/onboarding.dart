@@ -87,8 +87,8 @@ class _OnboardingState extends State<Onboarding> {
 
   @override
   void dispose() {
-    super.dispose();
     _timer.cancel();
+    super.dispose();
   }
   
   @override

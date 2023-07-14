@@ -41,11 +41,7 @@ class _WalletButtonState extends State<WalletButton> {
                 builder: (context, state) {
                   if (state is AppStateInitial) {
                   } else if (state is AppStateLoggedIn) {
-                    return Row(
-                      children: [
-                        Text(double.parse(state.balance).toStringAsFixed(2)),
-                      ],
-                    );
+                    return Text(double.parse(state.balance).toStringAsFixed(2));
                   } else if (state is AppStateError) {
                     return const Text("null");
                   }

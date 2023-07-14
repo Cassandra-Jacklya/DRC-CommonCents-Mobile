@@ -3,8 +3,11 @@ import 'package:commoncents/components/walletbutton.dart';
 import 'package:commoncents/cubit/login_cubit.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:iconsax/iconsax.dart';
 import '../components/popup.dart';
+import '../components/walletbutton.dart';
+import '../cubit/login_cubit.dart';
 
 class MyAccount extends StatefulWidget {
   final String photoUrl;
@@ -97,9 +100,9 @@ class _MyAccountState extends State<MyAccount> {
       appBar: AppBar(
         shadowColor: Colors.transparent,
         toolbarHeight: 60,
-        backgroundColor: Color(0XFF3366FF),
+        backgroundColor: const Color(0XFF3366FF),
         title: const Text("My Account"),
-        foregroundColor: Colors.black,
+        foregroundColor: Colors.white,
       ),
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
@@ -113,14 +116,14 @@ class _MyAccountState extends State<MyAccount> {
                   tag: 'test',
                   child: ClipOval(
                     child: Container(
-                      height: MediaQuery.of(context).size.height * 0.15,
+                      height: MediaQuery.of(context).size.height * 0.14,
                       width: MediaQuery.of(context).size.width * 0.3,
                       decoration: BoxDecoration(
                         image: DecorationImage(
                           image: widget.photoUrl.isNotEmpty
                               ? NetworkImage(widget.photoUrl)
                               : NetworkImage(
-                                  'https://static01.nyt.com/newsgraphics/2019/08/01/candidate-pages/3b31eab6a3fd70444f76f133924ae4317567b2b5/trump-circle.png',
+                                  'https://www.seekpng.com/png/detail/966-9665493_my-profile-icon-blank-profile-image-circle.png',
                                 ),
                           fit: BoxFit.cover,
                         ),
@@ -177,20 +180,26 @@ class _MyAccountState extends State<MyAccount> {
                 ),
               ),
             ),
-            const SizedBox(height: 20),
-            Container(
-              height: 2,
-              width: MediaQuery.of(context).size.width * 0.9,
-              color: Colors.grey[400],
+            const SizedBox(height: 15,),
+            // Container(
+            //   height: 2,
+            //   width: MediaQuery.of(context).size.width * 0.9,
+            //   color: Colors.grey[400],
+            // ),
+            // const SizedBox(height: 20),
+            const Divider(
+              indent: 20,
+              endIndent: 20,
+              thickness: 1,
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 15),
             Row(children: [
               Container(
                   margin: const EdgeInsets.only(left: 30),
                   width: MediaQuery.of(context).size.width * 0.6,
                   child: const Text(
                     "This is the email associated with CommonCents.",
-                    style: TextStyle(fontSize: 18),
+                    style: TextStyle(fontSize: 14),
                   ))
             ]),
             const SizedBox(height: 20),
@@ -214,7 +223,7 @@ class _MyAccountState extends State<MyAccount> {
                   width: MediaQuery.of(context).size.width * 0.9,
                   child: const Text(
                     "Click Change Password to change your CommonCents password",
-                    style: TextStyle(fontSize: 18),
+                    style: TextStyle(fontSize: 14),
                   ))
             ]),
             Align(
@@ -238,7 +247,7 @@ class _MyAccountState extends State<MyAccount> {
                   ),
                   child: const Center(
                     child: Text("Change Password",
-                        style: TextStyle(color: Colors.white, fontSize: 20)),
+                        style: TextStyle(color: Colors.white, fontSize: 15)),
                   ),
                 ),
               ),
