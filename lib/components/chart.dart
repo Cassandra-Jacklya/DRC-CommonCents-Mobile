@@ -42,7 +42,7 @@ class _CandleStickChartState extends State<CandleStickChart> {
             SizedBox(
               // height: MediaQuery.of(context).size.height * 0.3,
               // width: MediaQuery.of(context).size.width,
-              height: 400,
+              height: 350,
               width: double.infinity,
               child: BlocBuilder<CandlestickCubit, List<Map<String, dynamic>>>(
                 builder: (context, candleData) {

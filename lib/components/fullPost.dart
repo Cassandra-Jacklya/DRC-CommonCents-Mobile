@@ -98,8 +98,10 @@ class _PostModalState extends State<PostModal> {
     return SingleChildScrollView(
       child: Container(
         color: Colors.white,
-        height: MediaQuery.of(context).size.height * 0.7,
-        width: MediaQuery.of(context).size.width,
+        // height: MediaQuery.of(context).size.height * 0.7,
+        // width: MediaQuery.of(context).size.width,
+        height: 200,
+        width: double.infinity,
         child: Column(
           children: [
             Container(
@@ -125,7 +127,8 @@ class _PostModalState extends State<PostModal> {
                             ),
                             const SizedBox(height: 10),
                             SizedBox(
-                              width: MediaQuery.of(context).size.width * 0.15,
+                              // width: MediaQuery.of(context).size.width * 0.15,
+                              width: 400,
                               child: Center(
                                 child: Text(
                                   widget.post['author'] ?? 'Anonymous',
@@ -148,8 +151,9 @@ class _PostModalState extends State<PostModal> {
                             Row(
                               children: [
                                 Container(
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.5,
+                                  // width:
+                                      // MediaQuery.of(context).size.width * 0.5,
+                                  width: 300,
                                   padding: const EdgeInsets.all(1),
                                   child: Text(
                                     widget.post['title'],
@@ -173,7 +177,8 @@ class _PostModalState extends State<PostModal> {
                             ),
                             const SizedBox(height: 5),
                             Container(
-                              width: MediaQuery.of(context).size.width * 0.63,
+                              // width: MediaQuery.of(context).size.width * 0.63,
+                              width: 300,
                               padding: const EdgeInsets.all(1),
                               child: Text(
                                 widget.post['details'],
@@ -258,7 +263,8 @@ class _PostModalState extends State<PostModal> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.05,
+                  // width: MediaQuery.of(context).size.width * 0.05,
+                  width: 300,
                 ),
                 Container(
                   margin: const EdgeInsets.symmetric(vertical: 10),
@@ -276,8 +282,10 @@ class _PostModalState extends State<PostModal> {
                           decoration: BoxDecoration(
                               color: Colors.grey[200],
                               borderRadius: BorderRadius.circular(10)),
-                          height: MediaQuery.of(context).size.height * 0.2,
-                          width: MediaQuery.of(context).size.width,
+                          // height: MediaQuery.of(context).size.height * 0.2,
+                          // width: MediaQuery.of(context).size.width,
+                          height: 200,
+                          width: 300,
                           child: const Center(
                               child: Text(
                             "No comments yet!",
@@ -314,10 +322,11 @@ class _PostModalState extends State<PostModal> {
                                           radius: 20,
                                         ),
                                         Container(
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              0.15,
+                                          // width: MediaQuery.of(context)
+                                          //         .size
+                                          //         .width *
+                                          //     0.15,
+                                          width: 300,
                                           child: Center(
                                             child: Text(
                                               comments[index]['author'] ??
@@ -345,7 +354,8 @@ class _PostModalState extends State<PostModal> {
                         )),
             ),
             SizedBox(
-              width: MediaQuery.of(context).size.width,
+              // width: MediaQuery.of(context).size.width,
+              width: 300,
               child: Container(
                 margin: const EdgeInsets.all(5),
                 decoration: BoxDecoration(

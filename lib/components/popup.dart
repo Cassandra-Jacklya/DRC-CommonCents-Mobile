@@ -230,7 +230,8 @@ class _PasswordState extends State<Password> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: MediaQuery.of(context).size.width * 0.5,
+      // width: MediaQuery.of(context).size.width * 0.5,
+      width: 300,
       height: 300,
       child: Builder(
         builder: (BuildContext context) {
@@ -402,8 +403,10 @@ class _TradeDetailsState extends State<TradeDetails> {
       content: Container(
           // padding: const EdgeInsets.only(top: 10),
           child: SizedBox(
-        height: MediaQuery.of(context).size.height * 0.4,
-        width: MediaQuery.of(context).size.width * 0.8,
+        // height: MediaQuery.of(context).size.height * 0.4,
+        // width: MediaQuery.of(context).size.width * 0.8,
+        height: 300,
+        width: 300,
         child: Column(
           children: [
             Container(
@@ -420,8 +423,10 @@ class _TradeDetailsState extends State<TradeDetails> {
                             padding: const EdgeInsets.only(top: 20),
                             child: Container(
                               padding: const EdgeInsets.only(top: 10),
-                              height: MediaQuery.of(context).size.height * 0.08,
-                              width: MediaQuery.of(context).size.width * 0.3,
+                              // height: MediaQuery.of(context).size.height * 0.08,
+                              // width: MediaQuery.of(context).size.width * 0.3,
+                              height: 300,
+                              width: 300,
                               decoration: BoxDecoration(
                                 border: Border.all(color: Colors.black26),
                                 borderRadius: BorderRadius.circular(10),
@@ -462,8 +467,10 @@ class _TradeDetailsState extends State<TradeDetails> {
                             padding: const EdgeInsets.only(top: 20),
                             child: Container(
                               padding: const EdgeInsets.only(top: 10),
-                              height: MediaQuery.of(context).size.height * 0.08,
-                              width: MediaQuery.of(context).size.width * 0.3,
+                              // height: MediaQuery.of(context).size.height * 0.08,
+                              // width: MediaQuery.of(context).size.width * 0.3,
+                              height: 300,
+                              width: 300,
                               decoration: BoxDecoration(
                                 border: Border.all(color: Colors.black26),
                                 borderRadius: BorderRadius.circular(10),
@@ -500,7 +507,10 @@ class _TradeDetailsState extends State<TradeDetails> {
                       ),
                     ],
                   ),
-                  SizedBox(height: MediaQuery.of(context).size.height * 0.03),
+                  SizedBox(
+                    // height: MediaQuery.of(context).size.height * 0.03
+                    height: 300,
+                  ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
@@ -687,7 +697,8 @@ class _PostSomethingState extends State<PostSomething> {
         ),
       ),
       content: Container(
-        height: MediaQuery.of(context).size.height * 0.4,
+        // height: MediaQuery.of(context).size.height * 0.4,
+        height: 300,
         padding: const EdgeInsets.only(top: 10),
         child: Column(children: [
           TextFormField(
@@ -739,8 +750,10 @@ class _PostSomethingState extends State<PostSomething> {
                       color: _postController.text == ""
                           ? Colors.grey[400]
                           : const Color(0XFF3366FF)),
-                  width: MediaQuery.of(context).size.width * 0.4,
-                  height: MediaQuery.of(context).size.height * 0.05,
+                  // width: MediaQuery.of(context).size.width * 0.4,
+                  // height: MediaQuery.of(context).size.height * 0.05,
+                  width: 300,
+                  height: 300,
                   child: Center(
                     child: const Text(
                       "Post",
@@ -792,7 +805,8 @@ class ResetBalance extends StatelessWidget {
   Widget build(BuildContext context) {
     return AlertDialog(
       content: Container(
-        height: MediaQuery.of(context).size.height * 0.12,
+        // height: MediaQuery.of(context).size.height * 0.12,
+        height: 300,
         padding: const EdgeInsets.all(10),
         child: Column(
           children: [

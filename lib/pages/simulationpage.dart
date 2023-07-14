@@ -201,7 +201,7 @@ class _SimulationPageState extends State<SimulationPage> {
                           child: Container(
                             margin: const EdgeInsets.symmetric(vertical: 10),
                             // height: MediaQuery.of(context).size.height * 0.3,
-                            height: 400,
+                            height: 380,
                             width: double.infinity,
                             color: Colors.grey[300],
                             child: Center(

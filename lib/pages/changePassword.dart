@@ -96,7 +96,8 @@ class _ChangePasswordState extends State<ChangePassword> {
         body: Column(
           children: [
             Container(
-              width: MediaQuery.of(context).size.width * 0.9,
+              // width: MediaQuery.of(context).size.width * 0.9,
+              width: 300,
               margin: const EdgeInsets.only(top: 40, bottom: 30),
               child: TextFormField(
                 controller: textEditingController,
@@ -117,7 +118,8 @@ class _ChangePasswordState extends State<ChangePassword> {
               ),
             ),
             Container(
-              width: MediaQuery.of(context).size.width * 0.9,
+              // width: MediaQuery.of(context).size.width * 0.9,
+              width: 300,
               margin: const EdgeInsets.only(bottom: 30),
               child: TextFormField(
                 controller: textEditingController2,
@@ -161,7 +163,8 @@ class _ChangePasswordState extends State<ChangePassword> {
                   ),
                   margin: const EdgeInsets.only(top: 10, right: 30),
                   height: 50,
-                  width: MediaQuery.of(context).size.width * 0.3,
+                  // width: MediaQuery.of(context).size.width * 0.3,
+                  width: 300,
                   child: const Center(
                     child: Text(
                       "Save",

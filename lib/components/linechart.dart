@@ -81,7 +81,7 @@ class _LineChartState extends State<MyLineChart> {
               child: SizedBox(
                 // height: widget.isMini ? 100 : MediaQuery.of(context).size.height * 0.3,
                 // width: widget.isMini ? 100: MediaQuery.of(context).size.width,
-                height: 400,
+                height: 350,
                 width: 380,
                 child: BlocBuilder<StockDataCubit, List<Map<String, dynamic>>>(
                   builder: (context, stockData) {

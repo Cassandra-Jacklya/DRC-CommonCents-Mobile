@@ -104,11 +104,11 @@ class _MainAppState extends State<MainApp> {
         ],
         child: GestureDetector(
           onTap: () {
-            FocusScopeNode currentFocus = FocusScope.of(context);
+            // FocusScopeNode currentFocus = FocusScope.of(context);
 
-            if (!currentFocus.hasPrimaryFocus) {
-              currentFocus.unfocus();
-            }
+            // if (!currentFocus.hasPrimaryFocus) {
+            //   currentFocus.unfocus();
+            // }
           },
           child: MaterialApp(
             debugShowCheckedModeBanner: false,
