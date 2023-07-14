@@ -9,6 +9,10 @@ import '../cubit/candlePrice_cubit.dart';
 import '../cubit/livelinePrice_cubit.dart';
 
 class ChartPrice extends StatefulWidget {
+  final String market;
+
+  ChartPrice({required this.market});
+
   _ChartPriceState createState() => _ChartPriceState();
 }
 
@@ -21,7 +25,7 @@ class _ChartPriceState extends State<ChartPrice> {
 
   Map<String, dynamic> request() {
     Map<String, dynamic> request = {
-      "ticks_history": "R_50",
+      "ticks_history": widget.market,
       "subscribe": 1,
       "end": "latest",
       "style": "candles"

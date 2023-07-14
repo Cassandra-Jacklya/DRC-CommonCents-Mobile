@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:mailer/mailer.dart';
 import 'package:mailer/smtp_server.dart';
@@ -7,24 +8,13 @@ class ForgotPassword extends StatefulWidget {
 }
 
 class _ForgotPasswordState extends State<ForgotPassword> {
-  void sendResetPasswordEmail(String email) async {
-    final smtpServer = gmail('your.email@gmail.com', 'yourpassword');
-
-    // Create the email message
-    final message = Message()
-      ..from = const Address('bentley@besquare.com.my', 'Your Name')
-      ..recipients.add(email)
-      ..subject = 'Reset Password'
-      ..text =
-          'Click the link below to reset your password:\n\nhttps://www.example.com/reset-password'
-      ..html =
-          '<p>Click the link below to reset your password:</p>\n<p><a href="https://www.example.com/reset-password">Reset Password</a></p>';
-
+  FirebaseAuth _auth = FirebaseAuth.instance;
+  void sendPasswordResetEmail(String email) async {
     try {
-      final sendReport = await send(message, smtpServer);
-      print('Message sent: ${sendReport.toString()}');
+      await _auth.sendPasswordResetEmail(email: email);
+      showResetPasswordConfirmationDialog(email);
     } catch (e) {
-      print('Error sending email: $e');
+      print('Error sending password reset email: $e');
     }
   }
 
@@ -84,7 +74,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
           child: Text('Reset Password'),
           onPressed: () {
             if (_reset.text != "") {
-              sendResetPasswordEmail(email);
+              sendPasswordResetEmail(email);
               Navigator.of(context).pop();
               showResetPasswordConfirmationDialog(email);
             }

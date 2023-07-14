@@ -379,7 +379,7 @@ class _TradeDetailsState extends State<TradeDetails> {
         height: 60,
         decoration: BoxDecoration(
             color:
-                widget.status == 'Win' ? Colors.greenAccent : Colors.redAccent,
+                widget.status == 'Won' ? Colors.greenAccent : Colors.redAccent,
             borderRadius: const BorderRadius.only(
                 topLeft: Radius.circular(10), topRight: Radius.circular(10))),
         padding: const EdgeInsets.all(10),
@@ -388,7 +388,7 @@ class _TradeDetailsState extends State<TradeDetails> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              widget.status == "Win" ? "WON" : "LOST",
+              widget.status == "Won" ? "WON" : "LOST",
               style: Theme.of(context).textTheme.displayLarge!.merge(
                     const TextStyle(
                       fontSize: 18,
@@ -441,7 +441,7 @@ class _TradeDetailsState extends State<TradeDetails> {
                           ),
                           Positioned(
                             top: 10,
-                            right: 17,
+                            right: 12,
                             child: Container(
                               padding: const EdgeInsets.symmetric(
                                   horizontal: 10, vertical: 5),
@@ -491,7 +491,7 @@ class _TradeDetailsState extends State<TradeDetails> {
                                   color: Colors.white,
                                   border: Border.all(color: Colors.black26)),
                               child: const Text(
-                                "Entry spot",
+                                "Exit spot",
                                 style: TextStyle(fontSize: 16),
                               ),
                             ),
@@ -507,7 +507,7 @@ class _TradeDetailsState extends State<TradeDetails> {
                       Text(
                         "Profit/loss",
                         style: TextStyle(
-                            color: widget.status == "Win"
+                            color: widget.status == "Won"
                                 ? Colors.greenAccent
                                 : Colors.redAccent),
                       ),
@@ -517,11 +517,11 @@ class _TradeDetailsState extends State<TradeDetails> {
                         ),
                       ),
                       Text(
-                        widget.status == "Win"
+                        widget.status == "Won"
                             ? "+ ${widget.pNl.toStringAsFixed(2)}"
                             : "-${widget.pNl.toStringAsFixed(2)}",
                         style: TextStyle(
-                            color: widget.status == "Win"
+                            color: widget.status == "Won"
                                 ? Colors.greenAccent
                                 : Colors.redAccent),
                       ),

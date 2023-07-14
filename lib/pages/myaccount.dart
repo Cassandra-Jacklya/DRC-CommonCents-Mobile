@@ -1,3 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:commoncents/components/walletbutton.dart';
+import 'package:commoncents/cubit/login_cubit.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 import '../components/popup.dart';
@@ -23,8 +27,72 @@ class MyAccount extends StatefulWidget {
 class _MyAccountState extends State<MyAccount> {
   TextEditingController textEditingController = TextEditingController();
 
+  Future<void> updateDisplayName() async {
+    final User? user = FirebaseAuth.instance.currentUser;
+
+    if (user != null) {
+      try {
+        await user.updateDisplayName(textEditingController.text);
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(user.uid)
+            .update({'displayName': textEditingController.text});
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text('Success'),
+              content: const Text('Name successfully changed.'),
+              actions: <Widget>[
+                TextButton(
+                  child: const Text('OK'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            );
+          },
+        );
+      } catch (error) {
+        // Handle the error appropriately (e.g., display an error message)
+      }
+      setState(() {
+        textEditingController.clear();
+      });
+    }
+  }
+
+  void showConfirmationDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Confirmation'),
+          content: const Text('Are you sure you want to change your details?'),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: const Text('Confirm'),
+              onPressed: () {
+                updateDisplayName();
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    final User? user = FirebaseAuth.instance.currentUser;
     return Scaffold(
       appBar: AppBar(
         shadowColor: Colors.transparent,
@@ -66,23 +134,24 @@ class _MyAccountState extends State<MyAccount> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        widget.displayName,
-                        style: TextStyle(fontSize: 25),
+                        user?.email ?? 'Anonymous',
+                        style: const TextStyle(fontSize: 25),
                       ),
                       const SizedBox(
                         height: 5,
                       ),
-                      Row(
-                        children: [
-                          Icon(Icons.account_balance_wallet_sharp),
-                          const SizedBox(width: 10),
-                          Text(
-                            "${widget.balance.toStringAsFixed(2)} USD",
-                            style: TextStyle(
-                                fontSize: 18, fontWeight: FontWeight.bold),
-                          )
-                        ],
-                      )
+                      // WalletButton(loginStateBloc: LoginStateBloc),
+                      // Row(
+                      //   children: [
+                      //     Icon(Icons.account_balance_wallet_sharp),
+                      //     const SizedBox(width: 10),
+                      //     Text(
+                      //       "${widget.balance.toStringAsFixed(2)} USD",
+                      //       style: const TextStyle(
+                      //           fontSize: 18, fontWeight: FontWeight.bold),
+                      //     )
+                      //   ],
+                      // )
                     ],
                   ),
                 )
@@ -94,12 +163,17 @@ class _MyAccountState extends State<MyAccount> {
               margin: const EdgeInsets.symmetric(horizontal: 30),
               child: TextFormField(
                 controller: textEditingController,
+                onFieldSubmitted: (String value) {
+                  showConfirmationDialog();
+                },
                 decoration: InputDecoration(
                   border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
-                      borderSide: const BorderSide(color: Color(0xFF5F5F5F))),
-                  labelText: widget.displayName,
-                  suffixIcon: const Icon(Icons.person),
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: const BorderSide(color: Color(0xFF5F5F5F)),
+                  ),
+                  labelText:
+                      user!.displayName == "" ? "Anonymous" : user.displayName,
+                  suffixIcon: const Icon(Icons.edit),
                 ),
               ),
             ),
@@ -124,8 +198,7 @@ class _MyAccountState extends State<MyAccount> {
               height: 70,
               margin: const EdgeInsets.symmetric(horizontal: 30),
               child: TextFormField(
-                controller: textEditingController,
-                decoration: InputDecoration(
+                decoration: InputDecoration(enabled: false,
                   border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
                       borderSide: const BorderSide(color: Color(0xFF5F5F5F))),

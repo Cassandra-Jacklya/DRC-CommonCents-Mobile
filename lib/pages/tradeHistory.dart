@@ -29,10 +29,13 @@ class _TradeHistoryState extends State<TradeHistory> {
         final tradeHistoryDocs =
             docSnapshot.docs.where((doc) => doc.id != 'tradeSummary').toList();
 
-        for (final tradeDoc in tradeHistoryDocs) {
-          final tradeData = tradeDoc.data();
-          tradeDataList.add(tradeData);
-        }
+        tradeHistoryDocs.sort((a, b) {
+          final aTimestamp = (a.data() as Map<String, dynamic>)['timestamp'];
+          final bTimestamp = (b.data() as Map<String, dynamic>)['timestamp'];
+          return bTimestamp.compareTo(aTimestamp);
+        });
+
+        tradeDataList = tradeHistoryDocs.map((doc) => doc.data()).toList();
         return tradeDataList;
       }
     } else {
@@ -69,6 +72,7 @@ class _TradeHistoryState extends State<TradeHistory> {
                 return Text("Error: ${snapshot.error}");
               } else if (snapshot.hasData) {
                 tradeDataList = snapshot.data!;
+                print(tradeDataList);
                 return Container(
                   margin: const EdgeInsets.only(bottom: 20),
                   child: ListView(
@@ -88,7 +92,7 @@ class _TradeHistoryState extends State<TradeHistory> {
                                     status: trade['status'],
                                     entry: trade['previousSpot'],
                                     exit: trade['currentSpot'],
-                                    pNl: trade['status'] == 'Win'
+                                    pNl: trade['status'] == 'Won'
                                         ? trade['additionalAmount'].toDouble()
                                         : trade['askPrice'].toDouble(),
                                     marketType: trade['marketType'],
@@ -146,7 +150,7 @@ class _TradeHistoryState extends State<TradeHistory> {
                                         ),
                                         const SizedBox(height: 5),
                                         Text(
-                                          "${trade['status'] == 'Win' ? '+${trade['additionalAmount']}' : '-${trade['askPrice']}'}  USD",
+                                          "${trade['status'] == 'Won' ? '+${trade['additionalAmount']}' : '-${trade['askPrice']}'}  USD",
                                           style: const TextStyle(fontSize: 15),
                                           textAlign: TextAlign.start,
                                         ),

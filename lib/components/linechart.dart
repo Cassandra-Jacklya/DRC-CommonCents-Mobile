@@ -4,16 +4,22 @@ import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
+import '../cubit/lineTime_cubit.dart';
 import '../cubit/stock_data_cubit.dart';
 import '../apistore/stockdata.dart';
 import 'formatMarkets.dart';
 
 class MyLineChart extends StatefulWidget {
-   final bool isCandle;
-   final String market;
-   final bool isMini;
+  final bool isCandle;
+  final String market;
+  final bool isMini;
 
-  MyLineChart({required this.isCandle, required this.market, required this.isMini, Key? key}) : super(key: key);
+  MyLineChart(
+      {required this.isCandle,
+      required this.market,
+      required this.isMini,
+      Key? key})
+      : super(key: key);
 
   @override
   _LineChartState createState() => _LineChartState();
@@ -21,7 +27,8 @@ class MyLineChart extends StatefulWidget {
 
 class _LineChartState extends State<MyLineChart> {
   late StockDataCubit stockDataCubit;
-  // late MarketsCubit marketsCubit;
+  // late LineTimeCubit lineTimeCubit;
+  // late String selectedTimeUnit;
   List<FlSpot> spots = [];
   int initial = 50;
   Widget bottomTitleWidgets(double value, TitleMeta meta, double chartWidth) {
@@ -46,8 +53,14 @@ class _LineChartState extends State<MyLineChart> {
   void initState() {
     super.initState();
     stockDataCubit = StockDataCubit();
-    // marketsCubit = MarketsCubit();
-    connectToWebSocket(context: context,isCandle: widget.isCandle, market: formatMarkets(widget.market),);
+    // lineTimeCubit =
+    //     BlocProvider.of<LineTimeCubit>(context); // Access LineTimeCubit state
+    // selectedTimeUnit = lineTimeCubit.state;
+    connectToWebSocket(
+      context: context,
+      isCandle: widget.isCandle,
+      market: formatMarkets(widget.market),
+    );
   }
 
   @override
@@ -58,6 +71,7 @@ class _LineChartState extends State<MyLineChart> {
 
   @override
   Widget build(BuildContext context) {
+    // print(selectedTimeUnit);
     return Scaffold(
       body: Center(
         child: Column(
@@ -65,8 +79,10 @@ class _LineChartState extends State<MyLineChart> {
             SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: SizedBox(
-                height: widget.isMini ? 100 : MediaQuery.of(context).size.height * 0.3,
-                width: widget.isMini ? 100: MediaQuery.of(context).size.width,
+                height: widget.isMini
+                    ? 100
+                    : MediaQuery.of(context).size.height * 0.3,
+                width: widget.isMini ? 100 : MediaQuery.of(context).size.width,
                 child: BlocBuilder<StockDataCubit, List<Map<String, dynamic>>>(
                   builder: (context, stockData) {
                     if (stockData.length >= 100) {
@@ -80,7 +96,6 @@ class _LineChartState extends State<MyLineChart> {
                       if (stockData.length > 100) {
                         stockData.removeRange(0, stockData.length - 100);
                       }
-
 
                       double minClose = stockData[initial]['close'];
                       double maxClose = stockData[initial]['close'];
@@ -99,108 +114,74 @@ class _LineChartState extends State<MyLineChart> {
                         maxClose += 1;
                       }
 
-                      return InteractiveViewer(
-                        boundaryMargin: const EdgeInsets.all(double.infinity),
-                        minScale: 0.5,
-                        maxScale: 4.0,
-                        child: SfCartesianChart(
-                          zoomPanBehavior: ZoomPanBehavior(
-                            enableSelectionZooming: true,
-                            enablePinching: true,
-                            enablePanning: true,
-                            zoomMode: ZoomMode.xy,
-                          ),
-                          primaryXAxis: DateTimeAxis(
-                            isVisible: widget.isMini ? false : true,
-                            majorGridLines: const MajorGridLines(width: 0),
-                            dateFormat: DateFormat(
-                                'HH:mm'), // Specify the desired time format
-                            intervalType: DateTimeIntervalType
-                                .seconds, // Adjust based on your data
-                            axisLine: const AxisLine(
-                                width: 0), // Hide the x-axis line
-                            minimum: DateTime.fromMillisecondsSinceEpoch(
-                              stockData.first['epoch'].toInt() * 1000,
-                              isUtc: true,
-                            ), // Set the minimum value of the x-axis
-                            maximum: DateTime.fromMillisecondsSinceEpoch(
-                              stockData.last['epoch'].toInt() * 1000,
-                              isUtc: true,
-                            ), // Set the maximum value of the x-axis
-                            // visibleMinimum: DateTime.fromMillisecondsSinceEpoch(
-                            //   stockData[initial]['epoch'].toInt() * 1000,
-                            //   isUtc: true,
-                            // ).subtract(const Duration(
-                            //     seconds: 10)), // Set the initial visible range
-                            // visibleMaximum: DateTime.fromMillisecondsSinceEpoch(
-                            //   stockData.last['epoch'].toInt() * 1000,
-                            //   isUtc: true,
-                            // ), // Display the time of the first item as axis title
-                          ),
-                          primaryYAxis: NumericAxis(
-                            edgeLabelPlacement: EdgeLabelPlacement.shift,
-                            opposedPosition: true,
-                            isVisible: widget.isMini ? false : true,
-                            // minimum: minClose.floorToDouble(),
-                            // maximum: maxClose.floorToDouble() + 1.5,
-                            desiredIntervals: 3,
-                            // interval: 1,
-                            // numberFormat: NumberFormat.simpleCurrency(decimalDigits: 2),
-                          ),
-                          series: <ChartSeries>[
-                            LineSeries<FlSpot, DateTime>(
-                                dataSource: spots,
-                                xValueMapper: (FlSpot spot, _) =>
-                                    DateTime.fromMillisecondsSinceEpoch(
-                                        spot.x.toInt() * 1000,
-                                        isUtc: true),
-                                yValueMapper: (FlSpot spot, _) => spot.y,
-                                yAxisName: 'secondaryYAxis',
-                                width: 2.0),
-                          ],
+                      return SfCartesianChart(
+                        zoomPanBehavior: ZoomPanBehavior(
+                          enableSelectionZooming: true,
+                          enablePinching: true,
+                          enablePanning: true,
+                          zoomMode: ZoomMode.xy,
                         ),
+                        primaryXAxis: DateTimeAxis(
+                          isVisible: widget.isMini ? false : true,
+                          majorGridLines: const MajorGridLines(width: 0),
+                          dateFormat: DateFormat(
+                              'HH:mm'), // Specify the desired time format
+                          intervalType: DateTimeIntervalType
+                              .seconds, // Adjust based on your data
+                          axisLine: const AxisLine(
+                              width: 0), // Hide the x-axis line
+                          minimum: DateTime.fromMillisecondsSinceEpoch(
+                            stockData.first['epoch'].toInt() * 1000,
+                            isUtc: true,
+                          ), // Set the minimum value of the x-axis
+                          maximum: DateTime.fromMillisecondsSinceEpoch(
+                            stockData.last['epoch'].toInt() * 1000,
+                            isUtc: true,
+                          ), // Set the maximum value of the x-axis
+                          // visibleMinimum: DateTime.fromMillisecondsSinceEpoch(
+                          //   stockData[initial]['epoch'].toInt() * 1000,
+                          //   isUtc: true,
+                          // ).subtract(const Duration(
+                          //     seconds: 10)), // Set the initial visible range
+                          // visibleMaximum: DateTime.fromMillisecondsSinceEpoch(
+                          //   stockData.last['epoch'].toInt() * 1000,
+                          //   isUtc: true,
+                          // ), // Display the time of the first item as axis title
+                        ),
+                        primaryYAxis: NumericAxis(
+                          edgeLabelPlacement: EdgeLabelPlacement.shift,
+                          opposedPosition: true,
+                          isVisible: widget.isMini ? false : true,
+                          // minimum: minClose.floorToDouble(),
+                          // maximum: maxClose.floorToDouble() + 1.5,
+                          desiredIntervals: 3,
+                          // interval: 1,
+                          // numberFormat: NumberFormat.simpleCurrency(decimalDigits: 2),
+                        ),
+                        series: <ChartSeries>[
+                          LineSeries<FlSpot, DateTime>(
+                              dataSource: spots,
+                              xValueMapper: (FlSpot spot, _) =>
+                                  DateTime.fromMillisecondsSinceEpoch(
+                                      spot.x.toInt() * 1000,
+                                      isUtc: true),
+                              yValueMapper: (FlSpot spot, _) => spot.y,
+                              yAxisName: 'secondaryYAxis',
+                              width: 2.0),
+                        ],
                       );
-                    }
-                    else{
+                    } else {
                       return Center(
                         child: SizedBox(
-                          height: 20,
-                          width: 20,
-                          child: CircularProgressIndicator()),
+                            height: 20,
+                            width: 20,
+                            child: CircularProgressIndicator()),
                       );
                     }
                   },
                 ),
               ),
             ),
-            // Row(
-            //   children: [
-            //     GestureDetector(
-            //       child: Container(
-            //         height: 30,
-            //         width: 30,
-            //         color: Colors.grey,
-            //       ),
-            //       onTap: () {
-            //         setState(() {
-            //           initial = 400;
-            //         });
-            //       },
-            //     ),
-            //     GestureDetector(
-            //       child: Container(
-            //         height: 30,
-            //         width: 30,
-            //         color: Colors.red,
-            //       ),
-            //       onTap: () {
-            //         setState(() {
-            //           initial = 950;
-            //         });
-            //       },
-            //     ),
-            //   ],
-            // )
           ],
         ),
       ),

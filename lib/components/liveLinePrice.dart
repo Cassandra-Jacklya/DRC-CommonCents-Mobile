@@ -8,6 +8,10 @@ import 'package:web_socket_channel/web_socket_channel.dart';
 import '../cubit/livelinePrice_cubit.dart';
 
 class LiveLinePrice extends StatefulWidget {
+  final String market;
+
+  const LiveLinePrice({required this.market});
+
   _LiveLinePriceState createState() => _LiveLinePriceState();
 }
 
@@ -19,7 +23,7 @@ class _LiveLinePriceState extends State<LiveLinePrice> {
       'wss://ws.binaryws.com/websockets/v3?app_id=$appId&l=EN&brand=deriv');
 
   Map<String, dynamic> request() {
-    Map<String, dynamic> request = {"ticks": "R_50", "subscribe": 1};
+    Map<String, dynamic> request = {"ticks": widget.market, "subscribe": 1};
     return request;
   }
 
@@ -75,6 +79,7 @@ class _LiveLinePriceState extends State<LiveLinePrice> {
 
   @override
   Widget build(BuildContext context) {
+    print(widget.market);
     return BlocBuilder<LiveLinePriceCubit, double>(
       builder: (context, state) {
         return Text("Spot price: ${state.toStringAsFixed(2)}");

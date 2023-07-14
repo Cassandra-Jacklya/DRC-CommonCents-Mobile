@@ -3,8 +3,10 @@ import 'package:commoncents/pages/simulationpage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class Markets extends StatefulWidget {
-  const Markets({super.key});
+class Markets extends StatefulWidget {  
+  final String market;
+
+  Markets({required this.market});
 
   @override
   _MarketsState createState() => _MarketsState();
@@ -12,7 +14,7 @@ class Markets extends StatefulWidget {
 }
 
 class _MarketsState extends State<Markets> {
-  // late MarketsCubit marketsCubit;
+
   final List<String> items = [
     'Volatility 10',
     'Volatility 25',
@@ -40,7 +42,7 @@ class _MarketsState extends State<Markets> {
 
   @override
   Widget build(BuildContext context) {
-    // marketsCubit = context.read<MarketsCubit>();
+ 
 
     return MultiBlocProvider(
       providers: [
@@ -48,7 +50,6 @@ class _MarketsState extends State<Markets> {
       ],
       child:BlocBuilder<MarketsCubit, String>(
         builder: (context, state) {
-          print("test");
           return Scaffold(
             appBar: AppBar(
               shadowColor: Colors.transparent,
@@ -73,20 +74,20 @@ class _MarketsState extends State<Markets> {
                 return ListView.builder(
                   itemCount: items.length,
                   itemBuilder: (context, index) {
-                    final market = items[index];
-                    final isSelected = (market == state);
+                    final newMarket = items[index];
+                    final isSelected = (newMarket == widget.market);
                     return ListTile(
                       title: Text(
-                        market,
+                        newMarket,
                         style: TextStyle(
                           color: isSelected ? Colors.blue : Colors.black,
                         ),
                       ),
                       onTap: () {
                         setState(() {
-                          print("There:${market}");
-                          BlocProvider.of<MarketsCubit>(context).updateMarkets(market);
-                          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => SimulationPage(market: market,)));
+                          print("There:${newMarket}");
+                          BlocProvider.of<MarketsCubit>(context).updateMarkets(newMarket);
+                          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => SimulationPage(market: newMarket,)));
                         });
                       },
                     );

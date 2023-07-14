@@ -139,11 +139,47 @@ void handleBuyResponse(
     'currentSpot': sellingPrice,
     'marketType': decodedData['echo_req']['symbol'],
     'payoutValue': capital,
-    'perviousSpot': buyingPrice,
+    'previousSpot': buyingPrice,
     'status': tradeStatus,
     'strategy': Highstrategy ? "Higher" : "Lower",
     'tickDuration': duration,
     'timestamp': proposal['date_start']
   };
   await tradeDocRef.set(tradeData);
+
+  DocumentReference tradeSummaryDocRef =
+      tradeHistoryCollection.doc('tradeSummary');
+  tradeSummaryDocRef.get().then((tradeSummarySnapshot) {
+    if (tradeSummarySnapshot.exists) {
+      Map<String, dynamic>? tradeSummaryData =
+          tradeSummarySnapshot.data() as Map<String, dynamic>?;
+
+      double totalProfit =
+          (tradeSummaryData!['totalProfit'] as num?)?.toDouble() ?? 0;
+      double totalLoss =
+          (tradeSummaryData['totalLoss'] as num?)?.toDouble() ?? 0;
+
+      if (tradeStatus == 'Won') {
+        totalProfit += proposal['payout'];
+      } else if (tradeStatus == 'Lost') {
+        totalLoss += capital * -1;
+      }
+
+      double netWorth = totalProfit + totalLoss;
+
+      tradeSummaryDocRef.update({
+        'totalProfit': totalProfit,
+        'totalLoss': totalLoss,
+        'netWorth': netWorth,
+        'timestamp': proposal['date_start']
+      });
+    } else {
+      tradeSummaryDocRef.set({
+        'totalProfit': tradeStatus == 'Won' ? proposal['payout'] : 0,
+        'totalLoss': tradeStatus == 'Lost' ? capital : 0,
+        'netWorth': tradeStatus == 'Won' ? proposal['payout'] : capital * -1,
+        'timestamp': proposal['date_start']
+      });
+    }
+  });
 }

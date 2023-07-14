@@ -9,27 +9,39 @@ class Leaderboard extends StatefulWidget {
 class _LeaderboardState extends State<Leaderboard> {
   late List<Map<String, dynamic>> ranking = []; // Declare rankedUsers variable
 
-  Future<List<Map<String, dynamic>>> rankUsersByBalance() async {
+  Future<List<Map<String, dynamic>>> rankUsersByNetWorth() async {
     List<Map<String, dynamic>> rankedUsers = [];
-    print('Doing');
 
     // Retrieve all users from the Firestore collection
     QuerySnapshot querySnapshot =
         await FirebaseFirestore.instance.collection('users').get();
 
-    // Iterate through each document and retrieve balance field
-    querySnapshot.docs.forEach((userDoc) {
+    // Iterate through each document and retrieve netWorth field
+    await Future.forEach(querySnapshot.docs, (userDoc) async {
       Map<String, dynamic> userData = userDoc.data() as Map<String, dynamic>;
       String userId = userDoc.id;
-      double balance = userData['balance'].toDouble();
+      double netWorth = 0;
+
+      // Retrieve the trade summary document for the user
+      DocumentSnapshot tradeSummarySnapshot = await userDoc.reference
+          .collection('tradeHistory')
+          .doc('tradeSummary')
+          .get();
+
+      if (tradeSummarySnapshot.exists) {
+        Map<String, dynamic>? tradeSummaryData =
+            tradeSummarySnapshot.data() as Map<String, dynamic>?;
+
+        netWorth = tradeSummaryData!['netWorth']?.toDouble() ?? 0;
+      }
 
       String? photo = userData['photoURL'];
 
-      rankedUsers.add({'userId': userId, 'balance': balance, 'photo': photo});
+      rankedUsers.add({'userId': userId, 'netWorth': netWorth, 'photo': photo});
     });
 
-    // Sort the rankedUsers list in descending order based on balance
-    rankedUsers.sort((a, b) => b['balance'].compareTo(a['balance']));
+    // Sort the rankedUsers list in descending order based on netWorth
+    rankedUsers.sort((a, b) => b['netWorth'].compareTo(a['netWorth']));
 
     return rankedUsers;
   }
@@ -37,7 +49,7 @@ class _LeaderboardState extends State<Leaderboard> {
   @override
   void initState() {
     super.initState();
-    rankUsersByBalance().then((users) {
+    rankUsersByNetWorth().then((users) {
       setState(() {
         ranking = users;
       });
@@ -52,97 +64,82 @@ class _LeaderboardState extends State<Leaderboard> {
         appBar: AppBar(
           shadowColor: Colors.transparent,
           toolbarHeight: 60,
-          backgroundColor: Colors.transparent,
-          title: const Text("Leaderboard"),
+          backgroundColor: Color(0XFF3366FF),
+          title: const Text("Leaderboard", style: TextStyle(color: Colors.white),),
           foregroundColor: Colors.black,
         ),
         body: Column(
           children: [
-            Container(
-              height: MediaQuery.of(context).size.height * 0.4,
-              color: Colors.grey[300],
-              child: Stack(
-                children: [
-                  Positioned(
-                    top: 5,
-                    right: 135,
-                    child: Container(
-                      width: 110,
-                      height: 110,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Colors.grey[500],
-                      ),
-                      child: CircleAvatar(
-                        backgroundImage:
-                            NetworkImage(ranking[0]['photo'] ?? ''),
-                      ),
-                    ),
-                  ),
-                  Positioned(
-                    top: 80,
-                    right: 10,
-                    child: Container(
-                      width: 110,
-                      height: 110,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Colors.grey[500],
-                      ),
-                      child: CircleAvatar(
-                        backgroundImage:
-                            NetworkImage(ranking[1]['photo'] ?? ''),
-                      ),
-                    ),
-                  ),
-                  Positioned(
-                    top: 70,
-                    left: 10,
-                    child: Container(
-                      width: 110,
-                      height: 110,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Colors.grey[500],
-                      ),
-                      child: CircleAvatar(
-                        backgroundImage:
-                            NetworkImage(ranking[2]['photo'] ?? ''),
-                      ),
-                    ),
-                  ),
-                  Positioned(
-                      bottom: 40,
-                      left: 60,
-                      child: Transform.rotate(
-                        angle: -20 * (3.1415926535897932 / 180),
-                        child: const MyShape(
-                          number: 2,
+            Stack(
+              children: [
+                Image.asset('assets/images/leaderboard.png'),
+                Container(
+                  height: MediaQuery.of(context).size.height * 0.4,
+                  color: Colors.transparent,
+                  child: Stack(
+                    children: [
+                      Positioned(
+                        top: 30,
+                        right: 150,
+                        child: Container(
+                          width: 90,
+                          height: 90,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Colors.grey[500],
+                          ),
+                          child: CircleAvatar(
+                            radius: 20,
+                            backgroundImage:
+                                NetworkImage(ranking[0]['photo'] ?? ''),
+                          ),
                         ),
-                      )),
-                  const Positioned(
-                      top: 115,
-                      left: 163,
-                      child: MyShape(
-                        number: 1,
-                      )),
-                  Positioned(
-                      bottom: 30,
-                      right: 50,
-                      child: Transform.rotate(
-                        angle: 14 * (3.1415926535897932 / 180),
-                        child: const MyShape(
-                          number: 3,
+                      ),
+                      Positioned(
+                        top: 75,
+                        right: 30,
+                        child: Container(
+                          width: 90,
+                          height: 90,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Colors.grey[500],
+                          ),
+                          child: CircleAvatar(
+                            backgroundImage:
+                                NetworkImage(ranking[1]['photo'] ?? ''),
+                          ),
                         ),
-                      )),
-                ],
-              ),
+                      ),
+                      Positioned(
+                        top: 75,
+                        left: 30,
+                        child: Container(
+                          width: 90,
+                          height: 90,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Colors.grey[500],
+                          ),
+                          child: CircleAvatar(
+                            radius: 20,
+                            backgroundImage:
+                                NetworkImage(ranking[2]['photo'] ?? ''),
+                          ),
+                        ),
+                      ),
+                      Center(child: Image.asset('assets/videos/confetti.gif')),
+                    ],
+                  ),
+                ),
+              ],
             ),
             Expanded(
               child: ListView.builder(
                 itemCount: ranking.length > 3 ? ranking.length - 3 : 0,
                 itemBuilder: (context, index) {
                   final number = index + 3;
+                  ranking[number]['displayName'];
                   return Container(
                     height: 75,
                     margin: const EdgeInsets.all(10),
@@ -173,17 +170,17 @@ class _LeaderboardState extends State<Leaderboard> {
                         ),
                         Container(
                           margin: const EdgeInsets.only(top: 5),
-                
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                ranking[number]['displayName']?? 'Test',
+                                ranking[number]['displayName'] ?? 'Anonymous',
                                 style: const TextStyle(fontFamily: 'Roboto'),
                               ),
-                              Text("${ranking[number]['balance'].toStringAsFixed(2)} USD",
-                                  style: const TextStyle(fontFamily: "Roboto"))
+                              // Text(
+                              //     "${ranking[number]['balance'].toStringAsFixed(2)} USD",
+                              //     style: const TextStyle(fontFamily: "Roboto"))
                             ],
                           ),
                         ),

@@ -15,7 +15,7 @@ class ForumPage extends StatefulWidget {
 
 class _ForumPageState extends State<ForumPage> {
   User? user = FirebaseAuth.instance.currentUser;
-   Future<void> refreshPosts() async {
+  Future<void> refreshPosts() async {
     setState(() {
       postsList = []; // Clear the existing posts list
     });
@@ -26,6 +26,7 @@ class _ForumPageState extends State<ForumPage> {
       });
     });
   }
+
   void savePost(Map<String, dynamic> post) async {
     try {
       final userId = user!.uid;
@@ -144,31 +145,28 @@ class _ForumPageState extends State<ForumPage> {
     super.initState();
     print(mounted);
     fetchFavoritedPostIds().then((result) {
-      
-    if (mounted) {
-      
-      setState(() {
-      favouritePosts = result;
-      });
-    }
-  });
+      if (mounted) {
+        setState(() {
+          favouritePosts = result;
+        });
+      }
+    });
 
-  loadPosts().then((result) {
-    if (mounted) {
-      setState(() {
-        postsList = result;
-      });
-    }
-  });
-  isExpanded = false;
-}
+    loadPosts().then((result) {
+      if (mounted) {
+        setState(() {
+          postsList = result;
+        });
+      }
+    });
+    isExpanded = false;
+  }
 
-@override
-void dispose() {
-  textController.dispose();
-  super.dispose();
-}
-
+  @override
+  void dispose() {
+    textController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -225,17 +223,17 @@ void dispose() {
 
                             return GestureDetector(
                               onTap: () {
-                                showDialog(
+                                showModalBottomSheet(
                                   context: context,
-                                  builder: (BuildContext postDialog) {
-                                    return FullPost(
+                                  isScrollControlled: true,
+                                  builder: (BuildContext context) {
+                                    return PostModal(
                                       post: post,
                                       formattedDate: formattedDate,
                                       isFavorite: isFavorite,
                                       hoursAgo: hoursAgo,
-                                      savePostCallback: savePost,
+                                      refreshForumPage: refreshPosts,
                                     );
-// Pass the post to the FullPost dialog
                                   },
                                 );
                               },
@@ -272,7 +270,8 @@ void dispose() {
                                                     0.15,
                                                 child: Center(
                                                   child: Text(
-                                                    post['author'],
+                                                    post['author'] ??
+                                                        'Anonymous',
                                                     style: const TextStyle(
                                                       fontSize: 13,
                                                     ),
@@ -362,9 +361,31 @@ void dispose() {
                                         ),
                                         Row(
                                           children: [
+                                            Text(
+                                              '${post['comments'].length}',
+                                              style:
+                                                  const TextStyle(fontSize: 16),
+                                            ),
                                             IconButton(
                                               icon: const Icon(Icons.comment),
-                                              onPressed: () {},
+                                              onPressed: () {
+                                                showModalBottomSheet(
+                                                  context: context,
+                                                  isScrollControlled: true,
+                                                  builder:
+                                                      (BuildContext context) {
+                                                    return PostModal(
+                                                      post: post,
+                                                      formattedDate:
+                                                          formattedDate,
+                                                      isFavorite: isFavorite,
+                                                      hoursAgo: hoursAgo,
+                                                      refreshForumPage:
+                                                          refreshPosts,
+                                                    );
+                                                  },
+                                                );
+                                              },
                                             ),
                                             IconButton(
                                               icon: Icon(

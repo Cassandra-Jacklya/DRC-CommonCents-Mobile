@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:commoncents/components/popup.dart';
+import 'package:commoncents/pages/favourites.dart';
 import 'package:commoncents/pages/myaccount.dart';
 import 'package:commoncents/pages/security.dart';
 import 'package:commoncents/pages/leaderboard.dart';
@@ -128,8 +129,8 @@ class _ProfilePageState extends State<ProfilePage> {
                 margin: const EdgeInsets.symmetric(vertical: 30),
                 padding: const EdgeInsets.all(10),
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Hero(
                       tag: 'test',
@@ -155,7 +156,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     Container(
                       margin: const EdgeInsets.only(top: 5),
                       height: 70,
-                      width: 250,
+                      width: 200,
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -169,6 +170,19 @@ class _ProfilePageState extends State<ProfilePage> {
                         ],
                       ),
                     ),
+                    GestureDetector(
+                        onTap: () {
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext logoutDialog) {
+                              return const LogOut();
+                            },
+                          );
+                        },
+                        child: Transform.scale(
+                          scale: 1.5, // Adjust the scale factor as needed
+                          child: const Icon(Iconsax.logout),
+                        )),
                   ],
                 ),
               ),
@@ -196,6 +210,16 @@ class _ProfilePageState extends State<ProfilePage> {
                                           balance: balance,
                                           email: email,
                                         )));
+                          },
+                        ),
+                        buildContainer(
+                          title: "Favourites",
+                          icon: null,
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => FavouritesPage()));
                           },
                         ),
                         buildContainer(
@@ -237,38 +261,6 @@ class _ProfilePageState extends State<ProfilePage> {
                           },
                           showBottomBorder: false,
                         ),
-                        GestureDetector(
-                          onTap: () {
-                            showDialog(
-                              context: context,
-                              builder: (BuildContext logoutDialog) {
-                                return const LogOut();
-                              },
-                            );
-                          },
-                          child: Container(
-                            padding: const EdgeInsets.all(15),
-                            height: MediaQuery.of(context).size.height * 0.07,
-                            width: MediaQuery.of(context).size.width * 0.9,
-                            decoration: const BoxDecoration(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(10)),
-                                color: Color(0XFF3366FF)),
-                            child: Row(
-                              children: [
-                                Icon(color: Colors.white, Iconsax.logout),
-                                SizedBox(
-                                    width: MediaQuery.of(context).size.width *
-                                        0.3),
-                                Text(
-                                  "Logout",
-                                  style: TextStyle(
-                                      fontSize: 18, color: Colors.white),
-                                )
-                              ],
-                            ),
-                          ),
-                        )
                       ],
                     ),
                   ],
