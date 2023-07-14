@@ -9,7 +9,7 @@ class PostModal extends StatefulWidget {
   final String formattedDate;
   final bool isFavorite;
   final String hoursAgo;
-  final VoidCallback refreshForumPage;
+  final VoidCallback? refreshForumPage;
 
   PostModal({
     required this.post,
@@ -72,7 +72,7 @@ class _PostModalState extends State<PostModal> {
     }
 
     // Call the refreshForumPage callback to refresh the forum page
-    widget.refreshForumPage();
+    widget.refreshForumPage!();
 
     // Call the refreshModal callback to refresh the modal
     // refreshModal();
