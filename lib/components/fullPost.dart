@@ -25,7 +25,6 @@ class PostModal extends StatefulWidget {
 
 class _PostModalState extends State<PostModal> {
   late TextEditingController _comment;
-  
 
   User? user = FirebaseAuth.instance.currentUser;
 
@@ -72,36 +71,34 @@ class _PostModalState extends State<PostModal> {
     }
 
     // Call the refreshForumPage callback to refresh the forum page
-    widget.refreshForumPage!();
+    widget.refreshForumPage?.call();
 
     // Call the refreshModal callback to refresh the modal
     // refreshModal();
   }
 
-    @override
-  void initState(){
+  @override
+  void initState() {
     _comment = TextEditingController();
     super.initState();
   }
 
   @override
-  void dispose(){
+  void dispose() {
     super.dispose();
     _comment.dispose();
   }
-
 
   @override
   Widget build(BuildContext context) {
     Map<String, dynamic> data = widget.post;
     List comments = data['comments'];
+    print("Here: $comments");
     return SingleChildScrollView(
       child: Container(
         color: Colors.white,
-        // height: MediaQuery.of(context).size.height * 0.7,
-        // width: MediaQuery.of(context).size.width,
-        height: 200,
-        width: double.infinity,
+        height: MediaQuery.of(context).size.height * 0.7,
+        width: MediaQuery.of(context).size.width,
         child: Column(
           children: [
             Container(
@@ -121,14 +118,13 @@ class _PostModalState extends State<PostModal> {
                             CircleAvatar(
                               backgroundImage: NetworkImage(
                                 widget.post['authorImage'] ??
-                                    'https://static01.nyt.com/newsgraphics/2019/08/01/candidate-pages/3b31eab6a3fd70444f76f133924ae4317567b2b5/trump-circle.png',
+                                    'https://www.seekpng.com/png/detail/966-9665493_my-profile-icon-blank-profile-image-circle.png',
                               ),
                               radius: 40,
                             ),
                             const SizedBox(height: 10),
                             SizedBox(
-                              // width: MediaQuery.of(context).size.width * 0.15,
-                              width: 400,
+                              width: MediaQuery.of(context).size.width * 0.15,
                               child: Center(
                                 child: Text(
                                   widget.post['author'] ?? 'Anonymous',
@@ -151,9 +147,8 @@ class _PostModalState extends State<PostModal> {
                             Row(
                               children: [
                                 Container(
-                                  // width:
-                                      // MediaQuery.of(context).size.width * 0.5,
-                                  width: 300,
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.5,
                                   padding: const EdgeInsets.all(1),
                                   child: Text(
                                     widget.post['title'],
@@ -177,8 +172,7 @@ class _PostModalState extends State<PostModal> {
                             ),
                             const SizedBox(height: 5),
                             Container(
-                              // width: MediaQuery.of(context).size.width * 0.63,
-                              width: 300,
+                              width: MediaQuery.of(context).size.width * 0.63,
                               padding: const EdgeInsets.all(1),
                               child: Text(
                                 widget.post['details'],
@@ -204,7 +198,7 @@ class _PostModalState extends State<PostModal> {
                           child: CircleAvatar(
                             backgroundImage: NetworkImage(
                               user!.photoURL ??
-                                  'https://static01.nyt.com/newsgraphics/2019/08/01/candidate-pages/3b31eab6a3fd70444f76f133924ae4317567b2b5/trump-circle.png',
+                                  'https://www.seekpng.com/png/detail/966-9665493_my-profile-icon-blank-profile-image-circle.png',
                             ),
                             radius: 20,
                           ),
@@ -234,13 +228,14 @@ class _PostModalState extends State<PostModal> {
                         ),
                         GestureDetector(
                           onTap: () async {
+                            print("Legit: $data");
                             storeComment(
                                 data['id'],
                                 user!.displayName ?? "Anonymous",
                                 user!.photoURL ?? "",
                                 _comment.text);
-                                await Future.delayed(Duration(milliseconds: 500));
-                            Navigator.of(context).pop();
+                            // await Future.delayed(Duration(milliseconds: 500));
+                            // Navigator.of(context).pop();
                           },
                           child: Container(
                             padding: const EdgeInsets.all(5),
@@ -263,8 +258,7 @@ class _PostModalState extends State<PostModal> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 SizedBox(
-                  // width: MediaQuery.of(context).size.width * 0.05,
-                  width: 300,
+                  width: MediaQuery.of(context).size.width * 0.05,
                 ),
                 Container(
                   margin: const EdgeInsets.symmetric(vertical: 10),
@@ -282,10 +276,8 @@ class _PostModalState extends State<PostModal> {
                           decoration: BoxDecoration(
                               color: Colors.grey[200],
                               borderRadius: BorderRadius.circular(10)),
-                          // height: MediaQuery.of(context).size.height * 0.2,
-                          // width: MediaQuery.of(context).size.width,
-                          height: 200,
-                          width: 300,
+                          height: MediaQuery.of(context).size.height * 0.2,
+                          width: MediaQuery.of(context).size.width,
                           child: const Center(
                               child: Text(
                             "No comments yet!",
@@ -317,16 +309,15 @@ class _PostModalState extends State<PostModal> {
                                         CircleAvatar(
                                           backgroundImage: NetworkImage(
                                             comments[index]['authorImage'] ??
-                                                'https://static01.nyt.com/newsgraphics/2019/08/01/candidate-pages/3b31eab6a3fd70444f76f133924ae4317567b2b5/trump-circle.png',
+                                                'https://www.seekpng.com/png/detail/966-9665493_my-profile-icon-blank-profile-image-circle.png',
                                           ),
                                           radius: 20,
                                         ),
                                         Container(
-                                          // width: MediaQuery.of(context)
-                                          //         .size
-                                          //         .width *
-                                          //     0.15,
-                                          width: 300,
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.15,
                                           child: Center(
                                             child: Text(
                                               comments[index]['author'] ??
@@ -354,8 +345,7 @@ class _PostModalState extends State<PostModal> {
                         )),
             ),
             SizedBox(
-              // width: MediaQuery.of(context).size.width,
-              width: 300,
+              width: MediaQuery.of(context).size.width,
               child: Container(
                 margin: const EdgeInsets.all(5),
                 decoration: BoxDecoration(

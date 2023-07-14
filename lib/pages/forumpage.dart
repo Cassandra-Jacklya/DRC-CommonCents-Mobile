@@ -170,9 +170,12 @@ class _ForumPageState extends State<ForumPage> {
 
   @override
   Widget build(BuildContext context) {
-    // print(favouritePosts);
+    print(postsList);
     return Scaffold(
-      appBar: CustomAppBar(title: "Forum", logo: "assets/images/commoncents-logo.png", isTradingPage: false),
+      appBar: CustomAppBar(
+          title: "Forum",
+          logo: "assets/images/commoncents-logo.png",
+          isTradingPage: false),
       body: postsList.isNotEmpty
           ? Column(
               children: [
@@ -213,6 +216,7 @@ class _ForumPageState extends State<ForumPage> {
 
                             return GestureDetector(
                               onTap: () {
+                                print(post);
                                 showModalBottomSheet(
                                   context: context,
                                   isScrollControlled: true,
