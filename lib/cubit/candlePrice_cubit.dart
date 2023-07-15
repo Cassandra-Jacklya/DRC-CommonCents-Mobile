@@ -7,7 +7,6 @@ class candlePriceCubit extends Cubit<List<Map<String,dynamic>>> {
 
   void updateLiveLinePrice(List<Map<String,dynamic>> data) {
     emit(data);
-    print(data);
   }
 
 }

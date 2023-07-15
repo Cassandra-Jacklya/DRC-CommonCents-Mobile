@@ -59,9 +59,12 @@ class _SimulationPageState extends State<SimulationPage> {
   late String stakePayout;
   late int currentAmount;
   late bool isCandle;
-  late String selectedTimeUnit;
   List<String> timeUnit = ['Ticks', 'Minutes', 'Hours', 'Days'];
-  List<String> candleTimeUnit = ['Minutes','Hours','Days',];
+  List<String> candleTimeUnit = [
+    'Minutes',
+    'Hours',
+    'Days',
+  ];
 
   void showSnackbar(String message, int duration) {
     final snackbar = SnackBar(
@@ -85,7 +88,7 @@ class _SimulationPageState extends State<SimulationPage> {
   @override
   void dispose() {
     closeWebSocket();
-    
+
     super.dispose();
   }
 
@@ -199,80 +202,132 @@ class _SimulationPageState extends State<SimulationPage> {
                             ),
                           ],
                         ),
-                        BlocBuilder<LineTimeCubit, String>(
-                            builder: (context, state) {
-                          return Column(
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.fromLTRB(0, 0, 15, 0),
-                                child: Container(
-                                  margin:
-                                      const EdgeInsets.symmetric(vertical: 10),
-                                  // height: MediaQuery.of(context).size.height * 0.3,
-                                  height: 300,
-                                  width: double.infinity,
-                                  color: Colors.grey[300],
-                                  child: Center(
-                                    child: isCandle
-                                        ? BlocBuilder<MarketsCubit, String>(
-                                            builder: (context, market) {
-                                            return CandleStickChart(
-                                              isCandle: isCandle,
-                                              market: widget.market,
-                                              timeunit: context
-                                                  .read<ChartTimeCubit>()
-                                                  .state,
-                                            );
-                                          })
-                                        : BlocBuilder<MarketsCubit, String>(
-                                            builder: (context, market) {
-                                              print(
-                                                  "object ${context.read<LineTimeCubit>().state}");
-                                              return MyLineChart(
-                                                isMini: false,
-                                                isCandle: isCandle,
-                                                market: widget.market,
-                                                timeunit: state,
-                                              );
-                                            },
-                                          ),
+                        BlocBuilder<ChartTimeCubit, String>(
+                            builder: (context, charttime) {
+                          return BlocBuilder<LineTimeCubit, String>(
+                              builder: (context, state) {
+                            return Column(
+                              children: [
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(0, 0, 15, 0),
+                                  child: Container(
+                                    margin: const EdgeInsets.symmetric(
+                                        vertical: 10),
+                                    // height: MediaQuery.of(context).size.height * 0.3,
+                                    height: 300,
+                                    width: double.infinity,
+                                    color: Colors.grey[300],
+                                    child: Center(
+                                      child: isCandle
+                                          ? BlocBuilder<MarketsCubit, String>(
+                                              builder: (context, market) {
+                                              return CandleStickChart(
+                                                  isCandle: isCandle,
+                                                  market: widget.market,
+                                                  timeunit: charttime
+                                                  // context
+                                                  //     .read<ChartTimeCubit>()
+                                                  //     .state,
+                                                  );
+                                            })
+                                          : BlocBuilder<MarketsCubit, String>(
+                                              builder: (context, market) {
+                                                return MyLineChart(
+                                                  isMini: false,
+                                                  isCandle: isCandle,
+                                                  market: widget.market,
+                                                  timeunit: state,
+                                                );
+                                              },
+                                            ),
+                                    ),
                                   ),
                                 ),
-                              ),
-                              Container(
-                                height: 50,
-                                child: ListView.builder(
-                                  scrollDirection: Axis.horizontal,
-                                  itemCount: timeUnit.length,
-                                  itemBuilder: (context, index) {
-                                    final unit = timeUnit[index];
-                                    final isSelected = (unit == state);
-                                    return GestureDetector(
-                                      onTap: () {
-                                        BlocProvider.of<LineTimeCubit>(context)
-                                            .updateLineTime(unit);
-                                      },
-                                      child: Container(
-                                        margin:
-                                            EdgeInsets.symmetric(horizontal: 8),
-                                        width: 80,
-                                        height: 50,
-                                        decoration: BoxDecoration(
-                                          color: isSelected
-                                              ? Colors.blue
-                                              : Colors.white,
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                        ),
-                                        child: Center(
-                                            child: Text(timeUnit[index])),
-                                      ),
-                                    );
-                                  },
-                                ),
-                              ),
-                            ],
-                          );
+                                Container(
+                                    height: 50,
+                                    child: !isCandle
+                                        ? ListView.builder(
+                                            //line time
+                                            scrollDirection: Axis.horizontal,
+                                            itemCount: timeUnit.length,
+                                            itemBuilder: (context, index) {
+                                              final unit = timeUnit[index];
+                                              final isSelected =
+                                                  (unit == state);
+                                              return GestureDetector(
+                                                onTap: () {
+                                                  unsubscribe();
+                                                  BlocProvider.of<
+                                                              LineTimeCubit>(
+                                                          context)
+                                                      .updateLineTime(unit);
+                                                },
+                                                child: Container(
+                                                  //candle time
+                                                  margin: EdgeInsets.symmetric(
+                                                      horizontal: 8),
+                                                  width: 80,
+                                                  height: 50,
+                                                  decoration: BoxDecoration(
+                                                    color: isSelected
+                                                        ? Colors.blue
+                                                        : Colors.white,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10),
+                                                  ),
+                                                  child: Center(
+                                                      child: Text(
+                                                          timeUnit[index])),
+                                                ),
+                                              );
+                                            },
+                                          )
+                                        : Center( //candle time
+                                            child: ListView.builder(
+                                              scrollDirection: Axis.horizontal,
+                                              itemCount: candleTimeUnit.length,
+                                              itemBuilder: (context, index) {
+                                                final chartunit =
+                                                    candleTimeUnit[index];
+                                                final isSelected =
+                                                    (chartunit == charttime);
+                                                return GestureDetector(
+                                                  onTap: () {
+                                                    unsubscribeCandle();
+                                                    BlocProvider.of<
+                                                                ChartTimeCubit>(
+                                                            context)
+                                                        .updateChartTime(
+                                                            chartunit);
+                                                  },
+                                                  child: Container(
+                                                    margin: const EdgeInsets
+                                                            .symmetric(
+                                                        horizontal: 8),
+                                                    width: 80,
+                                                    height: 50,
+                                                    decoration: BoxDecoration(
+                                                      color: isSelected
+                                                          ? Colors.blue
+                                                          : Colors.white,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              10),
+                                                    ),
+                                                    child: Center(
+                                                        child: Text(
+                                                            candleTimeUnit[
+                                                                index])),
+                                                  ),
+                                                );
+                                              },
+                                            ),
+                                          )),
+                              ],
+                            );
+                          });
                         }),
                         Expanded(
                           child: SingleChildScrollView(
@@ -341,8 +396,6 @@ class _SimulationPageState extends State<SimulationPage> {
                                   children: [
                                     GestureDetector(
                                       onTap: () {
-                                        print("yeaboi");
-                                        print("onTap $isSnackbarVisible");
                                         if (!isSnackbarVisible) {
                                           markettype =
                                               formatMarkets(widget.market);
@@ -373,9 +426,7 @@ class _SimulationPageState extends State<SimulationPage> {
                                               'Contract bought: Higher',
                                               ticks.toInt());
                                           isSnackbarVisible = true;
-                                        } else {
-                                          print("else: $isSnackbarVisible");
-                                        }
+                                        } else {}
                                       },
                                       child: Container(
                                         padding:
@@ -426,9 +477,7 @@ class _SimulationPageState extends State<SimulationPage> {
                                               markettype);
                                           showSnackbar('Contract bought: Lower',
                                               ticks.toInt());
-                                        } else {
-                                          print("else: $isSnackbarVisible");
-                                        }
+                                        } else {}
                                       },
                                       child: Container(
                                         padding:

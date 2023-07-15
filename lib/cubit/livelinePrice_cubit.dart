@@ -5,7 +5,6 @@ class LiveLinePriceCubit extends Cubit<double> {
 
   void updateLiveLinePrice(double price) {
     emit(price);
-    print(price);
   }
 
 }

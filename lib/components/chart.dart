@@ -10,7 +10,12 @@ class CandleStickChart extends StatefulWidget {
   final String market;
   final String timeunit;
 
-  CandleStickChart({required this.isCandle,required this.market, required this.timeunit,Key? key}) : super(key: key);
+  CandleStickChart(
+      {required this.isCandle,
+      required this.market,
+      required this.timeunit,
+      Key? key})
+      : super(key: key);
 
   @override
   _CandleStickChartState createState() => _CandleStickChartState();
@@ -18,15 +23,7 @@ class CandleStickChart extends StatefulWidget {
 
 class _CandleStickChartState extends State<CandleStickChart> {
   CandlestickCubit candleStickCubit = CandlestickCubit();
-  // late MarketsCubit marketsCubit;
 
-  @override
-  void initState() {
-    super.initState();
-    // candleStickCubit = CandlestickCubit();
-    // marketsCubit = MarketsCubit();
-    connectToWebSocket(context: context, isCandle: widget.isCandle,market: formatMarkets(widget.market), selectedTimeUnit: widget.timeunit);
-  }
 
   @override
   void dispose() {
@@ -36,6 +33,11 @@ class _CandleStickChartState extends State<CandleStickChart> {
 
   @override
   Widget build(BuildContext context) {
+    connectToWebSocket(
+        context: context,
+        isCandle: widget.isCandle,
+        market: formatMarkets(widget.market),
+        selectedTimeUnit: widget.timeunit);
     return Scaffold(
       body: Center(
         child: Column(
@@ -43,7 +45,7 @@ class _CandleStickChartState extends State<CandleStickChart> {
             SizedBox(
               // height: MediaQuery.of(context).size.height * 0.3,
               // width: MediaQuery.of(context).size.width,
-              height: 350,
+              height: 300,
               width: double.infinity,
               child: BlocBuilder<CandlestickCubit, List<Map<String, dynamic>>>(
                 builder: (context, candleData) {
@@ -57,7 +59,7 @@ class _CandleStickChartState extends State<CandleStickChart> {
                       double close = data['close'];
                       DateTime time =
                           DateTime.fromMillisecondsSinceEpoch(x.toInt());
-            
+
                       return ChartData(
                         time: time,
                         open: open,
@@ -66,7 +68,7 @@ class _CandleStickChartState extends State<CandleStickChart> {
                         close: close,
                       );
                     }).toList();
-            
+
                     return SfCartesianChart(
                       zoomPanBehavior: ZoomPanBehavior(
                         enablePinching: true,

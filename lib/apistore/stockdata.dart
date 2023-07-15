@@ -19,6 +19,9 @@ List<Map<String, dynamic>> candles = [];
 
 final unsubscribeRequest = {"forget_all": "ticks"};
 
+final unsubscribeCandleRequest = {"forget_all" : "candles"};
+
+
 Map<String, dynamic> tickStream(String market) {
   Map<String, dynamic> request = {"ticks": market, "subscribe": 1};
   return request;
@@ -84,9 +87,10 @@ Map<String, dynamic> CandleHistoryRequest(
   if (selectedTimeUnit == "Minutes") {
     granularity = 60;
   } else if (selectedTimeUnit == "Hours") {
+    print("yesrrisss");
     granularity = 3600;
   } else if (selectedTimeUnit == "Days") {
-    86400;
+    granularity = 86400;
   }
   Map<String, dynamic> request = {
     "ticks_history": market,
@@ -101,9 +105,10 @@ Map<String, dynamic> CandleHistoryRequest(
   return request;
 }
 
-Map<String, dynamic> CandleTicksRequest(String market) {
+Map<String, dynamic> CandleTicksRequest(
+    String market, String selectedTimeUnit) {
   Map<String, dynamic> request = {
-    "ticks_history": "$market",
+    "ticks_history": market,
     "adjust_start_time": 1,
     "subscribe": 1,
     "count": 1,
@@ -147,7 +152,7 @@ Future<void> connectToWebSocket(
 
 void subscribeCandleTicks(String market, String selectedTimeUnit) async {
   await requestCandleHistory(market, selectedTimeUnit);
-  await candleTicks(market);
+  await candleTicks(market, selectedTimeUnit);
 }
 
 Future<void> requestCandleHistory(
@@ -156,8 +161,8 @@ Future<void> requestCandleHistory(
   socket?.sink.add(jsonEncode(request));
 }
 
-Future<void> candleTicks(String market) async {
-  final request = CandleTicksRequest(market);
+Future<void> candleTicks(String market, String selectedTimeUnit) async {
+  final request = CandleTicksRequest(market, selectedTimeUnit);
   socket?.sink.add(jsonEncode(request));
 }
 
@@ -169,6 +174,11 @@ void subscribeTicks(String market, String selectedTimeUnit) async {
 void unsubscribe() async {
   socket?.sink.add(jsonEncode(unsubscribeRequest));
   // stockDataCubit.clearStockData();
+}
+
+void unsubscribeCandle() async{
+  socket?.sink.add(jsonEncode(unsubscribeCandleRequest));
+  print("unsubscribed");
 }
 
 void closeWebSocket() {
@@ -209,30 +219,67 @@ Future<void> handleResponse(
       if (candles.isNotEmpty) {
         final lastItem = candles.last;
         final double lastEpoch = lastItem['epoch'];
+        final DateTime lastTime =
+            DateTime.fromMillisecondsSinceEpoch(lastEpoch.toInt() * 1000);
+        final DateTime currentTime =
+            DateTime.fromMillisecondsSinceEpoch(time.toInt() * 1000);
 
-        if (time == lastEpoch) {
-          //this for minutes
-          lastItem['high'] = high;
-          lastItem['low'] = low;
-          lastItem['close'] = close;
-          // lastItem['open'] = open;
-        } else {
-          candles.add({
-            'high': high,
-            'open': open,
-            'close': close,
-            'low': low,
-            'epoch': time,
-          });
+        if (selectedTimeUnit == 'Minutes') {
+          if (currentTime.minute == lastTime.minute) {
+            // They are in the same minute
+                  print("I am candle $selectedTimeUnit");
+            lastItem['high'] = high;
+            lastItem['low'] = low;
+            lastItem['close'] = close;
+          } else {
+            // They are in different minutes
+            candles.add({
+              'high': high,
+              'open': open,
+              'close': close,
+              'low': low,
+              'epoch': time,
+            });
+          }
+        }
+        if (selectedTimeUnit == 'Hours') {
+          if (currentTime.hour == lastTime.hour) {
+            // They are in the same minute
+                  print("I am candle $selectedTimeUnit");
+            lastItem['high'] = high;
+            lastItem['low'] = low;
+            lastItem['close'] = close;
+          } else {
+            // They are in different minutes
+            candles.add({
+              'high': high,
+              'open': open,
+              'close': close,
+              'low': low,
+              'epoch': time,
+            });
+          }
+        }
+        if (selectedTimeUnit == 'Days') {
+          if (currentTime.day == lastTime.day) {
+            print("I am candle $selectedTimeUnit");
+            // They are in the same minute
+            lastItem['high'] = high;
+            lastItem['low'] = low;
+            lastItem['close'] = close;
+          } else {
+            // They are in different minutes
+            candles.add({
+              'high': high,
+              'open': open,
+              'close': close,
+              'low': low,
+              'epoch': time,
+            });
+          }
         }
       } else {
-        candles.add({
-          'high': high,
-          'open': open,
-          'close': close,
-          'low': low,
-          'epoch': time,
-        });
+        null;
       }
 
       final candleStickData = BlocProvider.of<CandlestickCubit>(context);
@@ -241,6 +288,7 @@ Future<void> handleResponse(
   } else if (decodedData['msg_type'] == 'candles') {
     //history candles data
     if (isCandle) {
+
       final List<dynamic> legitCandles = decodedData['candles'];
       for (int i = 0; i < legitCandles.length; i++) {
         final candle = legitCandles[i];
@@ -301,7 +349,6 @@ Future<void> handleResponse(
       });
     }
     ticks = tickHistory;
-    print(ticks.length);
   } else if (decodedData['msg_type'] == 'tick') {
     final tickData = decodedData['tick'];
     if (tickData != null) {
@@ -312,6 +359,7 @@ Future<void> handleResponse(
       double utcTimeDouble = utcTime.millisecondsSinceEpoch.toDouble() / 1000;
 
       if (selectedTimeUnit == "Minutes") {
+        print("Ticks in $selectedTimeUnit");
         final lastTick = ticks.last;
         final lastTickEpoch = lastTick['epoch'] as double;
         final lastTickTime =
@@ -319,7 +367,6 @@ Future<void> handleResponse(
 
         final newTickTime =
             DateTime.fromMillisecondsSinceEpoch(utcTimeDouble.toInt() * 1000);
-        print("I am at stockdata : $selectedTimeUnit");
 
         print(
             "Previous ${lastTickTime.minute} & Current ${newTickTime.minute}");
@@ -331,7 +378,7 @@ Future<void> handleResponse(
             final lastTwoItems = ticks.sublist(ticks.length - 2);
             print("Last two items in ticks: $lastTwoItems");
           }
-          print("data :$ticks");
+          // print("data :$ticks");
           return;
         } else {
           final newTick = {'close': price, 'epoch': utcTimeDouble};
@@ -348,6 +395,8 @@ Future<void> handleResponse(
           stockDataCubit.updateStockData(ticks);
         }
       } else if (selectedTimeUnit == "Hours") {
+        print("Ticks in $selectedTimeUnit");
+
         final lastTick = ticks.last;
         final lastTickEpoch = lastTick['epoch'] as double;
         final lastTickTime =
@@ -366,6 +415,8 @@ Future<void> handleResponse(
           ticks.add({'close': price, 'epoch': utcTimeDouble});
         }
       } else if (selectedTimeUnit == "Days") {
+        print("Ticks in $selectedTimeUnit");
+
         final lastTick = ticks.last;
         final lastTickEpoch = lastTick['epoch'] as double;
         final lastTickTime =

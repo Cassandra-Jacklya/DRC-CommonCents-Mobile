@@ -54,7 +54,6 @@ class _LineChartState extends State<MyLineChart> {
   @override
   void initState() {
     super.initState();
-    print("I am here now: ${widget.timeunit}");
     stockDataCubit = StockDataCubit();
     // lineTimeCubit =
     //     BlocProvider.of<LineTimeCubit>(context); // Access LineTimeCubit state

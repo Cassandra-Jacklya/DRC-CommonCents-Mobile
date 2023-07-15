@@ -58,16 +58,18 @@ class _ChartPriceState extends State<ChartPrice> {
 
   void handleLineResponse(dynamic data) {
     final decodedData = jsonDecode(data);
-    String close = decodedData['ohlc']['close'];
-    String high = decodedData['ohlc']['high'];
-    String low = decodedData['ohlc']['low'];
-    String open = decodedData['ohlc']['open'];
+    if (decodedData['msg_type'] == "ohlc") {
+      String close = decodedData['ohlc']['close'];
+      String high = decodedData['ohlc']['high'];
+      String low = decodedData['ohlc']['low'];
+      String open = decodedData['ohlc']['open'];
 
-    List<Map<String, dynamic>> dataList = [
-      {'close': close, 'high': high, 'low': low, 'open': open},
-    ];
-    final candlePrice = BlocProvider.of<candlePriceCubit>(context);
-    candlePrice.updateLiveLinePrice(dataList);
+      List<Map<String, dynamic>> dataList = [
+        {'close': close, 'high': high, 'low': low, 'open': open},
+      ];
+      final candlePrice = BlocProvider.of<candlePriceCubit>(context);
+      candlePrice.updateLiveLinePrice(dataList);
+    }
   }
 
   void handleLineError(dynamic error) {
