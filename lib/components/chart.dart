@@ -8,8 +8,9 @@ import 'package:syncfusion_flutter_charts/charts.dart';
 class CandleStickChart extends StatefulWidget {
   final bool isCandle;
   final String market;
+  final String timeunit;
 
-  CandleStickChart({required this.isCandle,required this.market, Key? key}) : super(key: key);
+  CandleStickChart({required this.isCandle,required this.market, required this.timeunit,Key? key}) : super(key: key);
 
   @override
   _CandleStickChartState createState() => _CandleStickChartState();
@@ -24,7 +25,7 @@ class _CandleStickChartState extends State<CandleStickChart> {
     super.initState();
     // candleStickCubit = CandlestickCubit();
     // marketsCubit = MarketsCubit();
-    connectToWebSocket(context: context, isCandle: widget.isCandle,market: formatMarkets(widget.market));
+    connectToWebSocket(context: context, isCandle: widget.isCandle,market: formatMarkets(widget.market), selectedTimeUnit: widget.timeunit);
   }
 
   @override

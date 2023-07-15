@@ -33,7 +33,7 @@ class LoginStateBloc extends Cubit<LoginState> {
   }
 
   void updateBalance(String? email, String newBalance){
-    print(newBalance);
+    print("NEW BALANCE: $newBalance");
     emit(AppStateLoggedIn(email: email!, password: "", balance: newBalance));
   }
 }

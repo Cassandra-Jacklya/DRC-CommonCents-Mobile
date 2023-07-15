@@ -807,7 +807,7 @@ class ResetBalance extends StatelessWidget {
 
   ResetBalance({required this.loginStateBloc});
 
-  Future<void> resetBalance() async {
+  Future<void> resetBalance(BuildContext context) async {
     FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
     User? user = FirebaseAuth.instance.currentUser;
 
@@ -815,6 +815,10 @@ class ResetBalance extends StatelessWidget {
       CollectionReference collectionReference =
           firebaseFirestore.collection('users');
       DocumentReference userDocument = collectionReference.doc(user.uid);
+      DocumentSnapshot<Object?> userDataSnapshot = await userDocument.get();
+      Map<String, dynamic> userData =
+          userDataSnapshot.data() as Map<String, dynamic>;
+      String email = userData['email'];
 
       double updatedBalance = 100000.0; // Set the updated balance value
 
@@ -822,14 +826,15 @@ class ResetBalance extends StatelessWidget {
         'balance': updatedBalance,
       });
 
+      context
+          .read<LoginStateBloc>()
+          .updateBalance(userData['email'], updatedBalance.toString());
       // Retrieve the user data from Firestore to get the displayName
-      DocumentSnapshot<Object?> userDataSnapshot = await userDocument.get();
-      Map<String, dynamic> userData =
-          userDataSnapshot.data() as Map<String, dynamic>;
-      String displayName = userData['displayName'];
 
-      loginStateBloc.updateBalance(displayName, updatedBalance.toString());
-      print("Balance reset");
+      // BlocProvider.of<LoginStateBloc>(context)
+      //     .updateBalance(email, updatedBalance.toString());
+      // // loginStateBloc.updateBalance(displayName, updatedBalance.toString());
+      // print("Balance reset");
     }
   }
 
@@ -851,7 +856,7 @@ class ResetBalance extends StatelessWidget {
             GestureDetector(
               onTap: () {
                 Navigator.of(context).pop();
-                resetBalance();
+                resetBalance(context);
               },
               child: Container(
                 padding: const EdgeInsets.all(10),

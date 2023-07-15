@@ -13,11 +13,13 @@ class MyLineChart extends StatefulWidget {
   final bool isCandle;
   final String market;
   final bool isMini;
+  final String timeunit;
 
   MyLineChart(
       {required this.isCandle,
       required this.market,
       required this.isMini,
+      required this.timeunit,
       Key? key})
       : super(key: key);
 
@@ -27,7 +29,7 @@ class MyLineChart extends StatefulWidget {
 
 class _LineChartState extends State<MyLineChart> {
   late StockDataCubit stockDataCubit;
-  // late LineTimeCubit lineTimeCubit;
+  late String selectedTimeUnit = widget.timeunit;
   // late String selectedTimeUnit;
   List<FlSpot> spots = [];
   int initial = 50;
@@ -52,15 +54,11 @@ class _LineChartState extends State<MyLineChart> {
   @override
   void initState() {
     super.initState();
+    print("I am here now: ${widget.timeunit}");
     stockDataCubit = StockDataCubit();
     // lineTimeCubit =
     //     BlocProvider.of<LineTimeCubit>(context); // Access LineTimeCubit state
     // selectedTimeUnit = lineTimeCubit.state;
-    connectToWebSocket(
-      context: context,
-      isCandle: widget.isCandle,
-      market: formatMarkets(widget.market),
-    );
   }
 
   @override
@@ -71,7 +69,13 @@ class _LineChartState extends State<MyLineChart> {
 
   @override
   Widget build(BuildContext context) {
-    // print(selectedTimeUnit);
+    connectToWebSocket(
+      context: context,
+      isCandle: widget.isCandle,
+      market: formatMarkets(widget.market),
+      selectedTimeUnit: widget.timeunit,
+    );
+    print("Line Chart $selectedTimeUnit");
     return Scaffold(
       body: Center(
         child: Column(
@@ -81,7 +85,7 @@ class _LineChartState extends State<MyLineChart> {
               child: SizedBox(
                 // height: widget.isMini ? 100 : MediaQuery.of(context).size.height * 0.3,
                 // width: widget.isMini ? 100: MediaQuery.of(context).size.width,
-                height: 350,
+                height: 300,
                 width: 380,
                 child: BlocBuilder<StockDataCubit, List<Map<String, dynamic>>>(
                   builder: (context, stockData) {
@@ -92,15 +96,14 @@ class _LineChartState extends State<MyLineChart> {
                         double y = entry['close'];
                         spots.add(FlSpot(x, y));
                       }
-              
+
                       if (stockData.length > 100) {
                         stockData.removeRange(0, stockData.length - 100);
                       }
-              
-              
+
                       double minClose = stockData[initial]['close'];
                       double maxClose = stockData[initial]['close'];
-              
+
                       for (int i = initial; i < stockData.length; i++) {
                         double close = stockData[i]['close'];
                         if (close < minClose) {
@@ -110,7 +113,7 @@ class _LineChartState extends State<MyLineChart> {
                           maxClose = close;
                         }
                       }
-              
+
                       if (minClose == maxClose) {
                         maxClose += 1;
                       }
@@ -129,8 +132,8 @@ class _LineChartState extends State<MyLineChart> {
                               'HH:mm'), // Specify the desired time format
                           intervalType: DateTimeIntervalType
                               .seconds, // Adjust based on your data
-                          axisLine: const AxisLine(
-                              width: 0), // Hide the x-axis line
+                          axisLine:
+                              const AxisLine(width: 0), // Hide the x-axis line
                           minimum: DateTime.fromMillisecondsSinceEpoch(
                             stockData.first['epoch'].toInt() * 1000,
                             isUtc: true,

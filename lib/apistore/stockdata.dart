@@ -24,25 +24,77 @@ Map<String, dynamic> tickStream(String market) {
   return request;
 }
 
-Map<String, dynamic> ticksHistoryRequest(String market) {
-  Map<String, dynamic> request = {
-    "ticks_history": "$market",
-    "adjust_start_time": 1,
-    "count": 100,
-    "end": "latest",
-    "start": 1,
-    "style": "ticks"
-  };
-  return request;
+Map<String, dynamic> ticksHistoryRequest(
+    String market, String selectedTimeUnit) {
+  late int granularity;
+  if (selectedTimeUnit == "Ticks") {
+    Map<String, dynamic> request = {
+      "ticks_history": market,
+      "adjust_start_time": 1,
+      "count": 100,
+      "end": "latest",
+      "start": 1680040550,
+      "style": "ticks"
+    };
+    return request;
+  } else if (selectedTimeUnit == "Minutes") {
+    granularity = 60;
+    Map<String, dynamic> request = {
+      "ticks_history": market,
+      "adjust_start_time": 1,
+      "count": 100,
+      "end": "latest",
+      "granularity": granularity,
+      "start": 1680040550,
+      "style": "candles"
+    };
+    return request;
+  } else if (selectedTimeUnit == "Hours") {
+    granularity = 3600;
+    Map<String, dynamic> request = {
+      "ticks_history": market,
+      "adjust_start_time": 1,
+      "count": 100,
+      "end": "latest",
+      "granularity": granularity,
+      "start": 1680040550,
+      "style": "candles"
+    };
+    return request;
+  } else if (selectedTimeUnit == "Days") {
+    granularity = 86400;
+    Map<String, dynamic> request = {
+      "ticks_history": market,
+      "adjust_start_time": 1,
+      "count": 100,
+      "end": "latest",
+      "granularity": granularity,
+      "start": 1680040550,
+      "style": "candles"
+    };
+    return request;
+  } else {
+    return {};
+  }
 }
 
-Map<String, dynamic> CandleHistoryRequest(String market) {
+Map<String, dynamic> CandleHistoryRequest(
+    String market, String selectedTimeUnit) {
+  late int granularity;
+  if (selectedTimeUnit == "Minutes") {
+    granularity = 60;
+  } else if (selectedTimeUnit == "Hours") {
+    granularity = 3600;
+  } else if (selectedTimeUnit == "Days") {
+    86400;
+  }
   Map<String, dynamic> request = {
-    "ticks_history": "$market",
+    "ticks_history": market,
     "adjust_start_time": 1,
+    "granularity": granularity,
     "count": 100,
     "end": "latest",
-    "start": 1,
+    "start": 1680040550,
     "style": "candles"
   };
 
@@ -56,7 +108,7 @@ Map<String, dynamic> CandleTicksRequest(String market) {
     "subscribe": 1,
     "count": 1,
     "end": "latest",
-    "start": 1,
+    "start": 1680040550,
     "style": "candles"
   };
 
@@ -66,12 +118,17 @@ Map<String, dynamic> CandleTicksRequest(String market) {
 Future<void> connectToWebSocket(
     {required BuildContext context,
     required bool isCandle,
-    required String market}) async {
+    required String market,
+    required String selectedTimeUnit}) async {
   socket = WebSocketChannel.connect(url);
 
   socket?.stream.listen((dynamic message) {
     try {
-      handleResponse(data: message, isCandle: isCandle, context: context);
+      handleResponse(
+          data: message,
+          isCandle: isCandle,
+          context: context,
+          selectedTimeUnit: selectedTimeUnit);
     } catch (e) {
       handleError(e);
     }
@@ -82,19 +139,20 @@ Future<void> connectToWebSocket(
   });
 
   if (isCandle) {
-    subscribeCandleTicks(market);
+    subscribeCandleTicks(market, selectedTimeUnit);
   } else {
-    subscribeTicks(market);
+    subscribeTicks(market, selectedTimeUnit);
   }
 }
 
-void subscribeCandleTicks(String market) async {
-  await requestCandleHistory(market);
+void subscribeCandleTicks(String market, String selectedTimeUnit) async {
+  await requestCandleHistory(market, selectedTimeUnit);
   await candleTicks(market);
 }
 
-Future<void> requestCandleHistory(String market) async {
-  final request = CandleHistoryRequest(market);
+Future<void> requestCandleHistory(
+    String market, String selectedTimeUnit) async {
+  final request = CandleHistoryRequest(market, selectedTimeUnit);
   socket?.sink.add(jsonEncode(request));
 }
 
@@ -103,8 +161,8 @@ Future<void> candleTicks(String market) async {
   socket?.sink.add(jsonEncode(request));
 }
 
-void subscribeTicks(String market) async {
-  await requestTicksHistory(market);
+void subscribeTicks(String market, String selectedTimeUnit) async {
+  await requestTicksHistory(market, selectedTimeUnit);
   await tickSubscriber(market);
 }
 
@@ -122,18 +180,18 @@ Future<void> tickSubscriber(String market) async {
   socket?.sink.add(jsonEncode(request));
 }
 
-Future<void> requestTicksHistory(String market) async {
-  final request = ticksHistoryRequest(market);
+Future<void> requestTicksHistory(String market, String selectedTimeUnit) async {
+  final request = ticksHistoryRequest(market, selectedTimeUnit);
   socket?.sink.add(jsonEncode(request));
 }
 
 Future<void> handleResponse(
     {required BuildContext context,
     required bool isCandle,
-    required dynamic data}) async {
+    required dynamic data,
+    required String selectedTimeUnit}) async {
   final decodedData = jsonDecode(data);
   final List<Map<String, dynamic>> tickHistory = [];
-  final List<Map<String, dynamic>> miniHistory = [];
   final stockDataCubit = BlocProvider.of<StockDataCubit>(context);
 
   if (decodedData['msg_type'] == 'proposal') {
@@ -153,6 +211,7 @@ Future<void> handleResponse(
         final double lastEpoch = lastItem['epoch'];
 
         if (time == lastEpoch) {
+          //this for minutes
           lastItem['high'] = high;
           lastItem['low'] = low;
           lastItem['close'] = close;
@@ -208,9 +267,23 @@ Future<void> handleResponse(
 
       final candleStickData = BlocProvider.of<CandlestickCubit>(context);
       candleStickData.updateCandlestickData(candles);
+    } else {
+      //history for ticks (Minutes / Hours / Days)
+      final List<dynamic> data = decodedData['candles'];
+      for (int i = 0; i < data.length; i++) {
+        final point = data[i];
+        final int epoch = point['epoch'];
+        DateTime utcTime =
+            DateTime.fromMillisecondsSinceEpoch(epoch * 1000, isUtc: true);
+        double utcTimeDouble = utcTime.millisecondsSinceEpoch.toDouble() / 1000;
+        final double price = point['close'].toDouble();
+
+        tickHistory.add({'close': price, 'epoch': utcTimeDouble});
+        ticks = tickHistory;
+      }
     }
   } else if (decodedData['msg_type'] == 'history') {
-    //lines historty
+    //lines history
     final List<dynamic> prices = decodedData['history']['prices'];
     final List<dynamic> times = decodedData['history']['times'];
 
@@ -231,7 +304,6 @@ Future<void> handleResponse(
     print(ticks.length);
   } else if (decodedData['msg_type'] == 'tick') {
     final tickData = decodedData['tick'];
-
     if (tickData != null) {
       final double price = tickData['quote'].toDouble();
       final int time = tickData['epoch'];
@@ -239,11 +311,83 @@ Future<void> handleResponse(
           DateTime.fromMillisecondsSinceEpoch(time * 1000, isUtc: true);
       double utcTimeDouble = utcTime.millisecondsSinceEpoch.toDouble() / 1000;
 
-      // Append the latest tick price and time to the ticks list
-      ticks.add({'close': price, 'epoch': utcTimeDouble});
-    }
+      if (selectedTimeUnit == "Minutes") {
+        final lastTick = ticks.last;
+        final lastTickEpoch = lastTick['epoch'] as double;
+        final lastTickTime =
+            DateTime.fromMillisecondsSinceEpoch(lastTickEpoch.toInt() * 1000);
 
-    stockDataCubit.updateStockData(ticks); // this is for line chart
+        final newTickTime =
+            DateTime.fromMillisecondsSinceEpoch(utcTimeDouble.toInt() * 1000);
+        print("I am at stockdata : $selectedTimeUnit");
+
+        print(
+            "Previous ${lastTickTime.minute} & Current ${newTickTime.minute}");
+
+        if (lastTickTime.minute == newTickTime.minute) {
+          lastTick['close'] = price;
+          stockDataCubit.updateSameStockData(ticks);
+          if (ticks.length >= 2) {
+            final lastTwoItems = ticks.sublist(ticks.length - 2);
+            print("Last two items in ticks: $lastTwoItems");
+          }
+          print("data :$ticks");
+          return;
+        } else {
+          final newTick = {'close': price, 'epoch': utcTimeDouble};
+          ticks.add(newTick);
+          stockDataCubit.updateStockData(ticks);
+        }
+
+        // Print the last two items from ticks
+        if (ticks.length >= 2) {
+          final lastTwoItems = ticks.sublist(ticks.length - 2);
+          print("Last two items in ticks: $lastTwoItems");
+        } else {
+          ticks.add({'close': price, 'epoch': utcTimeDouble});
+          stockDataCubit.updateStockData(ticks);
+        }
+      } else if (selectedTimeUnit == "Hours") {
+        final lastTick = ticks.last;
+        final lastTickEpoch = lastTick['epoch'] as double;
+        final lastTickTime =
+            DateTime.fromMillisecondsSinceEpoch(lastTickEpoch.toInt() * 1000);
+
+        final newTickTime =
+            DateTime.fromMillisecondsSinceEpoch(utcTimeDouble.toInt() * 1000);
+
+        if (lastTickTime.hour == newTickTime.hour) {
+          // Update the close price of the last tick
+          lastTick['close'] = price;
+          stockDataCubit.updateStockData(ticks);
+          return;
+        } else {
+          // Append the latest tick price and time to the ticks list
+          ticks.add({'close': price, 'epoch': utcTimeDouble});
+        }
+      } else if (selectedTimeUnit == "Days") {
+        final lastTick = ticks.last;
+        final lastTickEpoch = lastTick['epoch'] as double;
+        final lastTickTime =
+            DateTime.fromMillisecondsSinceEpoch(lastTickEpoch.toInt() * 1000);
+
+        final newTickTime =
+            DateTime.fromMillisecondsSinceEpoch(utcTimeDouble.toInt() * 1000);
+
+        if (lastTickTime.day == newTickTime.day) {
+          // Update the close price of the last tick
+          lastTick['close'] = price;
+          stockDataCubit.updateStockData(ticks);
+          return;
+        } else {
+          ticks.add({'close': price, 'epoch': utcTimeDouble});
+          stockDataCubit.updateStockData(ticks);
+        }
+      } else if (selectedTimeUnit == "Ticks") {
+        ticks.add({'close': price, 'epoch': utcTimeDouble});
+        stockDataCubit.updateStockData(ticks); // this is for line chart
+      }
+    }
   }
 }
 
