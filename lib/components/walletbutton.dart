@@ -15,6 +15,16 @@ class WalletButton extends StatefulWidget {
 }
 
 class _WalletButtonState extends State<WalletButton> {
+// @override
+// void initState(){
+//   super.initState();
+//   getBalance();
+// }
+
+// Future<void> getBalance(BuildContext  context){
+// print("Hello");
+// }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -34,7 +44,7 @@ class _WalletButtonState extends State<WalletButton> {
               margin: const EdgeInsets.all(10),
               padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
-                border: Border.all(color: const Color(0xFF5F5F5F), width: 1),
+                border: Border.all(color: Colors.grey, width: 3),
                 borderRadius: BorderRadius.circular(10),
               ),
               child: BlocConsumer<LoginStateBloc, LoginState>(
