@@ -34,7 +34,7 @@ class _WalletButtonState extends State<WalletButton> {
               margin: const EdgeInsets.all(10),
               padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
-                border: Border.all(color: Colors.grey, width: 3),
+                border: Border.all(color: const Color(0xFF5F5F5F), width: 1),
                 borderRadius: BorderRadius.circular(10),
               ),
               child: BlocConsumer<LoginStateBloc, LoginState>(

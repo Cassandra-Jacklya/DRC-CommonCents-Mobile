@@ -1,9 +1,11 @@
 import 'package:commoncents/components/navbar.dart';
 import 'package:flutter/material.dart';
+import 'package:iconsax/iconsax.dart';
 
 import '../components/card.dart';
 import '../components/carousel_chart.dart';
 import '../components/newscontainer.dart';
+import '../components/popup.dart';
 
 class HomePageGuest extends StatefulWidget {
   final Future<List<dynamic>>? newsFuture;
@@ -26,13 +28,35 @@ class _HomePageGuestState extends State<HomePageGuest> {
               margin: const EdgeInsets.symmetric(horizontal: 10),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: const [
-                  Text(
-                    "SYNTHETIC INDICES",
-                    style: TextStyle(
-                        fontSize: 15,
+                children: [
+                  Row(
+                    children: [
+                      const Text(
+                      "SYNTHETIC INDICES",
+                      style: TextStyle(
+                        fontSize: 15, 
                         fontFamily: 'Roboto',
-                        fontWeight: FontWeight.bold),
+                        fontWeight: FontWeight.bold
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext syntheticContext) {
+                              return const SyntheticDetails();
+                            },
+                          );
+                        },
+                        child: const Padding(
+                          padding: EdgeInsets.fromLTRB(5, 0, 0, 0),
+                          child: Icon(Iconsax.info_circle,
+                          color: Color(0xFFCCCCCC),
+                          size: 17,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -93,7 +117,6 @@ class _HomePageGuestState extends State<HomePageGuest> {
           ],
         ),
       ),
-      bottomNavigationBar: const BottomNavBar(index: 0),
     );
   }
 }

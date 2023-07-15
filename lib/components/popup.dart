@@ -770,6 +770,38 @@ class _PostSomethingState extends State<PostSomething> {
   }
 }
 
+class SyntheticDetails extends StatelessWidget {
+  const SyntheticDetails({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20)
+      ),
+      content: Container(
+        height: 210,
+        padding: const EdgeInsets.all(8),
+        child: Column(
+          children: const [
+            Padding(
+              padding: EdgeInsets.fromLTRB(0, 0, 0, 20),
+              child: Text("Synthetic Indices",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            Text("Synthetic indices in forex are financial instruments that mimic the behavior of real-world indices. They are created by synthesizing the price movements of various underlying assets such as stocks, currencies, and commodities, using a mathematical algorithm.",
+              textAlign: TextAlign.justify,
+            )
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 class ResetBalance extends StatelessWidget {
   final LoginStateBloc loginStateBloc;
 

@@ -1,12 +1,14 @@
 import 'package:commoncents/apistore/news_lazyLoading.dart';
 import 'package:commoncents/components/carousel_chart.dart';
 import 'package:commoncents/components/navbar.dart';
+import 'package:commoncents/components/popup.dart';
 import 'package:commoncents/components/walletbutton.dart';
 import 'package:commoncents/pages/homepage_guest.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:iconsax/iconsax.dart';
 import '../apistore/news.dart';
 import '../components/appbar.dart';
 import '../components/card.dart';
@@ -68,13 +70,34 @@ class _HomePageState extends State<HomePage> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const Text(
-                          "SYNTHETIC INDICES",
-                          style: TextStyle(
-                            fontSize: 15, 
-                            fontFamily: 'Roboto',
-                            fontWeight: FontWeight.bold
-                            ),
+                          Row(
+                            children: [
+                              const Text(
+                              "SYNTHETIC INDICES",
+                              style: TextStyle(
+                                fontSize: 15, 
+                                fontFamily: 'Roboto',
+                                fontWeight: FontWeight.bold
+                                ),
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  showDialog(
+                                    context: context,
+                                    builder: (BuildContext syntheticContext) {
+                                      return const SyntheticDetails();
+                                    },
+                                  );
+                                },
+                                child: const Padding(
+                                  padding: EdgeInsets.fromLTRB(5, 0, 0, 0),
+                                  child: Icon(Iconsax.info_circle,
+                                  color: Color(0xFFCCCCCC),
+                                  size: 17,
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                           WalletButton(loginStateBloc: LoginStateBloc(),)
                         ],
