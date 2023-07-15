@@ -29,7 +29,7 @@ class _FAQState extends State<FAQ> {
               children: [
                 Container(
                   margin: const EdgeInsets.all(20),
-                  width: MediaQuery.of(context).size.width * 0.6,
+                  width: MediaQuery.of(context).size.width * 0.5,
                   child: const Text(
                     "Frequently Asked Questions",
                     style: TextStyle(fontSize: 30),
@@ -619,7 +619,7 @@ class _FAQState extends State<FAQ> {
                               width: MediaQuery.of(context).size.width * 0.8,
                               padding: const EdgeInsets.all(10),
                               // color: Colors.green,
-                              child: Flexible(
+                              child: Container(
                                 child: Row(
                                   children: [
                                     Row(

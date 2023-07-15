@@ -180,7 +180,9 @@ class _MyAccountState extends State<MyAccount> {
                 ),
               ),
             ),
-            const SizedBox(height: 15,),
+            const SizedBox(
+              height: 15,
+            ),
             // Container(
             //   height: 2,
             //   width: MediaQuery.of(context).size.width * 0.9,
@@ -207,15 +209,21 @@ class _MyAccountState extends State<MyAccount> {
               height: 70,
               margin: const EdgeInsets.symmetric(horizontal: 30),
               child: TextFormField(
-                decoration: InputDecoration(enabled: false,
+                decoration: InputDecoration(
+                  enabled: false,
                   border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
-                      borderSide: const BorderSide(color: Color(0xFF5F5F5F))),
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: const BorderSide(
+                        color: Colors.black), 
+                  ),
                   labelText: widget.email,
+                  labelStyle: const TextStyle(color: Colors.black),
                   suffixIcon: const Icon(Icons.person),
+                  suffixIconColor: Colors.black
                 ),
               ),
             ),
+
             const SizedBox(height: 20),
             Row(children: [
               Container(

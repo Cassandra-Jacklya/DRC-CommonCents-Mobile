@@ -12,6 +12,7 @@ import 'package:iconsax/iconsax.dart';
 
 import '../components/appbar.dart';
 import '../components/navbar.dart';
+import 'auth_pages/login.dart';
 import 'faq.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -24,6 +25,7 @@ class _ProfilePageState extends State<ProfilePage> {
   double balance = 0.0;
   String email = '';
   late Map<String, dynamic> forTradeHisitory;
+  User? user = FirebaseAuth.instance.currentUser;
 
   @override
   void initState() {
@@ -113,165 +115,214 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: const CustomAppBar(
-        title: "Profile",
-        logo: "assets/images/commoncents-logo.png",
-        isTradingPage: false,
-      ),
-      body: SingleChildScrollView(
-        scrollDirection: Axis.vertical,
-        child: Center(
-          child: Column(
-            children: [
-              Container(
-                margin: const EdgeInsets.symmetric(vertical: 30),
-                padding: const EdgeInsets.all(10),
-                child: Row(
-                  // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Hero(
-                      tag: 'test',
-                      child: Container(
-                        margin: const EdgeInsets.only(right: 10),
-                        height: 80,
-                        width: 80,
-                        decoration: BoxDecoration(
-                          color: Colors.grey[400],
-                          borderRadius: BorderRadius.circular(50),
-                        ),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(50),
-                          child: photoUrl.isNotEmpty
-                              ? Image.network(photoUrl, fit: BoxFit.cover)
-                              : Image.network(
-                                  'https://www.seekpng.com/png/detail/966-9665493_my-profile-icon-blank-profile-image-circle.png',
-                                  fit: BoxFit.cover,
-                                ),
-                        ),
-                      ),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.only(top: 5),
-                      height: 70,
-                      width: 200,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            displayName,
-                            style: const TextStyle(fontFamily: 'Roboto'),
-                          ),
-                          Text(balance.toStringAsFixed(2),
-                              style: const TextStyle(fontFamily: "Roboto"))
-                        ],
-                      ),
-                    ),
-                    GestureDetector(
-                        onTap: () {
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext logoutDialog) {
-                              return const LogOut();
-                            },
-                          );
-                        },
-                        child: Transform.scale(
-                          scale: 1.5, // Adjust the scale factor as needed
-                          child: const Icon(Iconsax.logout),
-                        )),
-                  ],
-                ),
-              ),
-              Container(
-                width: MediaQuery.of(context).size.width,
-                margin: const EdgeInsets.all(10),
-                padding: const EdgeInsets.all(10),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const SizedBox(height: 10),
-                    Column(
-                      children: [
-                        buildContainer(
-                          title: "My Account",
-                          icon: null,
-                          onPressed: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => MyAccount(
-                                          displayName: displayName,
-                                          photoUrl: photoUrl,
-                                          balance: balance,
-                                          email: email,
-                                        )));
-                          },
-                        ),
-                        buildContainer(
-                          title: "Favourites",
-                          icon: null,
-                          onPressed: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => FavouritesPage()));
-                          },
-                        ),
-                        buildContainer(
-                          title: "Leaderboard",
-                          icon: null,
-                          onPressed: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => Leaderboard()));
-                          },
-                        ),
-                        buildContainer(
-                          title: "Trade History",
-                          icon: null,
-                          onPressed: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => TradeHistory()));
-                          },
-                        ),
-                        buildContainer(
-                          title: "Help and Support",
-                          icon: null,
-                          onPressed: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => HelpSupport()));
-                          },
-                        ),
-                        buildContainer(
-                          title: "FAQs",
-                          icon: null,
-                          onPressed: () {
-                            Navigator.push(context,
-                                MaterialPageRoute(builder: (context) => FAQ()));
-                          },
-                          showBottomBorder: false,
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ],
+    if (user == null) {
+      return Scaffold(
+        appBar: AppBar(
+          backgroundColor: Color(0XFF3366FF),
+          title: Text(
+            "Profile",
+            style: TextStyle(color: Colors.white),
           ),
         ),
-      ),
-      bottomNavigationBar: const BottomNavBar(
-        index: 4,
-      ),
-    );
+        body: Center(
+            child: Column(
+          children: [
+            Image.asset('assets/images/no-profile.jpg'),
+            const Text(
+              "You are not logged in.",
+              style: TextStyle(fontWeight: FontWeight.w800),
+            ),
+            const SizedBox(height: 10),
+            Row(mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text("Please "),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const LoginView()),
+                    );
+                  },
+                  child: const Text(
+                    "Log in ",
+                    style: TextStyle(
+                        
+                        color: Color(0XFF3366FF),
+                        decoration: TextDecoration.underline,
+                        ),
+                  ),
+                ),
+                const Text("to view your profile")
+              ],
+            )
+          ],
+        )),
+        bottomNavigationBar: const BottomNavBar(index: 4),
+      );
+    } else {
+      return Scaffold(
+        appBar: const CustomAppBar(
+          title: "Profile",
+          logo: "assets/images/commoncents-logo.png",
+          isTradingPage: false,
+        ),
+        body: SingleChildScrollView(
+          scrollDirection: Axis.vertical,
+          child: Center(
+            child: Column(
+              children: [
+                Container(
+                  margin: const EdgeInsets.symmetric(vertical: 30),
+                  padding: const EdgeInsets.all(10),
+                  child: Row(
+                    // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Hero(
+                        tag: 'test',
+                        child: Container(
+                          margin: const EdgeInsets.only(right: 10),
+                          height: 80,
+                          width: 80,
+                          decoration: BoxDecoration(
+                            color: Colors.grey[400],
+                            borderRadius: BorderRadius.circular(50),
+                          ),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(50),
+                            child: photoUrl.isNotEmpty
+                                ? Image.network(photoUrl, fit: BoxFit.cover)
+                                : Image.network(
+                                    'https://www.seekpng.com/png/detail/966-9665493_my-profile-icon-blank-profile-image-circle.png',
+                                    fit: BoxFit.cover,
+                                  ),
+                          ),
+                        ),
+                      ),
+                      Container(
+                        margin: const EdgeInsets.only(top: 5),
+                        height: 70,
+                        width: 200,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              displayName,
+                              style: const TextStyle(fontFamily: 'Roboto'),
+                            ),
+                            Text(balance.toStringAsFixed(2),
+                                style: const TextStyle(fontFamily: "Roboto"))
+                          ],
+                        ),
+                      ),
+                      GestureDetector(
+                          onTap: () {
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext logoutDialog) {
+                                return const LogOut();
+                              },
+                            );
+                          },
+                          child: Transform.scale(
+                            scale: 1.5, // Adjust the scale factor as needed
+                            child: const Icon(Iconsax.logout),
+                          )),
+                    ],
+                  ),
+                ),
+                Container(
+                  width: MediaQuery.of(context).size.width,
+                  margin: const EdgeInsets.all(10),
+                  padding: const EdgeInsets.all(10),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const SizedBox(height: 10),
+                      Column(
+                        children: [
+                          buildContainer(
+                            title: "My Account",
+                            icon: null,
+                            onPressed: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => MyAccount(
+                                            displayName: displayName,
+                                            photoUrl: photoUrl,
+                                            balance: balance,
+                                            email: email,
+                                          )));
+                            },
+                          ),
+                          buildContainer(
+                            title: "Favourites",
+                            icon: null,
+                            onPressed: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => FavouritesPage()));
+                            },
+                          ),
+                          buildContainer(
+                            title: "Leaderboard",
+                            icon: null,
+                            onPressed: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => Leaderboard()));
+                            },
+                          ),
+                          buildContainer(
+                            title: "Trade History",
+                            icon: null,
+                            onPressed: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => TradeHistory()));
+                            },
+                          ),
+                          buildContainer(
+                            title: "Help and Support",
+                            icon: null,
+                            onPressed: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => HelpSupport()));
+                            },
+                          ),
+                          buildContainer(
+                            title: "FAQs",
+                            icon: null,
+                            onPressed: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => FAQ()));
+                            },
+                            showBottomBorder: false,
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        bottomNavigationBar: const BottomNavBar(
+          index: 4,
+        ),
+      );
+    }
   }
 }

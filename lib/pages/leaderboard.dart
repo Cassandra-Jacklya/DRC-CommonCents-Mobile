@@ -59,13 +59,17 @@ class _LeaderboardState extends State<Leaderboard> {
   @override
   Widget build(BuildContext context) {
     if (ranking.isNotEmpty) {
-      // print(ranking[0]['photo']);
+      final screenWidth = MediaQuery.of(context).size.width;
+      final screenHeight = MediaQuery.of(context).size.height;
       return Scaffold(
         appBar: AppBar(
           shadowColor: Colors.transparent,
           toolbarHeight: 60,
           backgroundColor: Color(0XFF3366FF),
-          title: const Text("Leaderboard", style: TextStyle(color: Colors.white),),
+          title: const Text(
+            "Leaderboard",
+            style: TextStyle(color: Colors.white),
+          ),
           foregroundColor: Colors.black,
         ),
         body: Column(
@@ -79,8 +83,8 @@ class _LeaderboardState extends State<Leaderboard> {
                   child: Stack(
                     children: [
                       Positioned(
-                        top: 30,
-                        right: 150,
+                        top: screenHeight * 0.029,
+                        right: screenWidth * 0.375,
                         child: Container(
                           width: 90,
                           height: 90,
@@ -96,8 +100,8 @@ class _LeaderboardState extends State<Leaderboard> {
                         ),
                       ),
                       Positioned(
-                        top: 75,
-                        right: 30,
+                        top: screenHeight * 0.082,
+                        right: screenWidth * 0.068,
                         child: Container(
                           width: 90,
                           height: 90,
@@ -112,8 +116,8 @@ class _LeaderboardState extends State<Leaderboard> {
                         ),
                       ),
                       Positioned(
-                        top: 75,
-                        left: 30,
+                        top: screenHeight * 0.082,
+                        left: screenWidth * 0.067,
                         child: Container(
                           width: 90,
                           height: 90,

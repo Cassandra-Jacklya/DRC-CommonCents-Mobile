@@ -10,6 +10,7 @@ class PostModal extends StatefulWidget {
   final bool isFavorite;
   final String hoursAgo;
   final VoidCallback? refreshForumPage;
+  late bool isLoggedin;
 
   PostModal({
     required this.post,
@@ -17,6 +18,7 @@ class PostModal extends StatefulWidget {
     required this.isFavorite,
     required this.hoursAgo,
     required this.refreshForumPage,
+    required this.isLoggedin
   });
 
   @override
@@ -191,7 +193,7 @@ class _PostModalState extends State<PostModal> {
                     decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(10)),
-                    child: Row(
+                    child: widget.isLoggedin ? Row(
                       children: [
                         Container(
                           margin: const EdgeInsets.symmetric(horizontal: 10),
@@ -249,7 +251,7 @@ class _PostModalState extends State<PostModal> {
                           ),
                         ),
                       ],
-                    ),
+                    ) : Container()
                   ),
                 ],
               ),

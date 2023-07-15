@@ -61,6 +61,7 @@ class _SimulationPageState extends State<SimulationPage> {
   late bool isCandle;
   late String selectedTimeUnit;
   List<String> timeUnit = ['Ticks', 'Minutes', 'Hours', 'Days'];
+  List<String> candleTimeUnit = ['Minutes','Hours','Days',];
 
   void showSnackbar(String message, int duration) {
     final snackbar = SnackBar(
@@ -84,6 +85,7 @@ class _SimulationPageState extends State<SimulationPage> {
   @override
   void dispose() {
     closeWebSocket();
+    
     super.dispose();
   }
 
@@ -130,8 +132,7 @@ class _SimulationPageState extends State<SimulationPage> {
                   final User? user = FirebaseAuth.instance.currentUser;
                   if (user == null) {
                     //not logged in
-                    // return SimulationPageGuest();
-                    return Container();
+                    return SimulationPageGuest();
                   } else {
                     //logged in
                     BlocProvider.of<LoginStateBloc>(context)
@@ -227,7 +228,6 @@ class _SimulationPageState extends State<SimulationPage> {
                                             builder: (context, market) {
                                               print(
                                                   "object ${context.read<LineTimeCubit>().state}");
-                                              // print("I am at my line chart ${unit}");
                                               return MyLineChart(
                                                 isMini: false,
                                                 isCandle: isCandle,
@@ -251,9 +251,6 @@ class _SimulationPageState extends State<SimulationPage> {
                                       onTap: () {
                                         BlocProvider.of<LineTimeCubit>(context)
                                             .updateLineTime(unit);
-
-                                        // context.read<LineTimeCubit>().updateLineTime(unit);
-                                        // print("This is lineTime: ${context.read<LineTimeCubit>().state}");
                                       },
                                       child: Container(
                                         margin:

@@ -1,3 +1,4 @@
+import 'package:commoncents/pages/auth_pages/login.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -19,7 +20,7 @@ class _SimulationPageGuestState extends State<SimulationPageGuest> {
   double ticks = 0.0;
   String stakePayout = '';
   int currentAmount = 100000;
-  bool isCandle = false ;
+  bool isCandle = false;
   String market = '';
 
   @override
@@ -42,7 +43,26 @@ class _SimulationPageGuestState extends State<SimulationPageGuest> {
 
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Row(
+      children: [
+        GestureDetector(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const LoginView()),
+            );
+          },
+          child: const Text(
+            "Log in ",
+            style: TextStyle(
+                fontSize: 20,
+                color: Color(0XFF3366FF),
+                decoration: TextDecoration.underline, fontWeight: FontWeight.w800 ),
+          ),
+        ),
+        const Text(" to start trading", style: TextStyle(fontSize: 20),)
+      ],
+    );
     // Scaffold(
     //     body: Column(
     //   children: [

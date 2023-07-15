@@ -158,6 +158,7 @@ class _FavouritesPageState extends State<FavouritesPage> {
                                   formattedDate: formattedDate,
                                   isFavorite: true,
                                   hoursAgo: hoursAgo,
+                                  isLoggedin: true,
                                   refreshForumPage: null,
                                 );
                               },
@@ -294,6 +295,7 @@ class _FavouritesPageState extends State<FavouritesPage> {
                                                   formattedDate: formattedDate,
                                                   isFavorite: true,
                                                   hoursAgo: hoursAgo,
+                                                  isLoggedin: true,
                                                   refreshForumPage: null,
                                                 );
                                               },

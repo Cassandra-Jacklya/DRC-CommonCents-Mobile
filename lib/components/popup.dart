@@ -401,10 +401,7 @@ class _TradeDetailsState extends State<TradeDetails> {
         ),
       ),
       content: Container(
-          // padding: const EdgeInsets.only(top: 10),
           child: SizedBox(
-        // height: MediaQuery.of(context).size.height * 0.4,
-        // width: MediaQuery.of(context).size.width * 0.8,
         height: 300,
         width: 300,
         child: Column(
@@ -423,10 +420,8 @@ class _TradeDetailsState extends State<TradeDetails> {
                             padding: const EdgeInsets.only(top: 20),
                             child: Container(
                               padding: const EdgeInsets.only(top: 10),
-                              // height: MediaQuery.of(context).size.height * 0.08,
-                              // width: MediaQuery.of(context).size.width * 0.3,
-                              height: 300,
-                              width: 300,
+                              height: 60,
+                              width: 100,
                               decoration: BoxDecoration(
                                 border: Border.all(color: Colors.black26),
                                 borderRadius: BorderRadius.circular(10),
@@ -467,10 +462,8 @@ class _TradeDetailsState extends State<TradeDetails> {
                             padding: const EdgeInsets.only(top: 20),
                             child: Container(
                               padding: const EdgeInsets.only(top: 10),
-                              // height: MediaQuery.of(context).size.height * 0.08,
-                              // width: MediaQuery.of(context).size.width * 0.3,
-                              height: 300,
-                              width: 300,
+                              height: 60,
+                              width: 100,
                               decoration: BoxDecoration(
                                 border: Border.all(color: Colors.black26),
                                 borderRadius: BorderRadius.circular(10),
@@ -509,103 +502,121 @@ class _TradeDetailsState extends State<TradeDetails> {
                   ),
                   SizedBox(
                     // height: MediaQuery.of(context).size.height * 0.03
-                    height: 300,
+                    height: 15,
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Text(
-                        "Profit/loss",
-                        style: TextStyle(
-                            color: widget.status == "Won"
-                                ? Colors.greenAccent
-                                : Colors.redAccent),
-                      ),
-                      const Flexible(
-                        child: Text(
-                          "......................",
+                  Container(
+                    margin: const EdgeInsets.only(bottom: 5),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Text(
+                          "Profit/loss",
+                          style: TextStyle(
+                              color: widget.status == "Won"
+                                  ? Colors.greenAccent
+                                  : Colors.redAccent),
                         ),
-                      ),
-                      Text(
-                        widget.status == "Won"
-                            ? "+ ${widget.pNl.toStringAsFixed(2)}"
-                            : "-${widget.pNl.toStringAsFixed(2)}",
-                        style: TextStyle(
-                            color: widget.status == "Won"
-                                ? Colors.greenAccent
-                                : Colors.redAccent),
-                      ),
-                    ],
+                        const Flexible(
+                          child: Text(
+                            "......................",
+                          ),
+                        ),
+                        Text(
+                          widget.status == "Won"
+                              ? "+ ${widget.pNl.toStringAsFixed(2)}"
+                              : "-${widget.pNl.toStringAsFixed(2)}",
+                          style: TextStyle(
+                              color: widget.status == "Won"
+                                  ? Colors.greenAccent
+                                  : Colors.redAccent),
+                        ),
+                      ],
+                    ),
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      const Text(
-                        "Market Type",
-                      ),
-                      const Flexible(
-                        child: Text(
-                          "......................",
+                  Container(
+                    margin: const EdgeInsets.only(bottom: 5),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        const Text(
+                          "Market Type",
                         ),
-                      ),
-                      Text(widget.marketType),
-                    ],
+                        const Flexible(
+                          child: Text(
+                            "......................",
+                          ),
+                        ),
+                        Text(widget.marketType),
+                      ],
+                    ),
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      const Text(
-                        "Duration",
-                      ),
-                      const Flexible(
-                        child: Text(
-                          "......................",
+                  Container(
+                    margin: const EdgeInsets.only(bottom: 5),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        const Text(
+                          "Duration",
                         ),
-                      ),
-                      Text(widget.duration.toString()),
-                    ],
+                        const Flexible(
+                          child: Text(
+                            "......................",
+                          ),
+                        ),
+                        Text(widget.duration.toString()),
+                      ],
+                    ),
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      const Text(
-                        "Basis",
-                      ),
-                      const Flexible(
-                        child: Text(
-                          "......................",
+                  Container(
+                    margin: const EdgeInsets.only(bottom: 5),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        const Text(
+                          "Basis",
                         ),
-                      ),
-                      Text(widget.basis),
-                    ],
+                        const Flexible(
+                          child: Text(
+                            "......................",
+                          ),
+                        ),
+                        Text(widget.basis),
+                      ],
+                    ),
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      const Text(
-                        "Buy Price",
-                      ),
-                      const Flexible(
-                        child: Text(
-                          "......................",
+                  Container(
+                    margin: const EdgeInsets.only(bottom: 5),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        const Text(
+                          "Buy Price",
                         ),
-                      ),
-                      Text("${widget.buyPrice.toStringAsFixed(2)} USD"),
-                    ],
+                        const Flexible(
+                          child: Text(
+                            "......................",
+                          ),
+                        ),
+                        Text("${widget.buyPrice.toStringAsFixed(2)} USD"),
+                      ],
+                    ),
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      const Text(
-                        "Payout limit",
-                      ),
-                      const Flexible(
-                        child: Text(
-                          "......................",
+                  Container(
+                    margin: const EdgeInsets.only(bottom: 5),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        const Text(
+                          "Payout limit",
                         ),
-                      ),
-                      Text("${widget.payout.toStringAsFixed(2)} USD"),
-                    ],
+                        const Flexible(
+                          child: Text(
+                            ".................",
+                          ),
+                        ),
+                        Text("${widget.payout.toStringAsFixed(2)} USD"),
+                      ],
+                    ),
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -752,8 +763,8 @@ class _PostSomethingState extends State<PostSomething> {
                           : const Color(0XFF3366FF)),
                   // width: MediaQuery.of(context).size.width * 0.4,
                   // height: MediaQuery.of(context).size.height * 0.05,
-                  width: 300,
-                  height: 300,
+                  width: 100,
+                  height: 42,
                   child: Center(
                     child: const Text(
                       "Post",
@@ -776,26 +787,29 @@ class SyntheticDetails extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20)
-      ),
-      content: Container(
-        height: 210,
-        padding: const EdgeInsets.all(8),
-        child: Column(
-          children: const [
-            Padding(
-              padding: EdgeInsets.fromLTRB(0, 0, 0, 20),
-              child: Text("Synthetic Indices",
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      content: SingleChildScrollView(
+        child: Container(
+          width: double.maxFinite,
+          padding: const EdgeInsets.all(8),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: const [
+              Padding(
+                padding: EdgeInsets.fromLTRB(0, 0, 0, 20),
+                child: Text(
+                  "Synthetic Indices",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
-            ),
-            Text("Synthetic indices in forex are financial instruments that mimic the behavior of real-world indices. They are created by synthesizing the price movements of various underlying assets such as stocks, currencies, and commodities, using a mathematical algorithm.",
-              textAlign: TextAlign.justify,
-            )
-          ],
+              Text(
+                "Synthetic indices in forex are financial instruments that mimic the behavior of real-world indices. They are created by synthesizing the price movements of various underlying assets such as stocks, currencies, and commodities, using a mathematical algorithm.",
+                textAlign: TextAlign.justify,
+              )
+            ],
+          ),
         ),
       ),
     );
@@ -815,10 +829,6 @@ class ResetBalance extends StatelessWidget {
       CollectionReference collectionReference =
           firebaseFirestore.collection('users');
       DocumentReference userDocument = collectionReference.doc(user.uid);
-      DocumentSnapshot<Object?> userDataSnapshot = await userDocument.get();
-      Map<String, dynamic> userData =
-          userDataSnapshot.data() as Map<String, dynamic>;
-      String email = userData['email'];
 
       double updatedBalance = 100000.0; // Set the updated balance value
 
@@ -826,15 +836,15 @@ class ResetBalance extends StatelessWidget {
         'balance': updatedBalance,
       });
 
-      context
-          .read<LoginStateBloc>()
-          .updateBalance(userData['email'], updatedBalance.toString());
       // Retrieve the user data from Firestore to get the displayName
-
-      // BlocProvider.of<LoginStateBloc>(context)
-      //     .updateBalance(email, updatedBalance.toString());
-      // // loginStateBloc.updateBalance(displayName, updatedBalance.toString());
-      // print("Balance reset");
+      DocumentSnapshot<Object?> userDataSnapshot = await userDocument.get();
+      Map<String, dynamic> userData =
+          userDataSnapshot.data() as Map<String, dynamic>;
+      String email = userData['email'];
+      BlocProvider.of<LoginStateBloc>(context)
+          .updateBalance(email, updatedBalance.toString());
+      // loginStateBloc.updateBalance(displayName, updatedBalance.toString());
+      print("Balance reset");
     }
   }
 
@@ -842,8 +852,8 @@ class ResetBalance extends StatelessWidget {
   Widget build(BuildContext context) {
     return AlertDialog(
       content: Container(
-        // height: MediaQuery.of(context).size.height * 0.12,
-        height: 300,
+        decoration: BoxDecoration(borderRadius: BorderRadius.circular(20)),
+        height: 100,
         padding: const EdgeInsets.all(10),
         child: Column(
           children: [

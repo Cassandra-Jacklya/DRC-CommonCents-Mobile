@@ -106,7 +106,7 @@ class _NewsPageState extends State<NewsPage> {
                             Expanded(
                               child: TextField(
                                 controller: _textEditingController,
-                                onChanged: _handleFilterChanged,
+                                onSubmitted: _handleFilterChanged,
                                 decoration: const InputDecoration(
                                   border: InputBorder.none,
                                 ),

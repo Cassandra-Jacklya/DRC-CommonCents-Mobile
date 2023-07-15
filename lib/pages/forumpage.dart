@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 
 import '../components/fullPost.dart';
 import '../components/navbar.dart';
+import 'auth_pages/login.dart';
 
 class ForumPage extends StatefulWidget {
   const ForumPage({super.key});
@@ -94,48 +95,44 @@ class _ForumPageState extends State<ForumPage> {
   }
 
   Future<List<Map<String, dynamic>>> loadPosts() async {
-    if (user != null) {
-      final docSnapshot =
-          await FirebaseFirestore.instance.collection('posts').get();
+    final docSnapshot =
+        await FirebaseFirestore.instance.collection('posts').get();
 
-      if (docSnapshot.docs.isEmpty) {
-        print("No Posts yet");
-        return postsList;
-      } else {
-        final postsDocs = docSnapshot.docs;
+    if (docSnapshot.docs.isEmpty) {
+      print("No Posts yet");
+      return postsList;
+    } else {
+      final postsDocs = docSnapshot.docs;
 
-        for (final postDoc in postsDocs) {
-          final post = postDoc.data();
-          post['id'] = postDoc.id;
+      for (final postDoc in postsDocs) {
+        final post = postDoc.data();
+        post['id'] = postDoc.id;
 
-          // Retrieve comments for the post
-          final commentsSnapshot =
-              await postDoc.reference.collection('comments').get();
-          final List<Map<String, dynamic>> commentsList = [];
+        // Retrieve comments for the post
+        final commentsSnapshot =
+            await postDoc.reference.collection('comments').get();
+        final List<Map<String, dynamic>> commentsList = [];
 
-          if (commentsSnapshot.docs.isNotEmpty) {
-            for (final commentDoc in commentsSnapshot.docs) {
-              final commentData = commentDoc.data();
-              final comment = {
-                'id': commentDoc.id,
-                'author': commentData['author'],
-                'authorImage': commentData['authorImage'],
-                'content': commentData['content'],
-                'postId': commentData['postId'],
-                'timestamp': commentData['timestamp'],
-              };
-              commentsList.add(comment);
-            }
+        if (commentsSnapshot.docs.isNotEmpty) {
+          for (final commentDoc in commentsSnapshot.docs) {
+            final commentData = commentDoc.data();
+            final comment = {
+              'id': commentDoc.id,
+              'author': commentData['author'],
+              'authorImage': commentData['authorImage'],
+              'content': commentData['content'],
+              'postId': commentData['postId'],
+              'timestamp': commentData['timestamp'],
+            };
+            commentsList.add(comment);
           }
-
-          post['comments'] = commentsList;
-
-          postsList.add(post);
         }
 
-        return postsList;
+        post['comments'] = commentsList;
+
+        postsList.add(post);
       }
-    } else {
+
       return postsList;
     }
   }
@@ -170,273 +167,525 @@ class _ForumPageState extends State<ForumPage> {
 
   @override
   Widget build(BuildContext context) {
-    print(postsList);
-    return Scaffold(
-      appBar: CustomAppBar(
-          title: "Forum",
-          logo: "assets/images/commoncents-logo.png",
-          isTradingPage: false),
-      body: postsList.isNotEmpty
-          ? Column(
-              children: [
-                const SizedBox(height: 10),
-                Expanded(
-                  child: SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        ListView.builder(
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          itemCount: postsList.length,
-                          itemBuilder: (BuildContext context, int index) {
-                            final sortedPosts = postsList
-                              ..sort((a, b) =>
-                                  b['timestamp'].compareTo(a['timestamp']));
-                            final post = sortedPosts[index];
-                            final bool isFavorite = favouritePosts.any(
-                                (favoritePost) =>
-                                    favoritePost['title'] == post['title'] &&
-                                    favoritePost['details'] == post['details']);
+    if (user == null) {
+      return Scaffold(
+        appBar: const CustomAppBar(
+            title: "Forum",
+            logo: "assets/images/commoncents-logo.png",
+            isTradingPage: false),
+        body: Container(
+          child: postsList.isEmpty
+              ? const Center(child: CircularProgressIndicator())
+              : SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const LoginView()),
+                              );
+                            },
+                            child: Container(
+                              margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(5),
+                                border: Border.all(
+                                    color: const Color(0XFF3366FF), width: 2),
+                              ),
+                              padding: const EdgeInsets.all(10),
+                              // height: 50,
+                              // width: 50,
+                              child: const Text(" Log in"),
+                            ),
+                          ),
+                        ],
+                      ),
+                      ListView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: postsList.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          final sortedPosts = postsList
+                            ..sort((a, b) =>
+                                b['timestamp'].compareTo(a['timestamp']));
+                          final post = sortedPosts[index];
+                          final bool isFavorite = favouritePosts.any(
+                              (favoritePost) =>
+                                  favoritePost['title'] == post['title'] &&
+                                  favoritePost['details'] == post['details']);
 
-                            final timestamp = post['timestamp'] as int;
-                            final date =
-                                DateTime.fromMillisecondsSinceEpoch(timestamp);
-                            final formattedDate =
-                                DateFormat('yyyy-MM-dd').format(date);
+                          final timestamp = post['timestamp'] as int;
+                          final date =
+                              DateTime.fromMillisecondsSinceEpoch(timestamp);
+                          final formattedDate =
+                              DateFormat('yyyy-MM-dd').format(date);
 
-                            final now = DateTime.now();
-                            final difference = now.difference(date);
-                            String hoursAgo;
+                          final now = DateTime.now();
+                          final difference = now.difference(date);
+                          String hoursAgo;
 
-                            if (difference.inHours < 1) {
-                              hoursAgo = 'less than an hour ago';
-                            } else {
-                              hoursAgo = '${difference.inHours} hours ago';
-                            }
+                          if (difference.inHours < 1) {
+                            hoursAgo = 'less than an hour ago';
+                          } else {
+                            hoursAgo = '${difference.inHours} hours ago';
+                          }
 
-                            return GestureDetector(
-                              onTap: () {
-                                print(post);
-                                showModalBottomSheet(
-                                  context: context,
-                                  isScrollControlled: true,
-                                  builder: (BuildContext context) {
-                                    return PostModal(
-                                      post: post,
-                                      formattedDate: formattedDate,
-                                      isFavorite: isFavorite,
-                                      hoursAgo: hoursAgo,
-                                      refreshForumPage: refreshPosts,
-                                    );
-                                  },
-                                );
-                              },
-                              child: Container(
-                                margin: const EdgeInsets.all(10),
-                                width: MediaQuery.of(context).size.width * 0.5,
-                                padding: const EdgeInsets.all(10),
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(10),
-                                  border: Border.all(color: Colors.black26),
-                                ),
-                                child: Column(
-                                  children: [
-                                    Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Flexible(
-                                          child: Column(
-                                            children: [
-                                              CircleAvatar(
-                                                backgroundImage: NetworkImage(
-                                                  post['authorImage'] ??
-                                                      'https://www.seekpng.com/png/detail/966-9665493_my-profile-icon-blank-profile-image-circle.png',
-                                                ),
-                                                radius: 40,
+                          return GestureDetector(
+                            onTap: () {
+                              showModalBottomSheet(
+                                context: context,
+                                isScrollControlled: true,
+                                builder: (BuildContext context) {
+                                  return PostModal(
+                                    post: post,
+                                    formattedDate: formattedDate,
+                                    isFavorite: isFavorite,
+                                    hoursAgo: hoursAgo,
+                                    isLoggedin: false,
+                                    refreshForumPage: refreshPosts,
+                                  );
+                                },
+                              );
+                            },
+                            child: Container(
+                              margin: const EdgeInsets.all(10),
+                              width: MediaQuery.of(context).size.width * 0.5,
+                              padding: const EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(10),
+                                border: Border.all(color: Colors.black26),
+                              ),
+                              child: Column(
+                                children: [
+                                  Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Flexible(
+                                        child: Column(
+                                          children: [
+                                            CircleAvatar(
+                                              backgroundImage: NetworkImage(
+                                                post['authorImage'] ??
+                                                    'https://www.seekpng.com/png/detail/966-9665493_my-profile-icon-blank-profile-image-circle.png',
                                               ),
-                                              const SizedBox(height: 10),
-                                              SizedBox(
-                                                width: MediaQuery.of(context)
-                                                        .size
-                                                        .width *
-                                                    0.15,
-                                                child: Center(
+                                              radius: 40,
+                                            ),
+                                            const SizedBox(height: 10),
+                                            SizedBox(
+                                              width: MediaQuery.of(context)
+                                                      .size
+                                                      .width *
+                                                  0.15,
+                                              child: Center(
+                                                child: Text(
+                                                  post['author'] ?? 'Anonymous',
+                                                  style: const TextStyle(
+                                                    fontSize: 13,
+                                                  ),
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      Container(
+                                        margin: const EdgeInsets.all(10),
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Row(
+                                              children: [
+                                                Container(
+                                                  width: MediaQuery.of(context)
+                                                          .size
+                                                          .width *
+                                                      0.5,
+                                                  padding:
+                                                      const EdgeInsets.all(1),
                                                   child: Text(
-                                                    post['author'] ??
-                                                        'Anonymous',
+                                                    post['title'],
                                                     style: const TextStyle(
-                                                      fontSize: 13,
+                                                      fontSize: 20,
+                                                      fontWeight:
+                                                          FontWeight.w800,
                                                     ),
                                                     overflow:
                                                         TextOverflow.ellipsis,
                                                   ),
                                                 ),
+                                                Container(
+                                                  child: Text(
+                                                    formattedDate,
+                                                    style: const TextStyle(
+                                                      fontSize: 12,
+                                                      color: Colors.black,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                            const SizedBox(height: 5),
+                                            Container(
+                                              width: MediaQuery.of(context)
+                                                      .size
+                                                      .width *
+                                                  0.63,
+                                              padding: const EdgeInsets.all(1),
+                                              child: Text(
+                                                post['details'],
+                                                style: const TextStyle(
+                                                    fontSize: 15),
+                                                overflow: TextOverflow.ellipsis,
+                                                maxLines: 3,
                                               ),
-                                            ],
-                                          ),
+                                            ),
+                                          ],
                                         ),
-                                        Container(
-                                          margin: const EdgeInsets.all(10),
-                                          child: Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Row(
-                                                children: [
-                                                  Container(
-                                                    width:
-                                                        MediaQuery.of(context)
-                                                                .size
-                                                                .width *
-                                                            0.5,
-                                                    padding:
-                                                        const EdgeInsets.all(1),
+                                      ),
+                                    ],
+                                  ),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Container(
+                                        margin: const EdgeInsets.only(left: 5),
+                                        child: Text(
+                                          hoursAgo,
+                                          style: const TextStyle(
+                                              fontSize: 13,
+                                              fontWeight: FontWeight.w300),
+                                        ),
+                                      ),
+                                      Row(
+                                        children: [
+                                          Text(
+                                            '${post['comments'].length}',
+                                            style:
+                                                const TextStyle(fontSize: 16),
+                                          ),
+                                          IconButton(
+                                            icon: const Icon(Icons.comment),
+                                            onPressed: () {
+                                              showModalBottomSheet(
+                                                context: context,
+                                                isScrollControlled: true,
+                                                builder:
+                                                    (BuildContext context) {
+                                                  return PostModal(
+                                                    post: post,
+                                                    formattedDate:
+                                                        formattedDate,
+                                                    isFavorite: isFavorite,
+                                                    hoursAgo: hoursAgo,
+                                                    refreshForumPage:
+                                                        refreshPosts,
+                                                    isLoggedin: false,
+                                                  );
+                                                },
+                                              );
+                                            },
+                                          ),
+                                        ],
+                                      )
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        },
+                      )
+                    ],
+                  ),
+                ),
+        ),
+        bottomNavigationBar: const BottomNavBar(index: 3),
+      );
+    } else {
+      return Scaffold(
+        appBar: const CustomAppBar(
+            title: "Forum",
+            logo: "assets/images/commoncents-logo.png",
+            isTradingPage: false),
+        body: postsList.isNotEmpty
+            ? Column(
+                children: [
+                  const SizedBox(height: 10),
+                  Expanded(
+                    child: SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          ListView.builder(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemCount: postsList.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              final sortedPosts = postsList
+                                ..sort((a, b) =>
+                                    b['timestamp'].compareTo(a['timestamp']));
+                              final post = sortedPosts[index];
+                              final bool isFavorite = favouritePosts.any(
+                                  (favoritePost) =>
+                                      favoritePost['title'] == post['title'] &&
+                                      favoritePost['details'] ==
+                                          post['details']);
+
+                              final timestamp = post['timestamp'] as int;
+                              final date = DateTime.fromMillisecondsSinceEpoch(
+                                  timestamp);
+                              final formattedDate =
+                                  DateFormat('yyyy-MM-dd').format(date);
+
+                              final now = DateTime.now();
+                              final difference = now.difference(date);
+                              String hoursAgo;
+
+                              if (difference.inHours < 1) {
+                                hoursAgo = 'less than an hour ago';
+                              } else {
+                                hoursAgo = '${difference.inHours} hours ago';
+                              }
+
+                              return GestureDetector(
+                                onTap: () {
+                                  showModalBottomSheet(
+                                    context: context,
+                                    isScrollControlled: true,
+                                    builder: (BuildContext context) {
+                                      return PostModal(
+                                        post: post,
+                                        formattedDate: formattedDate,
+                                        isFavorite: isFavorite,
+                                        hoursAgo: hoursAgo,
+                                        isLoggedin: true,
+                                        refreshForumPage: refreshPosts,
+                                      );
+                                    },
+                                  );
+                                },
+                                child: Container(
+                                  margin: const EdgeInsets.all(10),
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.5,
+                                  padding: const EdgeInsets.all(10),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(10),
+                                    border: Border.all(color: Colors.black26),
+                                  ),
+                                  child: Column(
+                                    children: [
+                                      Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Flexible(
+                                            child: Column(
+                                              children: [
+                                                CircleAvatar(
+                                                  backgroundImage: NetworkImage(
+                                                    post['authorImage'] ??
+                                                        'https://www.seekpng.com/png/detail/966-9665493_my-profile-icon-blank-profile-image-circle.png',
+                                                  ),
+                                                  radius: 40,
+                                                ),
+                                                const SizedBox(height: 10),
+                                                SizedBox(
+                                                  width: MediaQuery.of(context)
+                                                          .size
+                                                          .width *
+                                                      0.15,
+                                                  child: Center(
                                                     child: Text(
-                                                      post['title'],
+                                                      post['author'] ??
+                                                          'Anonymous',
                                                       style: const TextStyle(
-                                                        fontSize: 20,
-                                                        fontWeight:
-                                                            FontWeight.w800,
+                                                        fontSize: 13,
                                                       ),
                                                       overflow:
                                                           TextOverflow.ellipsis,
                                                     ),
                                                   ),
-                                                  Container(
-                                                    child: Text(
-                                                      formattedDate,
-                                                      style: const TextStyle(
-                                                        fontSize: 12,
-                                                        color: Colors.black,
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          Container(
+                                            margin: const EdgeInsets.all(10),
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Row(
+                                                  children: [
+                                                    Container(
+                                                      width:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .width *
+                                                              0.5,
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              1),
+                                                      child: Text(
+                                                        post['title'],
+                                                        style: const TextStyle(
+                                                          fontSize: 20,
+                                                          fontWeight:
+                                                              FontWeight.w800,
+                                                        ),
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
                                                       ),
                                                     ),
-                                                  ),
-                                                ],
-                                              ),
-                                              const SizedBox(height: 5),
-                                              Container(
-                                                width: MediaQuery.of(context)
-                                                        .size
-                                                        .width *
-                                                    0.63,
-                                                padding:
-                                                    const EdgeInsets.all(1),
-                                                child: Text(
-                                                  post['details'],
-                                                  style: const TextStyle(
-                                                      fontSize: 15),
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                  maxLines: 3,
+                                                    Container(
+                                                      child: Text(
+                                                        formattedDate,
+                                                        style: const TextStyle(
+                                                          fontSize: 12,
+                                                          color: Colors.black,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
                                                 ),
+                                                const SizedBox(height: 5),
+                                                Container(
+                                                  width: MediaQuery.of(context)
+                                                          .size
+                                                          .width *
+                                                      0.63,
+                                                  padding:
+                                                      const EdgeInsets.all(1),
+                                                  child: Text(
+                                                    post['details'],
+                                                    style: const TextStyle(
+                                                        fontSize: 15),
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                    maxLines: 3,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Container(
+                                            margin:
+                                                const EdgeInsets.only(left: 5),
+                                            child: Text(
+                                              hoursAgo,
+                                              style: const TextStyle(
+                                                  fontSize: 13,
+                                                  fontWeight: FontWeight.w300),
+                                            ),
+                                          ),
+                                          Row(
+                                            children: [
+                                              Text(
+                                                '${post['comments'].length}',
+                                                style: const TextStyle(
+                                                    fontSize: 16),
+                                              ),
+                                              IconButton(
+                                                icon: const Icon(Icons.comment),
+                                                onPressed: () {
+                                                  showModalBottomSheet(
+                                                    context: context,
+                                                    isScrollControlled: true,
+                                                    builder:
+                                                        (BuildContext context) {
+                                                      return PostModal(
+                                                        post: post,
+                                                        formattedDate:
+                                                            formattedDate,
+                                                        isFavorite: isFavorite,
+                                                        hoursAgo: hoursAgo,
+                                                        refreshForumPage:
+                                                            refreshPosts,
+                                                        isLoggedin: true,
+                                                      );
+                                                    },
+                                                  );
+                                                },
+                                              ),
+                                              IconButton(
+                                                icon: Icon(
+                                                  isFavorite
+                                                      ? Icons.favorite
+                                                      : Icons.favorite_border,
+                                                  color: isFavorite
+                                                      ? Colors.red
+                                                      : null,
+                                                ),
+                                                onPressed: () {
+                                                  savePost(post);
+                                                },
                                               ),
                                             ],
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Container(
-                                          margin:
-                                              const EdgeInsets.only(left: 5),
-                                          child: Text(
-                                            hoursAgo,
-                                            style: const TextStyle(
-                                                fontSize: 13,
-                                                fontWeight: FontWeight.w300),
-                                          ),
-                                        ),
-                                        Row(
-                                          children: [
-                                            Text(
-                                              '${post['comments'].length}',
-                                              style:
-                                                  const TextStyle(fontSize: 16),
-                                            ),
-                                            IconButton(
-                                              icon: const Icon(Icons.comment),
-                                              onPressed: () {
-                                                showModalBottomSheet(
-                                                  context: context,
-                                                  isScrollControlled: true,
-                                                  builder:
-                                                      (BuildContext context) {
-                                                    return PostModal(
-                                                      post: post,
-                                                      formattedDate:
-                                                          formattedDate,
-                                                      isFavorite: isFavorite,
-                                                      hoursAgo: hoursAgo,
-                                                      refreshForumPage:
-                                                          refreshPosts,
-                                                    );
-                                                  },
-                                                );
-                                              },
-                                            ),
-                                            IconButton(
-                                              icon: Icon(
-                                                isFavorite
-                                                    ? Icons.favorite
-                                                    : Icons.favorite_border,
-                                                color: isFavorite
-                                                    ? Colors.red
-                                                    : null,
-                                              ),
-                                              onPressed: () {
-                                                savePost(post);
-                                              },
-                                            ),
-                                          ],
-                                        )
-                                      ],
-                                    ),
-                                  ],
+                                          )
+                                        ],
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                              ),
-                            );
-                          },
-                        )
-                      ],
+                              );
+                            },
+                          )
+                        ],
+                      ),
                     ),
                   ),
-                ),
-              ],
-            )
-          : const Center(child: CircularProgressIndicator()),
-      floatingActionButton: Stack(
-        children: [
-          FloatingActionButton(
-            onPressed: () {
-              showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return PostSomething(
-                    // Pass the callback function to the PostSomething dialog
-                    refreshPosts: () {
-                      loadPosts().then((result) {
-                        setState(() {
-                          postsList = result;
+                ],
+              )
+            : const Center(child: CircularProgressIndicator()),
+        floatingActionButton: Stack(
+          children: [
+            FloatingActionButton(
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return PostSomething(
+                      // Pass the callback function to the PostSomething dialog
+                      refreshPosts: () {
+                        loadPosts().then((result) {
+                          setState(() {
+                            postsList = result;
+                          });
                         });
-                      });
-                    },
-                  );
-                },
-              );
-            },
-            backgroundColor: Colors.blue,
-            child: Icon(Icons.add),
-          ),
-        ],
-      ),
-      bottomNavigationBar: const BottomNavBar(index: 3),
-    );
+                      },
+                    );
+                  },
+                );
+              },
+              backgroundColor: Colors.blue,
+              child: const Icon(Icons.add),
+            ),
+          ],
+        ),
+        bottomNavigationBar: const BottomNavBar(index: 3),
+      );
+    }
   }
 }

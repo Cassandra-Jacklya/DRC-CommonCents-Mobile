@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import '../components/popup.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+import 'auth_pages/login.dart';
+
 class TradeHistory extends StatefulWidget {
   _TradeHistoryState createState() => _TradeHistoryState();
 }
@@ -73,99 +75,136 @@ class _TradeHistoryState extends State<TradeHistory> {
               } else if (snapshot.hasData) {
                 tradeDataList = snapshot.data!;
                 print(tradeDataList);
-                return Container(
-                  margin: const EdgeInsets.only(bottom: 20),
-                  child: ListView(
+                if (tradeDataList.isNotEmpty) {
+                  return Container(
+                    margin: const EdgeInsets.only(bottom: 20),
+                    child: ListView(
+                      children: [
+                        ListView.builder(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemCount: tradeDataList.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            final trade = tradeDataList[index];
+                            return GestureDetector(
+                              onTap: () {
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext tradeDialog) {
+                                    return TradeDetails(
+                                      status: trade['status'],
+                                      entry: trade['previousSpot'],
+                                      exit: trade['currentSpot'],
+                                      pNl: trade['status'] == 'Won'
+                                          ? trade['additionalAmount'].toDouble()
+                                          : trade['askPrice'].toDouble(),
+                                      marketType: trade['marketType'],
+                                      duration: trade['tickDuration'],
+                                      basis: trade['basis'],
+                                      buyPrice: trade['askPrice'].toDouble(),
+                                      payout: trade['payoutValue'].toDouble(),
+                                      strategy: trade['strategy'],
+                                    );
+                                  },
+                                );
+                              },
+                              child: Container(
+                                padding: const EdgeInsets.all(15),
+                                margin: const EdgeInsets.only(
+                                    top: 30, left: 10, right: 10),
+                                decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(10),
+                                    border: Border.all(color: Colors.black26),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.grey.withOpacity(0.3),
+                                        spreadRadius: 2,
+                                        blurRadius: 5,
+                                        offset: const Offset(0, 3),
+                                      ),
+                                    ]),
+                                height: 110,
+                                width: MediaQuery.of(context).size.width * 0.9,
+                                child: Row(
+                                  children: [
+                                    Container(
+                                      margin: const EdgeInsets.only(right: 10),
+                                      height: 80,
+                                      width: 80,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                      child: Image.asset(
+                                        'assets/images/market/${trade['marketType']}.png',
+                                      ),
+                                    ),
+                                    Container(
+                                      padding: const EdgeInsets.all(15),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            reverseMarkets(trade['marketType']),
+                                            style:
+                                                const TextStyle(fontSize: 20),
+                                          ),
+                                          const SizedBox(height: 5),
+                                          Text(
+                                            "${trade['status'] == 'Won' ? '+${trade['additionalAmount']}' : '-${trade['askPrice']}'}  USD",
+                                            style:
+                                                const TextStyle(fontSize: 15),
+                                            textAlign: TextAlign.start,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      ],
+                    ),
+                  );
+                } else {
+                  return Center(
+                      child: Column(
                     children: [
-                      ListView.builder(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        itemCount: tradeDataList.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          final trade = tradeDataList[index];
-                          return GestureDetector(
+                      Image.asset('assets/images/no-profile.jpg'),
+                      const Text(
+                        "You are not logged in.",
+                        style: TextStyle(fontWeight: FontWeight.w800),
+                      ),
+                      const SizedBox(height: 10),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Text("Please "),
+                          GestureDetector(
                             onTap: () {
-                              showDialog(
-                                context: context,
-                                builder: (BuildContext tradeDialog) {
-                                  return TradeDetails(
-                                    status: trade['status'],
-                                    entry: trade['previousSpot'],
-                                    exit: trade['currentSpot'],
-                                    pNl: trade['status'] == 'Won'
-                                        ? trade['additionalAmount'].toDouble()
-                                        : trade['askPrice'].toDouble(),
-                                    marketType: trade['marketType'],
-                                    duration: trade['tickDuration'],
-                                    basis: trade['basis'],
-                                    buyPrice: trade['askPrice'].toDouble(),
-                                    payout: trade['payoutValue'].toDouble(),
-                                    strategy: trade['strategy'],
-                                  );
-                                },
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const LoginView()),
                               );
                             },
-                            child: Container(
-                              padding: const EdgeInsets.all(15),
-                              margin: const EdgeInsets.only(
-                                  top: 30, left: 10, right: 10),
-                              decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(10),
-                                  border: Border.all(color: Colors.black26),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.grey.withOpacity(0.3),
-                                      spreadRadius: 2,
-                                      blurRadius: 5,
-                                      offset: const Offset(0, 3),
-                                    ),
-                                  ]),
-                              height: 110,
-                              width: MediaQuery.of(context).size.width * 0.9,
-                              child: Row(
-                                children: [
-                                  Container(
-                                    margin: const EdgeInsets.only(right: 10),
-                                    height: 80,
-                                    width: 80,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    // child: SvgPicture.asset(
-                                    //   'assets/images/market/${trade['marketType']}.svg',
-                                    //   fit: BoxFit
-                                    //       .contain, // Adjust the fit based on your requirements
-                                    // ),
-                                  ),
-                                  Container(
-                                    padding: const EdgeInsets.all(15),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          reverseMarkets(trade['marketType']),
-                                          style: const TextStyle(fontSize: 20),
-                                        ),
-                                        const SizedBox(height: 5),
-                                        Text(
-                                          "${trade['status'] == 'Won' ? '+${trade['additionalAmount']}' : '-${trade['askPrice']}'}  USD",
-                                          style: const TextStyle(fontSize: 15),
-                                          textAlign: TextAlign.start,
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
+                            child: const Text(
+                              "Log in ",
+                              style: TextStyle(
+                                color: Color(0XFF3366FF),
+                                decoration: TextDecoration.underline,
                               ),
                             ),
-                          );
-                        },
-                      ),
+                          ),
+                          const Text("to view your profile")
+                        ],
+                      )
                     ],
-                  ),
-                );
+                  ));
+                }
               } else {
                 return const Text('Havent Start Trading yet.');
               }
