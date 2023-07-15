@@ -102,37 +102,28 @@ class _MainAppState extends State<MainApp> {
           BlocProvider<IsCandleCubit>(create: (content) => IsCandleCubit()),
           BlocProvider<MiniChartCubit>(create: (context) => MiniChartCubit(),)
         ],
-        child: GestureDetector(
-          onTap: () {
-            // FocusScopeNode currentFocus = FocusScope.of(context);
-
-            // if (!currentFocus.hasPrimaryFocus) {
-            //   currentFocus.unfocus();
-            // }
-          },
-          child: MaterialApp(
-            debugShowCheckedModeBanner: false,
-            theme: theme,
-            home: FutureBuilder(
-                    future: Firebase.initializeApp(
-                      options: DefaultFirebaseOptions.currentPlatform,
-                    ),
-                    builder: ((context, snapshot) {
-                      switch (snapshot.connectionState) {
-                        case ConnectionState.done:
-                          final User? user = FirebaseAuth.instance.currentUser;
-                          if (user != null) {
-                            return const HomePage();
-                          }
-                          else {
-                            return const Onboarding();
-                          }
-                        default: 
-                          return const Center(child: CircularProgressIndicator());
-                      }
+        child: MaterialApp(
+          debugShowCheckedModeBanner: false,
+          theme: theme,
+          home: FutureBuilder(
+                  future: Firebase.initializeApp(
+                    options: DefaultFirebaseOptions.currentPlatform,
+                  ),
+                  builder: ((context, snapshot) {
+                    switch (snapshot.connectionState) {
+                      case ConnectionState.done:
+                        final User? user = FirebaseAuth.instance.currentUser;
+                        if (user != null) {
+                          return const HomePage();
+                        }
+                        else {
+                          return const Onboarding();
+                        }
+                      default: 
+                        return const Center(child: CircularProgressIndicator());
                     }
-                  )
-            ),
+                  }
+                )
           ),
         ));
   }
