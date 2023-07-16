@@ -20,6 +20,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:commoncents/pages/homepage.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'cubit/login_cubit.dart';
+import 'cubit/resetwallet_cubit.dart';
 // import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 void main() {
@@ -100,7 +101,8 @@ class _MainAppState extends State<MainApp> {
           BlocProvider<CandlestickCubit>(create: (context) => CandlestickCubit()),
           BlocProvider<MarketsCubit>(create: (context) => MarketsCubit()),
           BlocProvider<IsCandleCubit>(create: (content) => IsCandleCubit()),
-          BlocProvider<MiniChartCubit>(create: (context) => MiniChartCubit(),)
+          BlocProvider<MiniChartCubit>(create: (context) => MiniChartCubit(),),
+          BlocProvider<ResetWalletBloc>(create: (context) => ResetWalletBloc(),)
         ],
         child: MaterialApp(
           debugShowCheckedModeBanner: false,

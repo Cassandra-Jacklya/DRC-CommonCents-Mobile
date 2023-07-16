@@ -32,6 +32,7 @@ import '../cubit/candlestick_cubit.dart';
 import '../cubit/login_cubit.dart';
 import '../cubit/navbar_cubit.dart';
 import '../cubit/news_tabbar_cubit.dart';
+import '../cubit/resetwallet_cubit.dart';
 import '../cubit/stock_data_cubit.dart';
 import '../cubit/ticks_cubit.dart';
 import '../apistore/PriceProposal.dart';
@@ -53,6 +54,7 @@ class SimulationPage extends StatefulWidget {
 }
 
 class _SimulationPageState extends State<SimulationPage> {
+
   late IsCandleCubit isCandleCubit;
   late String markettype;
   late double ticks;
@@ -82,7 +84,14 @@ class _SimulationPageState extends State<SimulationPage> {
 
   @override
   void initState() {
+    super.initState();
     isCandle = false;
+  }
+
+  @override
+  void didChangeDependencies() {
+    isCandleCubit = context.watch<IsCandleCubit>();
+    super.didChangeDependencies();
   }
 
   @override
@@ -117,7 +126,8 @@ class _SimulationPageState extends State<SimulationPage> {
         BlocProvider<ChartTimeCubit>(create: (context) => ChartTimeCubit()),
         BlocProvider<LiveLinePriceCubit>(
             create: (context) => LiveLinePriceCubit()),
-        BlocProvider<candlePriceCubit>(create: (context) => candlePriceCubit())
+        BlocProvider<candlePriceCubit>(create: (context) => candlePriceCubit()),
+        BlocProvider<ResetWalletBloc>(create: (context) => ResetWalletBloc(),)
       ],
       child: Scaffold(
         resizeToAvoidBottomInset: false,
@@ -143,67 +153,71 @@ class _SimulationPageState extends State<SimulationPage> {
                     );
                   } else {
                     //logged in
-                    BlocProvider.of<LoginStateBloc>(context)
-                        .initFirebase('', '');
                     return Column(
                       children: [
                         const SizedBox(height: 5),
                         Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            BlocBuilder<MarketsCubit, String>(
-                                builder: (context, state) {
-                              return GestureDetector(
-                                onTap: () {
-                                  unsubscribe();
-                                  closeWebSocket();
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              Markets(market: widget.market)));
-                                },
-                                child: Container(
-                                  padding: const EdgeInsets.only(left: 15),
-                                  margin: const EdgeInsets.all(10),
-                                  height: 60,
-                                  color: Colors.grey[300],
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(widget.market),
-                                      const IconButton(
-                                        onPressed: null,
-                                        icon: Icon(
-                                          Icons.keyboard_arrow_down_sharp,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              );
-                            }),
-                            GestureDetector(
-                              child: Container(
-                                height: 60,
-                                color: Colors.grey[300],
-                                child: IconButton(
-                                  onPressed: () {
-                                    setState(() {
+                            Row( 
+                              children: [
+                                BlocBuilder<MarketsCubit, String>(
+                                    builder: (context, state) {
+                                  return GestureDetector(
+                                    onTap: () {
                                       unsubscribe();
                                       closeWebSocket();
-                                      isCandle = !isCandle;
-                                      // isCandleCubit.isItCandles(isCandle);
-                                    });
-                                  },
-                                  icon: isCandle
-                                      ? const Icon(Icons.line_axis)
-                                      : const Icon(Icons.candlestick_chart),
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  Markets(market: widget.market)));
+                                    },
+                                    child: Container(
+                                      padding: const EdgeInsets.only(left: 15),
+                                      margin: const EdgeInsets.all(10),
+                                      height: 60,
+                                      color: Colors.grey[300],
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text(widget.market),
+                                          const IconButton(
+                                            onPressed: null,
+                                            icon: Icon(
+                                              Icons.keyboard_arrow_down_sharp,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  );
+                                }),
+                                GestureDetector(
+                                  child: Container(
+                                    height: 60,
+                                    color: Colors.grey[300],
+                                    child: IconButton(
+                                      onPressed: () {
+                                        setState(() {
+                                          unsubscribe();
+                                          closeWebSocket();
+                                          isCandle = !isCandle;
+                                          // isCandleCubit.isItCandles(isCandle);
+                                        });
+                                      },
+                                      icon: isCandle
+                                          ? const Icon(Icons.line_axis)
+                                          : const Icon(Icons.candlestick_chart),
+                                    ),
+                                  ),
                                 ),
-                              ),
+                              ],
                             ),
-                            WalletButton(
-                              loginStateBloc: LoginStateBloc(),
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
+                              child: WalletButton(),
                             ),
                           ],
                         ),

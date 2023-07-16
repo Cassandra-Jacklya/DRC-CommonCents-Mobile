@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:commoncents/authStore/authentication.dart';
+import 'package:commoncents/cubit/resetwallet_cubit.dart';
 import 'package:commoncents/main.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -778,10 +779,10 @@ class _PostSomethingState extends State<PostSomething> {
                           canPost ? const Color(0XFF3366FF) : Colors.grey[400]),
                   // width: MediaQuery.of(context).size.width * 0.4,
                   // height: MediaQuery.of(context).size.height * 0.05,
-                  width: 100,
-                  height: 42,
-                  child: Center(
-                    child: const Text(
+                  width: 300,
+                  height: 300,
+                  child: const Center(
+                    child: Text(
                       "Post",
                       style: TextStyle(color: Colors.white),
                     ),
@@ -831,80 +832,108 @@ class SyntheticDetails extends StatelessWidget {
   }
 }
 
-class ResetBalance extends StatefulWidget {
-  final LoginStateBloc loginStateBloc;
-  ResetBalance({required this.loginStateBloc});
-  _ResetBalanceState createState() => _ResetBalanceState();
-}
-
-class _ResetBalanceState extends State<ResetBalance> {
-  void resetBalance() async {
-    FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
-    User? user = FirebaseAuth.instance.currentUser;
-    late LoginStateBloc? balance = widget.loginStateBloc;
-
-    if (user != null) {
-      CollectionReference collectionReference =
-          firebaseFirestore.collection('users');
-      DocumentReference userDocument = collectionReference.doc(user.uid);
-
-      double updatedBalance = 100000.0; // Set the updated balance value
-
-      try {
-        await userDocument.update({
-          'balance': updatedBalance,
-        });
-
-        DocumentSnapshot<Object?> userDataSnapshot = await userDocument.get();
-        if (userDataSnapshot.exists) {
-          Map<String, dynamic> userData =
-              userDataSnapshot.data() as Map<String, dynamic>;
-          String displayName = userData['displayName'];
-
-          // Update the balance in the LoginStateBloc
-          balance.updateBalance(displayName, updatedBalance.toString());
-          print("Balance reset");
-        }
-      } catch (e) {
-        // Handle any errors that occur during the update process
-        print("Error resetting balance: $e");
-      }
-    }
-  }
-
+class ResetBalance extends StatelessWidget {
+  const ResetBalance({super.key});
+  
   @override
   Widget build(BuildContext context) {
-    return AlertDialog(
-      content: Container(
-        decoration: BoxDecoration(borderRadius: BorderRadius.circular(20)),
-        height: 100,
-        padding: const EdgeInsets.all(10),
-        child: Column(
-          children: [
-            Row(
-              children: [
-                const Text("Current Balance: "),
-              ],
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<ResetWalletBloc>(create: (context) => ResetWalletBloc(),)
+      ],
+      child: Dialog(
+        child: Container(
+            height: 140,
+            width: 120,
+            padding: const EdgeInsets.all(10),
+            child: BlocBuilder<ResetWalletBloc, ResetWallet>(
+              builder: (context, state) {
+                if (state is ResetWalletExecuted) {
+                  return Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text("Current balance:"),
+                          Text(state.balance.toString()),
+                        ],
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.fromLTRB(0, 12, 0, 0),
+                          child: Container(
+                            padding: const EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(40),
+                              color: const Color(0XFF3366FF),
+                            ),
+                            child: const Text(
+                              "Click to reset balance",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(color: Colors.white, fontSize: 15),
+                            ),
+                          ),
+                        ),
+                      ),
+                      const Padding(
+                        padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
+                        child: Text("*Resetting your balance will clear all your trade histories and remove you from the leaderboard.",
+                          style: TextStyle(fontSize: 12),
+                        ),
+                      )
+                    ],
+                  );
+                }
+                else if (state is ResetWalletInitial) {
+                  return Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text("Current balance:"),
+                          Text(state.balance.toString()),
+                        ],
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          if(!ResetWalletBloc().isClosed) {
+                            BlocProvider.of<ResetWalletBloc>(context).resetBalance();
+                          }
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.fromLTRB(0, 12, 0, 0),
+                          child: Container(
+                            width: 200,
+                            padding: const EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(40),
+                              color: const Color(0XFF3366FF),
+                            ),
+                            child: const Text(
+                              "Click to reset balance",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(color: Colors.white, fontSize: 15),
+                            ),
+                          ),
+                        ),
+                      ),
+                      const Padding(
+                        padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
+                        child: Text("*Resetting your balance will clear all your trade histories and remove you from the leaderboard.",
+                          style: TextStyle(fontSize: 12),
+                        ),
+                      )
+                    ],
+                  );
+                }
+                if (!ResetWalletBloc().isClosed) {
+                  BlocProvider.of<ResetWalletBloc>(context).initialize();
+                }
+                return const Text("Loading...");
+              }
             ),
-            const SizedBox(height: 10),
-            GestureDetector(
-              onTap: () {
-                Navigator.of(context).pop();
-                resetBalance();
-              },
-              child: Container(
-                padding: const EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  color: const Color(0XFF3366FF),
-                ),
-                child: const Text(
-                  "Click to reset balance",
-                  style: TextStyle(color: Colors.white),
-                ),
-              ),
-            ),
-          ],
         ),
       ),
     );
