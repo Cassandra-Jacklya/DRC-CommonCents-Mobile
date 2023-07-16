@@ -285,7 +285,7 @@ class _ForumPageState extends State<ForumPage> {
                                                   0.15,
                                               child: Center(
                                                 child: Text(
-                                                  post['author'] ?? 'Anonymous',
+                                                  post['author'],
                                                   style: const TextStyle(
                                                     fontSize: 13,
                                                   ),

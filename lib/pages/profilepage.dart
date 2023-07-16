@@ -21,7 +21,7 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  String photoUrl = '';
+  String photoUrl = 'https://www.seekpng.com/png/detail/966-9665493_my-profile-icon-blank-profile-image-circle.png';
   String displayName = '';
   double balance = 0.0;
   String email = '';
@@ -50,15 +50,10 @@ class _ProfilePageState extends State<ProfilePage> {
         forTradeHisitory = docSnapshot.data()!;
         if (data != null) {
           setState(() {
-            photoUrl = data['photoURL'] ??
-                user.photoURL ??
-                ''; // Provide a default value if 'photoURL' is null
-            displayName = data['displayName'] ??
-                user.displayName ??
-                'nope'; // Provide a default value if 'displayName' is null
-            balance = data['balance']?.toDouble() ??
-                0.0; // Provide a default value if 'balance' is null
-            email = data['email'] ?? '';
+            photoUrl = data['photoURL'] ?? "https://www.seekpng.com/png/detail/966-9665493_my-profile-icon-blank-profile-image-circle.png";// Provide a default value if 'photoURL' is null
+            displayName = data['displayName'] ?? data['email']; // Provide a default value if 'displayName' is null
+            balance = data['balance'].toDouble(); // Provide a default value if 'balance' is null
+            email = data['email'];
           });
         }
       }
@@ -179,22 +174,20 @@ class _ProfilePageState extends State<ProfilePage> {
                     children: [
                       Hero(
                         tag: 'test',
-                        child: Container(
-                          margin: const EdgeInsets.only(right: 10),
-                          height: 80,
-                          width: 80,
-                          decoration: BoxDecoration(
-                            color: Colors.grey[400],
-                            borderRadius: BorderRadius.circular(50),
-                          ),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(50),
-                            child: photoUrl.isNotEmpty
-                                ? Image.network(photoUrl, fit: BoxFit.cover)
-                                : Image.network(
-                                    'https://www.seekpng.com/png/detail/966-9665493_my-profile-icon-blank-profile-image-circle.png',
-                                    fit: BoxFit.cover,
-                                  ),
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 15),
+                          child: Container(
+                            margin: const EdgeInsets.only(right: 10),
+                            height: 80,
+                            width: 80,
+                            decoration: BoxDecoration(
+                              color: Colors.grey[400],
+                              borderRadius: BorderRadius.circular(50),
+                            ),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(50),
+                              child: Image.network(photoUrl, fit: BoxFit.cover),
+                            ),
                           ),
                         ),
                       ),

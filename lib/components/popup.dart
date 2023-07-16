@@ -442,8 +442,10 @@ class _TradeDetailsState extends State<TradeDetails> {
                           ),
                           Positioned(
                             top: 10,
-                            right: 12,
+                            right: 14,
                             child: Container(
+                              height: 25,
+                              width: 72,
                               padding: const EdgeInsets.symmetric(
                                   horizontal: 10, vertical: 5),
                               decoration: BoxDecoration(
@@ -451,7 +453,7 @@ class _TradeDetailsState extends State<TradeDetails> {
                                   border: Border.all(color: Colors.black26)),
                               child: const Text(
                                 "Entry spot",
-                                style: TextStyle(fontSize: 16),
+                                style: TextStyle(fontSize: 11),
                               ),
                             ),
                           ),
@@ -484,16 +486,20 @@ class _TradeDetailsState extends State<TradeDetails> {
                           ),
                           Positioned(
                             top: 10,
-                            right: 17,
+                            right: 14,
                             child: Container(
+                              height: 25,
+                              width: 72,
                               padding: const EdgeInsets.symmetric(
                                   horizontal: 10, vertical: 5),
                               decoration: BoxDecoration(
                                   color: Colors.white,
                                   border: Border.all(color: Colors.black26)),
-                              child: const Text(
-                                "Exit spot",
-                                style: TextStyle(fontSize: 16),
+                              child: const Center(
+                                child: Text(
+                                  "Exit spot",
+                                  style: TextStyle(fontSize: 11),
+                                ),
                               ),
                             ),
                           ),
@@ -508,7 +514,7 @@ class _TradeDetailsState extends State<TradeDetails> {
                   Container(
                     margin: const EdgeInsets.only(bottom: 5),
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
                           "Profit/loss",
@@ -518,8 +524,10 @@ class _TradeDetailsState extends State<TradeDetails> {
                                   : Colors.redAccent),
                         ),
                         const Flexible(
-                          child: Text(
-                            "......................",
+                          child: Divider(
+                            color: Color(0xFFD9D9D9,),
+                            indent: 10,
+                            endIndent: 10,
                           ),
                         ),
                         Text(
@@ -529,7 +537,8 @@ class _TradeDetailsState extends State<TradeDetails> {
                           style: TextStyle(
                               color: widget.status == "Won"
                                   ? Colors.greenAccent
-                                  : Colors.redAccent),
+                                  : Colors.redAccent,
+                            ),
                         ),
                       ],
                     ),
@@ -537,14 +546,16 @@ class _TradeDetailsState extends State<TradeDetails> {
                   Container(
                     margin: const EdgeInsets.only(bottom: 5),
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         const Text(
                           "Market Type",
                         ),
                         const Flexible(
-                          child: Text(
-                            "......................",
+                          child: Divider(
+                            color: Color(0xFFD9D9D9,),
+                            indent: 10,
+                            endIndent: 10,
                           ),
                         ),
                         Text(widget.marketType),
@@ -554,14 +565,16 @@ class _TradeDetailsState extends State<TradeDetails> {
                   Container(
                     margin: const EdgeInsets.only(bottom: 5),
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         const Text(
                           "Duration",
                         ),
                         const Flexible(
-                          child: Text(
-                            "......................",
+                          child: Divider(
+                            color: Color(0xFFD9D9D9,),
+                            indent: 10,
+                            endIndent: 10,
                           ),
                         ),
                         Text(widget.duration.toString()),
@@ -571,14 +584,16 @@ class _TradeDetailsState extends State<TradeDetails> {
                   Container(
                     margin: const EdgeInsets.only(bottom: 5),
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         const Text(
                           "Basis",
                         ),
                         const Flexible(
-                          child: Text(
-                            "......................",
+                          child: Divider(
+                            color: Color(0xFFD9D9D9,),
+                            indent: 10,
+                            endIndent: 10,
                           ),
                         ),
                         Text(widget.basis),
@@ -588,14 +603,16 @@ class _TradeDetailsState extends State<TradeDetails> {
                   Container(
                     margin: const EdgeInsets.only(bottom: 5),
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         const Text(
                           "Buy Price",
                         ),
                         const Flexible(
-                          child: Text(
-                            "......................",
+                          child: Divider(
+                            color: Color(0xFFD9D9D9,),
+                            indent: 10,
+                            endIndent: 10,
                           ),
                         ),
                         Text("${widget.buyPrice.toStringAsFixed(2)} USD"),
@@ -605,14 +622,16 @@ class _TradeDetailsState extends State<TradeDetails> {
                   Container(
                     margin: const EdgeInsets.only(bottom: 5),
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         const Text(
                           "Payout limit",
                         ),
                         const Flexible(
-                          child: Text(
-                            ".................",
+                          child: Divider(
+                            color: Color(0xFFD9D9D9,),
+                            indent: 10,
+                            endIndent: 10,
                           ),
                         ),
                         Text("${widget.payout.toStringAsFixed(2)} USD"),
@@ -620,16 +639,18 @@ class _TradeDetailsState extends State<TradeDetails> {
                     ),
                   ),
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       const Text(
                         "Strategy",
                       ),
                       const Flexible(
-                        child: Text(
-                          "......................",
+                          child: Divider(
+                            color: Color(0xFFD9D9D9,),
+                            indent: 10,
+                            endIndent: 10,
+                          ),
                         ),
-                      ),
                       Text(widget.strategy),
                     ],
                   ),
@@ -855,6 +876,13 @@ class ResetBalance extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           const Text("Current balance:"),
+                          const Flexible(
+                          child: Divider(
+                            color: Color(0xFFD9D9D9,),
+                            indent: 10,
+                            endIndent: 10,
+                          ),
+                        ),
                           Text(state.balance.toString()),
                         ],
                       ),
@@ -893,6 +921,13 @@ class ResetBalance extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           const Text("Current balance:"),
+                          const Flexible(
+                          child: Divider(
+                            color: Color(0xFFD9D9D9,),
+                            indent: 10,
+                            endIndent: 10,
+                          ),
+                        ),
                           Text(state.balance.toString()),
                         ],
                       ),

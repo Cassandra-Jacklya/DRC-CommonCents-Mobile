@@ -1,18 +1,18 @@
-import 'dart:convert';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import '../authStore/auth_error.dart';
 
 class LoginStateBloc extends Cubit<LoginState> {
   LoginStateBloc() : super(AppStateInitial());
   
   void initFirebase(String email, String password) async{
+    User? user = FirebaseAuth.instance.currentUser;
     try {
-      if (FirebaseAuth.instance.currentUser == null) {
+      if (user == null) {
         await FirebaseAuth.instance.signInWithEmailAndPassword(email: email, password: password);
       }
+
       CollectionReference collectionReference = FirebaseFirestore.instance.collection('users');
       DocumentSnapshot<Object?> doc = await collectionReference.doc(FirebaseAuth.instance.currentUser!.uid).get();
       if (doc.data() != null) {
