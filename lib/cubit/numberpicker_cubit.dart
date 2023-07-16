@@ -13,6 +13,6 @@ class CurrentAmountCubit extends Cubit<int> {
   }
 
   void setCurrentAmount(int amount) {
-    emit(amount.clamp(0, 100));
+    emit(amount.clamp(0, 500));
   }
 }

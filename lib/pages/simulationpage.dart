@@ -120,7 +120,7 @@ class _SimulationPageState extends State<SimulationPage> {
         BlocProvider<candlePriceCubit>(create: (context) => candlePriceCubit())
       ],
       child: Scaffold(
-        resizeToAvoidBottomInset: false,
+        // resizeToAvoidBottomInset: true,
         appBar: const CustomAppBar(
           title: "Trading Simulation",
           logo: "assets/images/commoncents-logo.png",

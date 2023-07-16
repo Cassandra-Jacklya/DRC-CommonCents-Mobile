@@ -12,14 +12,13 @@ class PostModal extends StatefulWidget {
   final VoidCallback? refreshForumPage;
   late bool isLoggedin;
 
-  PostModal({
-    required this.post,
-    required this.formattedDate,
-    required this.isFavorite,
-    required this.hoursAgo,
-    required this.refreshForumPage,
-    required this.isLoggedin
-  });
+  PostModal(
+      {required this.post,
+      required this.formattedDate,
+      required this.isFavorite,
+      required this.hoursAgo,
+      required this.refreshForumPage,
+      required this.isLoggedin});
 
   @override
   _PostModalState createState() => _PostModalState();
@@ -30,12 +29,12 @@ class _PostModalState extends State<PostModal> {
 
   User? user = FirebaseAuth.instance.currentUser;
 
-  // void refreshModal(){
-  //   setState(() {
-  //     _comment.clear();
-
-  //   });
-  // }
+  void refreshModal(List updatedComments) {
+    setState(() {
+      _comment.clear();
+      widget.post['comments'] = updatedComments;
+    });
+  }
 
   void storeComment(
     String postId,
@@ -72,11 +71,16 @@ class _PostModalState extends State<PostModal> {
       });
     }
 
+    // Fetch the updated comments data after adding the new comment
+    final updatedCommentsSnapshot = await postRef.collection('comments').get();
+    final updatedComments =
+        updatedCommentsSnapshot.docs.map((doc) => doc.data()).toList();
+
     // Call the refreshForumPage callback to refresh the forum page
     widget.refreshForumPage?.call();
 
-    // Call the refreshModal callback to refresh the modal
-    // refreshModal();
+    // Call the refreshModal callback to refresh the modal with the updated comments
+    refreshModal(updatedComments);
   }
 
   @override
@@ -190,69 +194,74 @@ class _PostModalState extends State<PostModal> {
                   ),
                   const SizedBox(height: 5),
                   Container(
-                    decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(10)),
-                    child: widget.isLoggedin ? Row(
-                      children: [
-                        Container(
-                          margin: const EdgeInsets.symmetric(horizontal: 10),
-                          child: CircleAvatar(
-                            backgroundImage: NetworkImage(
-                              user!.photoURL ??
-                                  'https://www.seekpng.com/png/detail/966-9665493_my-profile-icon-blank-profile-image-circle.png',
-                            ),
-                            radius: 20,
-                          ),
-                        ),
-                        Expanded(
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                              vertical: 8,
-                              horizontal: 12,
-                            ), // Adjust the padding values as needed
-                            child: TextFormField(
-                              scrollPadding: EdgeInsets.all(10),
-                              controller: _comment,
-                              enableSuggestions: false,
-                              autocorrect: false,
-                              decoration: InputDecoration(
-                                isDense: true, // Reduce the overall height
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                  borderSide: const BorderSide(
-                                      color: Color(0xFF5F5F5F)),
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10)),
+                      child: widget.isLoggedin
+                          ? Row(
+                              children: [
+                                Container(
+                                  margin: const EdgeInsets.symmetric(
+                                      horizontal: 10),
+                                  child: CircleAvatar(
+                                    backgroundImage: NetworkImage(
+                                      user!.photoURL ??
+                                          'https://www.seekpng.com/png/detail/966-9665493_my-profile-icon-blank-profile-image-circle.png',
+                                    ),
+                                    radius: 20,
+                                  ),
                                 ),
-                                labelText: 'Comment',
-                              ),
-                            ),
-                          ),
-                        ),
-                        GestureDetector(
-                          onTap: () async {
-                            print("Legit: $data");
-                            storeComment(
-                                data['id'],
-                                user!.displayName ?? "Anonymous",
-                                user!.photoURL ?? "",
-                                _comment.text);
-                            // await Future.delayed(Duration(milliseconds: 500));
-                            // Navigator.of(context).pop();
-                          },
-                          child: Container(
-                            padding: const EdgeInsets.all(5),
-                            margin: const EdgeInsets.symmetric(horizontal: 10),
-                            decoration: BoxDecoration(
-                                color: _comment.text == ""
-                                    ? Colors.grey[300]
-                                    : Colors.greenAccent,
-                                borderRadius: BorderRadius.circular(5)),
-                            child: const Icon(Iconsax.send),
-                          ),
-                        ),
-                      ],
-                    ) : Container()
-                  ),
+                                Expanded(
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                      vertical: 8,
+                                      horizontal: 12,
+                                    ), // Adjust the padding values as needed
+                                    child: TextFormField(
+                                      scrollPadding: EdgeInsets.all(10),
+                                      controller: _comment,
+                                      enableSuggestions: false,
+                                      autocorrect: false,
+                                      decoration: InputDecoration(
+                                        isDense:
+                                            true, // Reduce the overall height
+                                        border: OutlineInputBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                          borderSide: const BorderSide(
+                                              color: Color(0xFF5F5F5F)),
+                                        ),
+                                        labelText: 'Comment',
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                GestureDetector(
+                                  onTap: () async {
+                                    print("Legit: $data");
+                                    storeComment(
+                                        data['id'],
+                                        user!.displayName ?? "Anonymous",
+                                        user!.photoURL ?? "",
+                                        _comment.text);
+                                    // await Future.delayed(Duration(milliseconds: 500));
+                                    // Navigator.of(context).pop();
+                                  },
+                                  child: Container(
+                                    padding: const EdgeInsets.all(5),
+                                    margin: const EdgeInsets.symmetric(
+                                        horizontal: 10),
+                                    decoration: BoxDecoration(
+                                        color: _comment.text == ""
+                                            ? Colors.grey[300]
+                                            : Colors.greenAccent,
+                                        borderRadius: BorderRadius.circular(5)),
+                                    child: const Icon(Iconsax.send),
+                                  ),
+                                ),
+                              ],
+                            )
+                          : Container()),
                 ],
               ),
             ),
