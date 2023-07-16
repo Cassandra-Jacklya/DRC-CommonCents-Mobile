@@ -1,161 +1,309 @@
-import 'package:commoncents/pages/auth_pages/login.dart';
+import 'package:commoncents/apistore/stockdata.dart';
+import 'package:commoncents/components/chart.dart';
+import 'package:commoncents/components/chartTime.dart';
+import 'package:commoncents/components/contractSnackbar.dart';
+import 'package:commoncents/components/liveLinePrice.dart';
+import 'package:commoncents/cubit/candlePrice_cubit.dart';
+import 'package:commoncents/cubit/chartTime_cubit.dart';
+import 'package:commoncents/cubit/isCandle_cubit.dart';
+import 'package:commoncents/cubit/lineTime_cubit.dart';
+import 'package:commoncents/cubit/livelinePrice_cubit.dart';
+import 'package:commoncents/cubit/markets_cubit.dart';
+import 'package:commoncents/cubit/numberpicker_cubit.dart';
+import 'package:commoncents/cubit/stake_payout_cubit.dart';
+import 'package:commoncents/pages/simulationpage_guest.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-import '../apistore/stockdata.dart';
-import '../components/chart.dart';
-import '../pages/marketspage.dart';
+import 'package:toggle_switch/toggle_switch.dart';
+import '../components/appbar.dart';
+import '../components/chartPrice.dart';
+import '../components/formatMarkets.dart';
+import '../components/lineTime.dart';
+import '../components/navbar.dart';
+import '../components/numberPIcker.dart';
 import '../components/linechart.dart';
-import '../cubit/isCandle_cubit.dart';
-import '../cubit/markets_cubit.dart';
+import '../components/ticks_gauge.dart';
+import '../components/walletbutton.dart';
+import '../cubit/candlestick_cubit.dart';
+import '../cubit/login_cubit.dart';
+import '../cubit/navbar_cubit.dart';
+import '../cubit/news_tabbar_cubit.dart';
+import '../cubit/stock_data_cubit.dart';
+import '../cubit/ticks_cubit.dart';
+import '../apistore/PriceProposal.dart';
+import '../firebase_options.dart';
+import '../pages/marketspage.dart';
+import 'auth_pages/login.dart';
+
+bool isSnackbarVisible = false;
 
 class SimulationPageGuest extends StatefulWidget {
+  final String market;
+
+  const SimulationPageGuest({
+    super.key,
+    required this.market,
+  });
+
   @override
   _SimulationPageGuestState createState() => _SimulationPageGuestState();
 }
 
 class _SimulationPageGuestState extends State<SimulationPageGuest> {
-  IsCandleCubit isCandleCubit = IsCandleCubit();
-  MarketsCubit marketType = MarketsCubit();
-  double ticks = 0.0;
-  String stakePayout = '';
-  int currentAmount = 100000;
-  bool isCandle = false;
-  String market = '';
+  late IsCandleCubit isCandleCubit;
+  late String markettype;
+  late double ticks;
+  late String stakePayout;
+  late int currentAmount;
+  late bool isCandle;
+  List<String> timeUnit = ['Ticks', 'Minutes', 'Hours', 'Days'];
+  List<String> candleTimeUnit = [
+    'Minutes',
+    'Hours',
+    'Days',
+  ];
 
   @override
   void initState() {
-    super.initState();
-    marketType = context.read<MarketsCubit>();
-    isCandleCubit =
-        context.read<IsCandleCubit>(); // Initialize the isCandleCubit
-    isCandle = isCandleCubit.state;
-    market = marketType.state;
+    isCandle = false;
   }
 
   @override
   void dispose() {
     closeWebSocket();
-    // marketType.close();
-    // isCandleCubit.close();
+
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        GestureDetector(
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const LoginView()),
-            );
-          },
-          child: const Text(
-            "Log in ",
-            style: TextStyle(
-                fontSize: 20,
-                color: Color(0XFF3366FF),
-                decoration: TextDecoration.underline, fontWeight: FontWeight.w800 ),
-          ),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<BottomNavBarCubit>(
+          create: (context) => BottomNavBarCubit(),
         ),
-        const Text(" to start trading", style: TextStyle(fontSize: 20),)
+        BlocProvider<StockDataCubit>(
+          create: (context) => StockDataCubit(),
+        ),
+        BlocProvider<LoginStateBloc>(
+          create: (context) => LoginStateBloc(),
+        ),
+        BlocProvider<NewsTabBarCubit>(create: (context) => NewsTabBarCubit()),
+        BlocProvider<StakePayoutCubit>(create: (context) => StakePayoutCubit()),
+        BlocProvider<TicksCubit>(create: (context) => TicksCubit()),
+        BlocProvider<CurrentAmountCubit>(
+            create: (context) => CurrentAmountCubit()),
+        BlocProvider<CandlestickCubit>(create: (context) => CandlestickCubit()),
+        BlocProvider<MarketsCubit>(create: (context) => MarketsCubit()),
+        BlocProvider<IsCandleCubit>(create: (content) => IsCandleCubit()),
+        BlocProvider<LineTimeCubit>(create: (context) => LineTimeCubit()),
+        BlocProvider<ChartTimeCubit>(create: (context) => ChartTimeCubit()),
+        BlocProvider<LiveLinePriceCubit>(
+            create: (context) => LiveLinePriceCubit()),
+        BlocProvider<candlePriceCubit>(create: (context) => candlePriceCubit())
       ],
+      child: Scaffold(
+        resizeToAvoidBottomInset: false,
+        body: Column(
+          children: [
+            const SizedBox(height: 5),
+            Row(
+              children: [
+                BlocBuilder<MarketsCubit, String>(builder: (context, state) {
+                  return GestureDetector(
+                    onTap: () {
+                      unsubscribe();
+                      closeWebSocket();
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  Markets(market: widget.market)));
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.only(left: 15),
+                      margin: const EdgeInsets.all(10),
+                      height: 60,
+                      color: Colors.grey[300],
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(widget.market),
+                          const IconButton(
+                            onPressed: null,
+                            icon: Icon(
+                              Icons.keyboard_arrow_down_sharp,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                }),
+                GestureDetector(
+                  child: Container(
+                    height: 60,
+                    color: Colors.grey[300],
+                    child: IconButton(
+                      onPressed: () {
+                        setState(() {
+                          unsubscribe();
+                          closeWebSocket();
+                          isCandle = !isCandle;
+                          // isCandleCubit.isItCandles(isCandle);
+                        });
+                      },
+                      icon: isCandle
+                          ? const Icon(Icons.line_axis)
+                          : const Icon(Icons.candlestick_chart),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            BlocBuilder<ChartTimeCubit, String>(builder: (context, charttime) {
+              return BlocBuilder<LineTimeCubit, String>(
+                  builder: (context, state) {
+                return Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(0, 0, 15, 0),
+                      child: Container(
+                        margin: const EdgeInsets.symmetric(vertical: 10),
+                        // height: MediaQuery.of(context).size.height * 0.3,
+                        height: 300,
+                        width: double.infinity,
+                        color: Colors.grey[300],
+                        child: Center(
+                          child: isCandle
+                              ? BlocBuilder<MarketsCubit, String>(
+                                  builder: (context, market) {
+                                  return CandleStickChart(
+                                      isCandle: isCandle,
+                                      market: widget.market,
+                                      timeunit: charttime
+                                      // context
+                                      //     .read<ChartTimeCubit>()
+                                      //     .state,
+                                      );
+                                })
+                              : BlocBuilder<MarketsCubit, String>(
+                                  builder: (context, market) {
+                                    return MyLineChart(
+                                      isMini: false,
+                                      isCandle: isCandle,
+                                      market: widget.market,
+                                      timeunit: state,
+                                    );
+                                  },
+                                ),
+                        ),
+                      ),
+                    ),
+                    Container(
+                        height: 50,
+                        child: !isCandle
+                            ? ListView.builder(
+                                //line time
+                                scrollDirection: Axis.horizontal,
+                                itemCount: timeUnit.length,
+                                itemBuilder: (context, index) {
+                                  final unit = timeUnit[index];
+                                  final isSelected = (unit == state);
+                                  return GestureDetector(
+                                    onTap: () {
+                                      unsubscribe();
+                                      BlocProvider.of<LineTimeCubit>(context)
+                                          .updateLineTime(unit);
+                                    },
+                                    child: Container(
+                                      //candle time
+                                      margin: const EdgeInsets.symmetric(
+                                          horizontal: 8),
+                                      width: 80,
+                                      height: 50,
+                                      decoration: BoxDecoration(
+                                        color: isSelected
+                                            ? Colors.blue
+                                            : Colors.white,
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                      child:
+                                          Center(child: Text(timeUnit[index])),
+                                    ),
+                                  );
+                                },
+                              )
+                            : Center(
+                                //candle time
+                                child: ListView.builder(
+                                  scrollDirection: Axis.horizontal,
+                                  itemCount: candleTimeUnit.length,
+                                  itemBuilder: (context, index) {
+                                    final chartunit = candleTimeUnit[index];
+                                    final isSelected = (chartunit == charttime);
+                                    return GestureDetector(
+                                      onTap: () {
+                                        unsubscribeCandle();
+                                        BlocProvider.of<ChartTimeCubit>(context)
+                                            .updateChartTime(chartunit);
+                                      },
+                                      child: Container(
+                                        margin: const EdgeInsets.symmetric(
+                                            horizontal: 8),
+                                        width: 80,
+                                        height: 50,
+                                        decoration: BoxDecoration(
+                                          color: isSelected
+                                              ? Colors.blue
+                                              : Colors.white,
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                        ),
+                                        child: Center(
+                                            child: Text(candleTimeUnit[index])),
+                                      ),
+                                    );
+                                  },
+                                ),
+                              )),
+                  ],
+                );
+              });
+            }),
+            const SizedBox(height: 20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const LoginView()),
+                    );
+                  },
+                  child: const Text(
+                    "Log in ",
+                    style: TextStyle(
+                        fontSize: 20,
+                        color: Color(0XFF3366FF),
+                        decoration: TextDecoration.underline,
+                        fontWeight: FontWeight.w800),
+                  ),
+                ),
+                const Text(
+                  " to start trading",
+                  style: TextStyle(fontSize: 20),
+                ),
+                const SizedBox(height: 20),
+              ],
+            )
+          ],
+        ),
+      ),
     );
-    // Scaffold(
-    //     body: Column(
-    //   children: [
-    //     const SizedBox(height: 10),
-    //     Row(
-    //       children: [
-    //         BlocBuilder<MarketsCubit, String>(builder: (context, market) {
-    //           return GestureDetector(
-    //             onTap: () {
-    //               unsubscribe();
-    //               closeWebSocket();
-    //               Navigator.push(context,
-    //                   MaterialPageRoute(builder: (context) => Markets(market: market,)));
-    //             },
-    //             child: Container(
-    //               padding: const EdgeInsets.only(left: 15),
-    //               margin: const EdgeInsets.all(10),
-    //               height: 60,
-    //               color: Colors.grey[300],
-    //               child: Row(
-    //                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-    //                 children: [
-    //                   Text(market),
-    //                   const IconButton(
-    //                     onPressed: null,
-    //                     icon: Icon(
-    //                       Icons.keyboard_arrow_down_sharp,
-    //                     ),
-    //                   ),
-    //                 ],
-    //               ),
-    //             ),
-    //           );
-    //         }),
-    //         GestureDetector(
-    //           child: Container(
-    //             height: 60,
-    //             color: Colors.grey[300],
-    //             child: IconButton(
-    //               onPressed: () {
-    //                 setState(() {
-    //                   unsubscribe();
-    //                   closeWebSocket();
-    //                   isCandle = !isCandle;
-    //                   isCandleCubit.isItCandles(isCandle);
-    //                 });
-    //               },
-    //               icon: isCandle
-    //                   ? const Icon(Icons.line_axis)
-    //                   : const Icon(Icons.candlestick_chart),
-    //             ),
-    //           ),
-    //         ),
-    //         Container(
-    //           margin: const EdgeInsets.symmetric(horizontal: 10),
-    //           width: 25,
-    //           height: 25,
-    //           decoration: const BoxDecoration(
-    //             shape: BoxShape.circle,
-    //             color: Colors.blue,
-    //           ),
-    //           child: const Icon(
-    //             Icons.info,
-    //             color: Colors.white,
-    //             size: 24,
-    //           ),
-    //         ),
-    //       ],
-    //     ),
-    //     Container(
-    //       margin: const EdgeInsets.symmetric(vertical: 10),
-    //       height: MediaQuery.of(context).size.height * 0.4,
-    //       color: Colors.grey[300],
-    //       child: Center(
-    //         child: isCandle
-    //             ? BlocBuilder<MarketsCubit, String>(builder: (context, market) {
-    //                 return CandleStickChart(
-    //                   isCandle: isCandle,
-    //                   market: market,
-    //                 );
-    //               })
-    //             : BlocBuilder<MarketsCubit, String>(
-    //                 builder: (context, market) {
-    //                   return MyLineChart(
-    //                     isMini: false,
-    //                     isCandle: isCandle,
-    //                     market: market,
-    //                   );
-    //                 },
-    //               ),
-    //       ),
-    //     ),
-    //   ],
-    // ));
   }
 }

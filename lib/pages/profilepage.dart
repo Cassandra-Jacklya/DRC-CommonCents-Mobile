@@ -117,13 +117,10 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget build(BuildContext context) {
     if (user == null) {
       return Scaffold(
-        appBar: AppBar(
-          backgroundColor: Color(0XFF3366FF),
-          title: Text(
-            "Profile",
-            style: TextStyle(color: Colors.white),
-          ),
-        ),
+        appBar: CustomAppBar(
+            title: 'Profile',
+            logo: "assets/images/commoncents-logo.png",
+            isTradingPage: false),
         body: Center(
             child: Column(
           children: [
@@ -133,7 +130,8 @@ class _ProfilePageState extends State<ProfilePage> {
               style: TextStyle(fontWeight: FontWeight.w800),
             ),
             const SizedBox(height: 10),
-            Row(mainAxisAlignment: MainAxisAlignment.center,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const Text("Please "),
                 GestureDetector(
@@ -147,10 +145,9 @@ class _ProfilePageState extends State<ProfilePage> {
                   child: const Text(
                     "Log in ",
                     style: TextStyle(
-                        
-                        color: Color(0XFF3366FF),
-                        decoration: TextDecoration.underline,
-                        ),
+                      color: Color(0XFF3366FF),
+                      decoration: TextDecoration.underline,
+                    ),
                   ),
                 ),
                 const Text("to view your profile")

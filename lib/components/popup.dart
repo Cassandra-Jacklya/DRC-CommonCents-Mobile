@@ -653,6 +653,8 @@ class PostSomething extends StatefulWidget {
 class _PostSomethingState extends State<PostSomething> {
   TextEditingController _postController = TextEditingController();
   TextEditingController _titleController = TextEditingController();
+  late bool canPost = false;
+
   final user = FirebaseAuth.instance.currentUser;
 
   Future<void> createPost(String? author, String? authorImage, String? details,
@@ -668,6 +670,14 @@ class _PostSomethingState extends State<PostSomething> {
       print('Post created successfully!');
     } catch (e) {
       print('Error creating post: $e');
+    }
+  }
+
+  void postValidation(TextEditingController controller) {
+    if (controller.text != "") {
+      setState(() {
+        canPost = true;
+      });
     }
   }
 
@@ -724,6 +734,11 @@ class _PostSomethingState extends State<PostSomething> {
             maxLines: 1,
           ),
           TextFormField(
+            onChanged: (value) {
+              setState(() {
+                canPost = value.isNotEmpty;
+              });
+            },
             controller: _postController,
             decoration: InputDecoration(
               labelText: "Post",
@@ -739,15 +754,16 @@ class _PostSomethingState extends State<PostSomething> {
           ),
           GestureDetector(
             onTap: () {
-              _postController.text == "" ? {} : print(user!.displayName);
+              _postController.text.isEmpty && _titleController.text.isEmpty
+                  ? {print("You havent typed anything!")}
+                  : createPost(
+                      user!.displayName,
+                      user!.photoURL,
+                      _postController.text,
+                      DateTime.now().millisecondsSinceEpoch,
+                      _titleController.text,
+                    );
               Navigator.of(context).pop();
-              createPost(
-                user!.displayName,
-                user!.photoURL,
-                _postController.text,
-                DateTime.now().millisecondsSinceEpoch,
-                _titleController.text,
-              );
 
               // Call the refreshPosts callback function
               widget.refreshPosts();
@@ -758,9 +774,8 @@ class _PostSomethingState extends State<PostSomething> {
                 Container(
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
-                      color: _postController.text == ""
-                          ? Colors.grey[400]
-                          : const Color(0XFF3366FF)),
+                      color:
+                          canPost ? const Color(0XFF3366FF) : Colors.grey[400]),
                   // width: MediaQuery.of(context).size.width * 0.4,
                   // height: MediaQuery.of(context).size.height * 0.05,
                   width: 100,
@@ -816,14 +831,17 @@ class SyntheticDetails extends StatelessWidget {
   }
 }
 
-class ResetBalance extends StatelessWidget {
+class ResetBalance extends StatefulWidget {
   final LoginStateBloc loginStateBloc;
-
   ResetBalance({required this.loginStateBloc});
+  _ResetBalanceState createState() => _ResetBalanceState();
+}
 
-  Future<void> resetBalance(BuildContext context) async {
+class _ResetBalanceState extends State<ResetBalance> {
+  void resetBalance() async {
     FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
     User? user = FirebaseAuth.instance.currentUser;
+    late LoginStateBloc? balance = widget.loginStateBloc;
 
     if (user != null) {
       CollectionReference collectionReference =
@@ -832,19 +850,25 @@ class ResetBalance extends StatelessWidget {
 
       double updatedBalance = 100000.0; // Set the updated balance value
 
-      await userDocument.update({
-        'balance': updatedBalance,
-      });
+      try {
+        await userDocument.update({
+          'balance': updatedBalance,
+        });
 
-      // Retrieve the user data from Firestore to get the displayName
-      DocumentSnapshot<Object?> userDataSnapshot = await userDocument.get();
-      Map<String, dynamic> userData =
-          userDataSnapshot.data() as Map<String, dynamic>;
-      String email = userData['email'];
-      BlocProvider.of<LoginStateBloc>(context)
-          .updateBalance(email, updatedBalance.toString());
-      // loginStateBloc.updateBalance(displayName, updatedBalance.toString());
-      print("Balance reset");
+        DocumentSnapshot<Object?> userDataSnapshot = await userDocument.get();
+        if (userDataSnapshot.exists) {
+          Map<String, dynamic> userData =
+              userDataSnapshot.data() as Map<String, dynamic>;
+          String displayName = userData['displayName'];
+
+          // Update the balance in the LoginStateBloc
+          balance.updateBalance(displayName, updatedBalance.toString());
+          print("Balance reset");
+        }
+      } catch (e) {
+        // Handle any errors that occur during the update process
+        print("Error resetting balance: $e");
+      }
     }
   }
 
@@ -866,7 +890,7 @@ class ResetBalance extends StatelessWidget {
             GestureDetector(
               onTap: () {
                 Navigator.of(context).pop();
-                resetBalance(context);
+                resetBalance();
               },
               child: Container(
                 padding: const EdgeInsets.all(10),

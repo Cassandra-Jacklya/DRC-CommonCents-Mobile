@@ -120,6 +120,7 @@ class _SimulationPageState extends State<SimulationPage> {
         BlocProvider<candlePriceCubit>(create: (context) => candlePriceCubit())
       ],
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
         appBar: const CustomAppBar(
           title: "Trading Simulation",
           logo: "assets/images/commoncents-logo.png",
@@ -135,7 +136,11 @@ class _SimulationPageState extends State<SimulationPage> {
                   final User? user = FirebaseAuth.instance.currentUser;
                   if (user == null) {
                     //not logged in
-                    return SimulationPageGuest();
+                    return BlocBuilder<MarketsCubit, String>(
+                      builder: (context,state) {
+                        return SimulationPageGuest(market: widget.market);
+                      }
+                    );
                   } else {
                     //logged in
                     BlocProvider.of<LoginStateBloc>(context)
@@ -214,7 +219,6 @@ class _SimulationPageState extends State<SimulationPage> {
                                   child: Container(
                                     margin: const EdgeInsets.symmetric(
                                         vertical: 10),
-                                    // height: MediaQuery.of(context).size.height * 0.3,
                                     height: 300,
                                     width: double.infinity,
                                     color: Colors.grey[300],
@@ -284,7 +288,8 @@ class _SimulationPageState extends State<SimulationPage> {
                                               );
                                             },
                                           )
-                                        : Center( //candle time
+                                        : Center(
+                                            //candle time
                                             child: ListView.builder(
                                               scrollDirection: Axis.horizontal,
                                               itemCount: candleTimeUnit.length,
@@ -331,6 +336,7 @@ class _SimulationPageState extends State<SimulationPage> {
                         }),
                         Expanded(
                           child: SingleChildScrollView(
+                            reverse: true,
                             scrollDirection: Axis.vertical,
                             child: Column(
                               children: [

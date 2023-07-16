@@ -38,6 +38,18 @@ class _RegisterViewState extends State<RegisterView>
     return Firebase.initializeApp();
   }
 
+  Future<bool> isEmailRegistered(String email) async {
+    try {
+      final signInMethods =
+          await FirebaseAuth.instance.fetchSignInMethodsForEmail(email);
+      return signInMethods.isNotEmpty;
+    } on FirebaseAuthException catch (e) {
+      // Handle any errors that might occur during the check
+      print("Error checking email existence: ${e.message}");
+      return false;
+    }
+  }
+
   void addDocument() async {
     FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
     User? user = FirebaseAuth.instance.currentUser;
@@ -167,8 +179,8 @@ class _RegisterViewState extends State<RegisterView>
                             decoration: InputDecoration(
                               border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(10),
-                                  borderSide:
-                                      const BorderSide(color: Color(0xFF5F5F5F))),
+                                  borderSide: const BorderSide(
+                                      color: Color(0xFF5F5F5F))),
                               labelText: 'Email',
                             ),
                           ),
@@ -187,8 +199,8 @@ class _RegisterViewState extends State<RegisterView>
                             decoration: InputDecoration(
                               border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(10),
-                                  borderSide:
-                                      const BorderSide(color: Color(0xFF5F5F5F))),
+                                  borderSide: const BorderSide(
+                                      color: Color(0xFF5F5F5F))),
                               labelText: 'Password',
                               suffixIcon: GestureDetector(
                                 child: viewPass
@@ -217,8 +229,8 @@ class _RegisterViewState extends State<RegisterView>
                             decoration: InputDecoration(
                               border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(10),
-                                  borderSide:
-                                      const BorderSide(color: Color(0xFF5F5F5F))),
+                                  borderSide: const BorderSide(
+                                      color: Color(0xFF5F5F5F))),
                               labelText: 'Confirm Password',
                               suffixIcon: GestureDetector(
                                 child: viewConfirmPass
@@ -296,8 +308,9 @@ class _RegisterViewState extends State<RegisterView>
                             width: 92,
                             child: ElevatedButton(
                               style: ButtonStyle(
-                                backgroundColor: MaterialStateProperty.all<Color>(
-                                    const Color(0xFF3366FF)),
+                                backgroundColor:
+                                    MaterialStateProperty.all<Color>(
+                                        const Color(0xFF3366FF)),
                                 shape: MaterialStateProperty.all<
                                     RoundedRectangleBorder>(
                                   RoundedRectangleBorder(
@@ -308,6 +321,37 @@ class _RegisterViewState extends State<RegisterView>
                               onPressed: () async {
                                 final email = _email.text;
                                 final password = _password.text;
+
+                                bool emailExists =
+                                    await isEmailRegistered(email);
+
+                                if (emailExists) {
+                                  // Email already registered. Show an AlertDialog.
+                                  // ignore: use_build_context_synchronously
+                                  showDialog<String>(
+                                    barrierDismissible: false,
+                                    context: context,
+                                    builder: (BuildContext context) =>
+                                        AlertDialog(
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(20),
+                                      ),
+                                      title: Text('Email Already Registered'),
+                                      content: Text(
+                                          'The email $email is already registered.'),
+                                      actions: <Widget>[
+                                        TextButton(
+                                          onPressed: () =>
+                                              Navigator.pop(context, 'OK'),
+                                          child: const Text('OK'),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                  return;
+                                }
+
+                                // Proceed with the sign-up process
                                 BlocProvider.of<SignUpStateBloc>(context)
                                     .signUp(email, password);
                               },
@@ -330,17 +374,21 @@ class _RegisterViewState extends State<RegisterView>
                           children: const [
                             SizedBox(
                               width: 125,
-                              child: Divider(color: Color(0xFFD9D9D9),
-                              endIndent: 10,
+                              child: Divider(
+                                color: Color(0xFFD9D9D9),
+                                endIndent: 10,
                               ),
                             ),
-                            Text("or",
+                            Text(
+                              "or",
                               style: TextStyle(color: Color(0xFFD9D9D9)),
                             ),
-                            SizedBox(width: 125,
-                              child: Divider(color: Color(0xFFD9D9D9),
+                            SizedBox(
+                              width: 125,
+                              child: Divider(
+                                color: Color(0xFFD9D9D9),
                                 indent: 10,
-                              ), 
+                              ),
                             )
                           ],
                         ),

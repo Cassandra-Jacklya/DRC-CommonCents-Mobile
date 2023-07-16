@@ -73,8 +73,8 @@ class _ForumPageState extends State<ForumPage> {
   late bool isExpanded; // Track the expansion state
 
   Future<List<Map<String, dynamic>>> fetchFavoritedPostIds() async {
-    try {
-      final userId = user!.uid; // Replace with the actual user ID
+    if (user != null) {
+      final userId = user!.uid;
       final favoritesCollection = FirebaseFirestore.instance
           .collection('users')
           .doc(userId)
@@ -88,8 +88,7 @@ class _ForumPageState extends State<ForumPage> {
       }
 
       return favouritePosts;
-    } catch (error) {
-      print('Failed to fetch favorited post IDs: $error');
+    } else {
       return [];
     }
   }
@@ -191,7 +190,8 @@ class _ForumPageState extends State<ForumPage> {
                               );
                             },
                             child: Container(
-                              margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                              margin: const EdgeInsets.symmetric(
+                                  vertical: 10, horizontal: 20),
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(5),
                                 border: Border.all(

@@ -15,15 +15,6 @@ class WalletButton extends StatefulWidget {
 }
 
 class _WalletButtonState extends State<WalletButton> {
-// @override
-// void initState(){
-//   super.initState();
-//   getBalance();
-// }
-
-// Future<void> getBalance(BuildContext  context){
-// print("Hello");
-// }
 
   @override
   Widget build(BuildContext context) {
