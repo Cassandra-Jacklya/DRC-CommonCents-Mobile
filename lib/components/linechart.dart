@@ -74,7 +74,6 @@ class _LineChartState extends State<MyLineChart> {
       market: formatMarkets(widget.market),
       selectedTimeUnit: widget.timeunit,
     );
-    print("Line Chart $selectedTimeUnit");
     return Scaffold(
       body: Center(
         child: Column(

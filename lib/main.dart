@@ -1,4 +1,3 @@
-import 'package:commoncents/components/carousel_chart.dart';
 import 'package:commoncents/cubit/candlestick_cubit.dart';
 import 'package:commoncents/cubit/isCandle_cubit.dart';
 import 'package:commoncents/cubit/markets_cubit.dart';
