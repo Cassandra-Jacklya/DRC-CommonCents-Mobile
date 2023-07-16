@@ -8,6 +8,7 @@ import 'package:commoncents/pages/tradeHistory.dart';
 import 'package:commoncents/pages/help_support.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:iconsax/iconsax.dart';
 
 import '../components/appbar.dart';
@@ -117,7 +118,7 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget build(BuildContext context) {
     if (user == null) {
       return Scaffold(
-        appBar: CustomAppBar(
+        appBar: const CustomAppBar(
             title: 'Profile',
             logo: "assets/images/commoncents-logo.png",
             isTradingPage: false),
@@ -199,7 +200,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       ),
                       Container(
                         margin: const EdgeInsets.only(top: 5),
-                        height: 70,
+                        height: 78,
                         width: 200,
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -209,8 +210,45 @@ class _ProfilePageState extends State<ProfilePage> {
                               displayName,
                               style: const TextStyle(fontFamily: 'Roboto'),
                             ),
-                            Text(balance.toStringAsFixed(2),
-                                style: const TextStyle(fontFamily: "Roboto"))
+                            Row(
+                              children: [
+                                const Padding(
+                                  padding: EdgeInsets.fromLTRB(0, 0, 5, 0),
+                                  child: Icon(FontAwesomeIcons.wallet,
+                                    size: 13,
+                                  ),
+                                ),
+                                Text(balance.toStringAsFixed(2),
+                                    style: const TextStyle(fontFamily: "Roboto", fontWeight: FontWeight.bold),
+                                ),
+                                const Padding(
+                                  padding: EdgeInsets.only(left: 5),
+                                  child: Text("USD",
+                                    style: TextStyle(fontFamily: "Roboto", fontWeight: FontWeight.bold),
+                                  ),
+                                )
+                              ],
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 10),
+                              child: SizedBox(
+                                height: 30,
+                                width: 130,
+                                child: ElevatedButton(onPressed: () {
+                                  
+                                },
+                                style: ButtonStyle(
+                                  backgroundColor: MaterialStateProperty.all(const Color(0xFF6699FF)),
+                                  shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10)
+                                  ))
+                                ),
+                                child: const Text("Reset balance",
+                                  style: TextStyle(color: Colors.white, fontSize: 12
+                                  ),
+                                )),
+                              ),
+                            ),
                           ],
                         ),
                       ),
@@ -225,13 +263,15 @@ class _ProfilePageState extends State<ProfilePage> {
                           },
                           child: Transform.scale(
                             scale: 1.5, // Adjust the scale factor as needed
-                            child: const Icon(Iconsax.logout),
+                            child: const Icon(Iconsax.logout,
+                              size: 20,
+                            ),
                           )),
                     ],
                   ),
                 ),
                 Container(
-                  width: MediaQuery.of(context).size.width,
+                  // width: MediaQuery.of(context).size.width,
                   margin: const EdgeInsets.all(10),
                   padding: const EdgeInsets.all(10),
                   child: Column(

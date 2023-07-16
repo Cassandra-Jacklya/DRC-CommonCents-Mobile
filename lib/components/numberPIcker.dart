@@ -80,22 +80,25 @@ class _IntegerExampleState extends State<IntegerExample> {
                 },
               );
             },
-            child: TextField(
-              enabled: false,
-              textAlign: TextAlign.center,
-              controller: _controller,
-              keyboardType: TextInputType.number,
-              inputFormatters: [_amountFormatter], // Apply the formatter
-              onSubmitted: (value) {
-                final amount = int.tryParse(value) ?? 0;
-                // Limit the input to a range of 0 to 500
-                final limitedAmount = amount.clamp(0, 500);
-                currentAmountCubit.setCurrentAmount(limitedAmount);
-              },
-              decoration: InputDecoration(
-                hintText: currentAmountCubit.state == 0
-                    ? 'USD'
-                    : currentAmountCubit.state.toString(),
+            child: SizedBox(
+              height: 35,
+              child: TextField(
+                enabled: false,
+                textAlign: TextAlign.center,
+                controller: _controller,
+                keyboardType: TextInputType.number,
+                inputFormatters: [_amountFormatter], // Apply the formatter
+                onSubmitted: (value) {
+                  final amount = int.tryParse(value) ?? 0;
+                  // Limit the input to a range of 0 to 500
+                  final limitedAmount = amount.clamp(0, 500);
+                  currentAmountCubit.setCurrentAmount(limitedAmount);
+                },
+                decoration: InputDecoration(
+                  hintText: currentAmountCubit.state == 0
+                      ? 'USD'
+                      : currentAmountCubit.state.toString(),
+                ),
               ),
             ),
           ),
