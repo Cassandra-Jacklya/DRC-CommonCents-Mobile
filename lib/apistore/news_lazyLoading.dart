@@ -30,7 +30,7 @@ Future<List<dynamic>> getLazyNews(String topic) async {
       final feed = data['feed'];
       if (feed != null) {
         // news = feed;
-        news = feed.sublist(0, 8);
+        news = feed;
       }
       return news;
     } else {

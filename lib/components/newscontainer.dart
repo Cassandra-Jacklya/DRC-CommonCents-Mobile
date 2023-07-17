@@ -18,6 +18,7 @@ class NewsContainer extends StatelessWidget {
       itemCount: feeds?.length,
       itemBuilder: (context, index) {
         final news = feeds?[index];
+        print(feeds?.length);
         return GestureDetector(
           onTap: () async {
             // print(news['url']);
