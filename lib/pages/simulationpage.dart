@@ -89,12 +89,6 @@ class _SimulationPageState extends State<SimulationPage> {
   }
 
   @override
-  void didChangeDependencies() {
-    isCandleCubit = context.watch<IsCandleCubit>();
-    super.didChangeDependencies();
-  }
-
-  @override
   void dispose() {
     closeWebSocket();
 
