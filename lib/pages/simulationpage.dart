@@ -124,7 +124,7 @@ class _SimulationPageState extends State<SimulationPage> {
         BlocProvider<ResetWalletBloc>(create: (context) => ResetWalletBloc(),)
       ],
       child: Scaffold(
-        resizeToAvoidBottomInset: false,
+        resizeToAvoidBottomInset: true,
         appBar: const CustomAppBar(
           title: "Trading Simulation",
           logo: "assets/images/commoncents-logo.png",
@@ -237,7 +237,7 @@ class _SimulationPageState extends State<SimulationPage> {
                                   child: Container(
                                     margin: const EdgeInsets.symmetric(
                                         vertical: 10),
-                                    height: 300,
+                                    height: 280,
                                     width: double.infinity,
                                     color: Colors.grey[300],
                                     child: Center(
@@ -359,190 +359,191 @@ class _SimulationPageState extends State<SimulationPage> {
                           });
                         }),
                         Expanded(
-                          child: SingleChildScrollView(
-                            reverse: true,
-                            scrollDirection: Axis.vertical,
-                            child: Column(
-                              children: [
-                                // Container(
-                                //   child: isCandle ? ChartTime() : LineTime(),
-                                // ),
-                                Padding(
-                                  padding: const EdgeInsets.only(top: 17),
-                                  child: Container(
-                                      child: isCandle
-                                          ? ChartPrice(
-                                              market:
-                                                  formatMarkets(widget.market))
-                                          : LiveLinePrice(
-                                              market:
-                                                  formatMarkets(widget.market))),
-                                ),
-                                BlocBuilder<TicksCubit, double>(
-                                    builder: (context, selectedValue) {
-                                  return Padding(
-                                    padding: const EdgeInsets.only(top: 30),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceEvenly,
-                                      children: [
-                                        const Text("Ticks"),
-                                        TicksGauge()
-                                      ],
-                                    ),
-                                  );
-                                }),
-                                const SizedBox(height: 12),
-                                BlocBuilder<StakePayoutCubit, int>(
-                                  builder: (context, index) {
-                                    return Container(
-                                      height: 45,
-                                      child: ToggleSwitch(
-                                        minWidth: 269,
-                                        initialLabelIndex: context
-                                            .read<StakePayoutCubit>()
-                                            .state,
-                                        cornerRadius: 5,
-                                        borderColor: const [
-                                          Color(0xFF5F5F5F),
-                                          Color(0xFF5F5F5F)
+                          child: Scaffold(resizeToAvoidBottomInset: true,
+                            body: SingleChildScrollView(
+                              scrollDirection: Axis.vertical,
+                              child: Column(
+                                children: [
+                                  // Container(
+                                  //   child: isCandle ? ChartTime() : LineTime(),
+                                  // ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 17),
+                                    child: Container(
+                                        child: isCandle
+                                            ? ChartPrice(
+                                                market:
+                                                    formatMarkets(widget.market))
+                                            : LiveLinePrice(
+                                                market:
+                                                    formatMarkets(widget.market))),
+                                  ),
+                                  BlocBuilder<TicksCubit, double>(
+                                      builder: (context, selectedValue) {
+                                    return Padding(
+                                      padding: const EdgeInsets.only(top: 30),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceEvenly,
+                                        children: [
+                                          const Text("Ticks"),
+                                          TicksGauge()
                                         ],
-                                        borderWidth: 2,
-                                        activeFgColor: Colors.white,
-                                        inactiveBgColor: Colors.white,
-                                        inactiveFgColor: Colors.black,
-                                        totalSwitches: 2,
-                                        labels: const ['Stake', 'Payout'],
-                                        activeBgColors: const [
-                                          [Color(0xFF5F5F5F)],
-                                          [Color(0xFF5F5F5F)]
-                                        ],
-                                        onToggle: (index) {
-                                          context
-                                              .read<StakePayoutCubit>()
-                                              .updateStakePayout(index as int);
-                                        },
                                       ),
                                     );
-                                  },
-                                ),
-                                const SizedBox(height: 14),
-                                BlocBuilder<CurrentAmountCubit, int>(
-                                    builder: (context, amount) {
-                                  return const IntegerExample();
-                                }),
-                                const SizedBox(height: 20),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceAround,
-                                  children: [
-                                    GestureDetector(
-                                      onTap: () {
-                                        if (!isSnackbarVisible) {
-                                          markettype =
-                                              formatMarkets(widget.market);
-                                          ticks =
-                                              context.read<TicksCubit>().state;
-                                          if (BlocProvider.of<StakePayoutCubit>(
-                                                      context)
-                                                  .state ==
-                                              0) {
-                                            stakePayout = 'stake';
-                                          } else if (BlocProvider.of<
-                                                      StakePayoutCubit>(context)
-                                                  .state ==
-                                              1) {
-                                            stakePayout = 'payout';
-                                          }
-                                          currentAmount = context
-                                              .read<CurrentAmountCubit>()
-                                              .state;
-                                          handleBuy(
-                                              context,
-                                              ticks.toInt(),
-                                              stakePayout,
-                                              currentAmount,
-                                              "high",
-                                              markettype);
-                                          showSnackbar(
-                                              'Contract bought: Higher',
-                                              ticks.toInt());
-                                          isSnackbarVisible = true;
-                                        } else {}
-                                      },
-                                      child: Container(
-                                        padding:
-                                            const EdgeInsets.only(right: 10),
-                                        decoration: BoxDecoration(
-                                            color: Colors.green,
-                                            borderRadius:
-                                                BorderRadius.circular(10)),
+                                  }),
+                                  const SizedBox(height: 12),
+                                  BlocBuilder<StakePayoutCubit, int>(
+                                    builder: (context, index) {
+                                      return Container(
                                         height: 45,
-                                        width: 128,
-                                        child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceAround,
-                                            children: const [
-                                              Icon(Icons.arrow_upward),
-                                              Text("Higher")
-                                            ]),
+                                        child: ToggleSwitch(
+                                          minWidth: 269,
+                                          initialLabelIndex: context
+                                              .read<StakePayoutCubit>()
+                                              .state,
+                                          cornerRadius: 5,
+                                          borderColor: const [
+                                            Color(0xFF5F5F5F),
+                                            Color(0xFF5F5F5F)
+                                          ],
+                                          borderWidth: 2,
+                                          activeFgColor: Colors.white,
+                                          inactiveBgColor: Colors.white,
+                                          inactiveFgColor: Colors.black,
+                                          totalSwitches: 2,
+                                          labels: const ['Stake', 'Payout'],
+                                          activeBgColors: const [
+                                            [Color(0xFF5F5F5F)],
+                                            [Color(0xFF5F5F5F)]
+                                          ],
+                                          onToggle: (index) {
+                                            context
+                                                .read<StakePayoutCubit>()
+                                                .updateStakePayout(index as int);
+                                          },
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                  const SizedBox(height: 14),
+                                  BlocBuilder<CurrentAmountCubit, int>(
+                                      builder: (context, amount) {
+                                    return const IntegerExample();
+                                  }),
+                                  const SizedBox(height: 20),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceAround,
+                                    children: [
+                                      GestureDetector(
+                                        onTap: () {
+                                          if (!isSnackbarVisible) {
+                                            markettype =
+                                                formatMarkets(widget.market);
+                                            ticks =
+                                                context.read<TicksCubit>().state;
+                                            if (BlocProvider.of<StakePayoutCubit>(
+                                                        context)
+                                                    .state ==
+                                                0) {
+                                              stakePayout = 'stake';
+                                            } else if (BlocProvider.of<
+                                                        StakePayoutCubit>(context)
+                                                    .state ==
+                                                1) {
+                                              stakePayout = 'payout';
+                                            }
+                                            currentAmount = context
+                                                .read<CurrentAmountCubit>()
+                                                .state;
+                                            handleBuy(
+                                                context,
+                                                ticks.toInt(),
+                                                stakePayout,
+                                                currentAmount,
+                                                "high",
+                                                markettype);
+                                            showSnackbar(
+                                                'Contract bought: Higher',
+                                                ticks.toInt());
+                                            isSnackbarVisible = true;
+                                          } else {}
+                                        },
+                                        child: Container(
+                                          padding:
+                                              const EdgeInsets.only(right: 10),
+                                          decoration: BoxDecoration(
+                                              color: Colors.green,
+                                              borderRadius:
+                                                  BorderRadius.circular(10)),
+                                          height: 45,
+                                          width: 128,
+                                          child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.spaceAround,
+                                              children: const [
+                                                Icon(Icons.arrow_upward),
+                                                Text("Higher")
+                                              ]),
+                                        ),
                                       ),
-                                    ),
-                                    GestureDetector(
-                                      onTap: () {
-                                        if (!isSnackbarVisible) {
-                                          isSnackbarVisible = true;
-                                          markettype =
-                                              formatMarkets(widget.market);
-                                          ticks =
-                                              context.read<TicksCubit>().state;
-                                          if (BlocProvider.of<StakePayoutCubit>(
-                                                      context)
-                                                  .state ==
-                                              0) {
-                                            stakePayout = 'stake';
-                                          } else if (BlocProvider.of<
-                                                      StakePayoutCubit>(context)
-                                                  .state ==
-                                              1) {
-                                            stakePayout = 'payout';
-                                          }
-                                          currentAmount = context
-                                              .read<CurrentAmountCubit>()
-                                              .state;
-                                          handleBuy(
-                                              context,
-                                              ticks.toInt(),
-                                              stakePayout,
-                                              currentAmount,
-                                              "low",
-                                              markettype);
-                                          showSnackbar('Contract bought: Lower',
-                                              ticks.toInt());
-                                        } else {}
-                                      },
-                                      child: Container(
-                                        padding:
-                                            const EdgeInsets.only(right: 10),
-                                        decoration: BoxDecoration(
-                                            color: Colors.red,
-                                            borderRadius:
-                                                BorderRadius.circular(10)),
-                                        height: 45,
-                                        width: 128,
-                                        child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceAround,
-                                            children: const [
-                                              Icon(Icons.arrow_downward),
-                                              Text("Lower")
-                                            ]),
+                                      GestureDetector(
+                                        onTap: () {
+                                          if (!isSnackbarVisible) {
+                                            isSnackbarVisible = true;
+                                            markettype =
+                                                formatMarkets(widget.market);
+                                            ticks =
+                                                context.read<TicksCubit>().state;
+                                            if (BlocProvider.of<StakePayoutCubit>(
+                                                        context)
+                                                    .state ==
+                                                0) {
+                                              stakePayout = 'stake';
+                                            } else if (BlocProvider.of<
+                                                        StakePayoutCubit>(context)
+                                                    .state ==
+                                                1) {
+                                              stakePayout = 'payout';
+                                            }
+                                            currentAmount = context
+                                                .read<CurrentAmountCubit>()
+                                                .state;
+                                            handleBuy(
+                                                context,
+                                                ticks.toInt(),
+                                                stakePayout,
+                                                currentAmount,
+                                                "low",
+                                                markettype);
+                                            showSnackbar('Contract bought: Lower',
+                                                ticks.toInt());
+                                          } else {}
+                                        },
+                                        child: Container(
+                                          padding:
+                                              const EdgeInsets.only(right: 10),
+                                          decoration: BoxDecoration(
+                                              color: Colors.red,
+                                              borderRadius:
+                                                  BorderRadius.circular(10)),
+                                          height: 45,
+                                          width: 128,
+                                          child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.spaceAround,
+                                              children: const [
+                                                Icon(Icons.arrow_downward),
+                                                Text("Lower")
+                                              ]),
+                                        ),
                                       ),
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(height: 40),
-                              ],
+                                    ],
+                                  ),
+                                  const SizedBox(height: 40),
+                                ],
+                              ),
                             ),
                           ),
                         ),

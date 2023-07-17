@@ -12,34 +12,38 @@ class IntegerExample extends StatefulWidget {
 }
 
 class _IntegerExampleState extends State<IntegerExample> {
-  late CurrentAmountCubit currentAmountCubit;
   final TextEditingController _controller = TextEditingController();
 
-  @override
-  void didChangeDependencies() {
-    currentAmountCubit = context.watch<CurrentAmountCubit>();
-    super.didChangeDependencies();
-  }
+  // @override
+  // void didChangeDependencies() {
 
-  @override
-  void dispose() {
-    currentAmountCubit.close();
-    _controller.dispose();
-    super.dispose();
-  }
+  //   super.didChangeDependencies();
+  // }
+
+  // @override
+  // void dispose() {
+  //   currentAmountCubit.close();
+  //   _controller.dispose();
+  //   super.dispose();
+  // }
 
   final _amountFormatter =
       FilteringTextInputFormatter.allow(RegExp(r'^[0-9]{1,3}$'));
 
   @override
   Widget build(BuildContext context) {
+    CurrentAmountCubit currentAmountCubit = context.watch<CurrentAmountCubit>();
+
     return Row(
       children: [
         IconButton(
           icon: const Icon(Icons.remove),
           onPressed: () {
-            currentAmountCubit.decrement(currentAmountCubit.state);
-            _controller.text = currentAmountCubit.state.toString();
+            if (currentAmountCubit.state <=0) {
+            } else {
+              currentAmountCubit.decrement(currentAmountCubit.state);
+              _controller.text = currentAmountCubit.state.toString();
+            }
           },
         ),
         Expanded(
@@ -48,8 +52,10 @@ class _IntegerExampleState extends State<IntegerExample> {
               showDialog(
                 context: context,
                 builder: (BuildContext context) {
-                  return AlertDialog(alignment: Alignment.topCenter,
+                  return AlertDialog(
+                    alignment: Alignment.center,
                     content: TextField(
+                      autofocus: true,
                       textAlign: TextAlign.center,
                       controller: _controller,
                       keyboardType: TextInputType.number,
@@ -64,8 +70,8 @@ class _IntegerExampleState extends State<IntegerExample> {
                       },
                       decoration: InputDecoration(
                         hintText: currentAmountCubit.state == 0
-                    ? 'USD'
-                    : currentAmountCubit.state.toString(),
+                            ? 'USD'
+                            : currentAmountCubit.state.toString(),
                       ),
                     ),
                     actions: <Widget>[
@@ -106,8 +112,11 @@ class _IntegerExampleState extends State<IntegerExample> {
         IconButton(
           icon: const Icon(Icons.add),
           onPressed: () {
-            currentAmountCubit.increment(currentAmountCubit.state);
-            _controller.text = currentAmountCubit.state.toString();
+            if (currentAmountCubit.state >=500) {
+            } else {
+              currentAmountCubit.increment(currentAmountCubit.state);
+              _controller.text = currentAmountCubit.state.toString();
+            }
           },
         ),
       ],
