@@ -104,7 +104,7 @@ class _PostModalState extends State<PostModal> {
     Map<String, dynamic> data = widget.post;
     List comments = data['comments'];
     print("Here: $comments");
-    print(widget.post['authorImage'] );
+    print(widget.post['authorImage']);
     return SingleChildScrollView(
       child: Container(
         color: Colors.white,
@@ -243,12 +243,15 @@ class _PostModalState extends State<PostModal> {
                                 ),
                                 GestureDetector(
                                   onTap: () async {
-                                    print("Legit: $data");
-                                    storeComment(
-                                        data['id'],
-                                        user!.displayName ?? user!.email!,
-                                        user!.photoURL ?? "https://www.seekpng.com/png/detail/966-9665493_my-profile-icon-blank-profile-image-circle.png",
-                                        _comment.text);
+                                    if (_comment.text.isEmpty) {
+                                    } else {
+                                      storeComment(
+                                          data['id'],
+                                          user!.displayName ?? user!.email!,
+                                          user!.photoURL ??
+                                              "https://www.seekpng.com/png/detail/966-9665493_my-profile-icon-blank-profile-image-circle.png",
+                                          _comment.text);
+                                    }
                                     // await Future.delayed(Duration(milliseconds: 500));
                                     // Navigator.of(context).pop();
                                   },

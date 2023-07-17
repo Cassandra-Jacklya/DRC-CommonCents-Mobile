@@ -525,7 +525,9 @@ class _TradeDetailsState extends State<TradeDetails> {
                         ),
                         const Flexible(
                           child: Divider(
-                            color: Color(0xFFD9D9D9,),
+                            color: Color(
+                              0xFFD9D9D9,
+                            ),
                             indent: 10,
                             endIndent: 10,
                           ),
@@ -535,10 +537,10 @@ class _TradeDetailsState extends State<TradeDetails> {
                               ? "+ ${widget.pNl.toStringAsFixed(2)}"
                               : "-${widget.pNl.toStringAsFixed(2)}",
                           style: TextStyle(
-                              color: widget.status == "Won"
-                                  ? Colors.greenAccent
-                                  : Colors.redAccent,
-                            ),
+                            color: widget.status == "Won"
+                                ? Colors.greenAccent
+                                : Colors.redAccent,
+                          ),
                         ),
                       ],
                     ),
@@ -553,7 +555,9 @@ class _TradeDetailsState extends State<TradeDetails> {
                         ),
                         const Flexible(
                           child: Divider(
-                            color: Color(0xFFD9D9D9,),
+                            color: Color(
+                              0xFFD9D9D9,
+                            ),
                             indent: 10,
                             endIndent: 10,
                           ),
@@ -572,7 +576,9 @@ class _TradeDetailsState extends State<TradeDetails> {
                         ),
                         const Flexible(
                           child: Divider(
-                            color: Color(0xFFD9D9D9,),
+                            color: Color(
+                              0xFFD9D9D9,
+                            ),
                             indent: 10,
                             endIndent: 10,
                           ),
@@ -591,7 +597,9 @@ class _TradeDetailsState extends State<TradeDetails> {
                         ),
                         const Flexible(
                           child: Divider(
-                            color: Color(0xFFD9D9D9,),
+                            color: Color(
+                              0xFFD9D9D9,
+                            ),
                             indent: 10,
                             endIndent: 10,
                           ),
@@ -610,7 +618,9 @@ class _TradeDetailsState extends State<TradeDetails> {
                         ),
                         const Flexible(
                           child: Divider(
-                            color: Color(0xFFD9D9D9,),
+                            color: Color(
+                              0xFFD9D9D9,
+                            ),
                             indent: 10,
                             endIndent: 10,
                           ),
@@ -629,7 +639,9 @@ class _TradeDetailsState extends State<TradeDetails> {
                         ),
                         const Flexible(
                           child: Divider(
-                            color: Color(0xFFD9D9D9,),
+                            color: Color(
+                              0xFFD9D9D9,
+                            ),
                             indent: 10,
                             endIndent: 10,
                           ),
@@ -645,12 +657,14 @@ class _TradeDetailsState extends State<TradeDetails> {
                         "Strategy",
                       ),
                       const Flexible(
-                          child: Divider(
-                            color: Color(0xFFD9D9D9,),
-                            indent: 10,
-                            endIndent: 10,
+                        child: Divider(
+                          color: Color(
+                            0xFFD9D9D9,
                           ),
+                          indent: 10,
+                          endIndent: 10,
                         ),
+                      ),
                       Text(widget.strategy),
                     ],
                   ),
@@ -776,19 +790,19 @@ class _PostSomethingState extends State<PostSomething> {
           ),
           GestureDetector(
             onTap: () {
-              _postController.text.isEmpty && _titleController.text.isEmpty
-                  ? {print("You havent typed anything!")}
-                  : createPost(
-                      user!.displayName,
-                      user!.photoURL,
-                      _postController.text,
-                      DateTime.now().millisecondsSinceEpoch,
-                      _titleController.text,
-                    );
-              Navigator.of(context).pop();
-
-              // Call the refreshPosts callback function
-              widget.refreshPosts();
+              if (_postController.text.isEmpty ||
+                  _titleController.text.isEmpty) {
+              } else {
+                createPost(
+                  user!.displayName,
+                  user!.photoURL,
+                  _postController.text,
+                  DateTime.now().millisecondsSinceEpoch,
+                  _titleController.text,
+                );
+                Navigator.of(context).pop();
+                widget.refreshPosts();
+              }
             },
             child: Row(
               mainAxisAlignment: MainAxisAlignment.end,
@@ -800,8 +814,8 @@ class _PostSomethingState extends State<PostSomething> {
                           canPost ? const Color(0XFF3366FF) : Colors.grey[400]),
                   // width: MediaQuery.of(context).size.width * 0.4,
                   // height: MediaQuery.of(context).size.height * 0.05,
-                  width: 300,
-                  height: 300,
+                  width: 100,
+                  height: 42,
                   child: const Center(
                     child: Text(
                       "Post",
@@ -855,120 +869,126 @@ class SyntheticDetails extends StatelessWidget {
 
 class ResetBalance extends StatelessWidget {
   const ResetBalance({super.key});
-  
+
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider<ResetWalletBloc>(create: (context) => ResetWalletBloc(),)
+        BlocProvider<ResetWalletBloc>(
+          create: (context) => ResetWalletBloc(),
+        )
       ],
       child: Dialog(
         child: Container(
-            height: 140,
-            width: 120,
-            padding: const EdgeInsets.all(10),
-            child: BlocBuilder<ResetWalletBloc, ResetWallet>(
+          height: 140,
+          width: 120,
+          padding: const EdgeInsets.all(10),
+          child: BlocBuilder<ResetWalletBloc, ResetWallet>(
               builder: (context, state) {
-                if (state is ResetWalletExecuted) {
-                  return Column(
+            if (state is ResetWalletExecuted) {
+              return Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          const Text("Current balance:"),
-                          const Flexible(
-                          child: Divider(
-                            color: Color(0xFFD9D9D9,),
-                            indent: 10,
-                            endIndent: 10,
+                      const Text("Current balance:"),
+                      const Flexible(
+                        child: Divider(
+                          color: Color(
+                            0xFFD9D9D9,
                           ),
-                        ),
-                          Text(state.balance.toString()),
-                        ],
-                      ),
-                      GestureDetector(
-                        onTap: () {
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.fromLTRB(0, 12, 0, 0),
-                          child: Container(
-                            padding: const EdgeInsets.all(10),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(40),
-                              color: const Color(0XFF3366FF),
-                            ),
-                            child: const Text(
-                              "Click to reset balance",
-                              textAlign: TextAlign.center,
-                              style: TextStyle(color: Colors.white, fontSize: 15),
-                            ),
-                          ),
+                          indent: 10,
+                          endIndent: 10,
                         ),
                       ),
-                      const Padding(
-                        padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
-                        child: Text("*Resetting your balance will clear all your trade histories and remove you from the leaderboard.",
-                          style: TextStyle(fontSize: 12),
-                        ),
-                      )
+                      Text(state.balance.toString()),
                     ],
-                  );
-                }
-                else if (state is ResetWalletInitial) {
-                  return Column(
+                  ),
+                  GestureDetector(
+                    onTap: () {},
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(0, 12, 0, 0),
+                      child: Container(
+                        padding: const EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(40),
+                          color: const Color(0XFF3366FF),
+                        ),
+                        child: const Text(
+                          "Click to reset balance",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(color: Colors.white, fontSize: 15),
+                        ),
+                      ),
+                    ),
+                  ),
+                  const Padding(
+                    padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
+                    child: Text(
+                      "*Resetting your balance will clear all your trade histories and remove you from the leaderboard.",
+                      style: TextStyle(fontSize: 12),
+                    ),
+                  )
+                ],
+              );
+            } else if (state is ResetWalletInitial) {
+              return Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          const Text("Current balance:"),
-                          const Flexible(
-                          child: Divider(
-                            color: Color(0xFFD9D9D9,),
-                            indent: 10,
-                            endIndent: 10,
+                      const Text("Current balance:"),
+                      const Flexible(
+                        child: Divider(
+                          color: Color(
+                            0xFFD9D9D9,
                           ),
-                        ),
-                          Text(state.balance.toString()),
-                        ],
-                      ),
-                      GestureDetector(
-                        onTap: () {
-                          if(!ResetWalletBloc().isClosed) {
-                            BlocProvider.of<ResetWalletBloc>(context).resetBalance();
-                          }
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.fromLTRB(0, 12, 0, 0),
-                          child: Container(
-                            width: 200,
-                            padding: const EdgeInsets.all(10),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(40),
-                              color: const Color(0XFF3366FF),
-                            ),
-                            child: const Text(
-                              "Click to reset balance",
-                              textAlign: TextAlign.center,
-                              style: TextStyle(color: Colors.white, fontSize: 15),
-                            ),
-                          ),
+                          indent: 10,
+                          endIndent: 10,
                         ),
                       ),
-                      const Padding(
-                        padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
-                        child: Text("*Resetting your balance will clear all your trade histories and remove you from the leaderboard.",
-                          style: TextStyle(fontSize: 12),
-                        ),
-                      )
+                      Text(state.balance.toString()),
                     ],
-                  );
-                }
-                if (!ResetWalletBloc().isClosed) {
-                  BlocProvider.of<ResetWalletBloc>(context).initialize();
-                }
-                return const Text("Loading...");
-              }
-            ),
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      if (!ResetWalletBloc().isClosed) {
+                        BlocProvider.of<ResetWalletBloc>(context)
+                            .resetBalance();
+                      }
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(0, 12, 0, 0),
+                      child: Container(
+                        width: 200,
+                        padding: const EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(40),
+                          color: const Color(0XFF3366FF),
+                        ),
+                        child: const Text(
+                          "Click to reset balance",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(color: Colors.white, fontSize: 15),
+                        ),
+                      ),
+                    ),
+                  ),
+                  const Padding(
+                    padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
+                    child: Text(
+                      "*Resetting your balance will clear all your trade histories and remove you from the leaderboard.",
+                      style: TextStyle(fontSize: 12),
+                    ),
+                  )
+                ],
+              );
+            }
+            if (!ResetWalletBloc().isClosed) {
+              BlocProvider.of<ResetWalletBloc>(context).initialize();
+            }
+            return const Text("Loading...");
+          }),
         ),
       ),
     );
