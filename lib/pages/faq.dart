@@ -133,7 +133,7 @@ class _FAQState extends State<FAQ> {
                                   border: Border.all(color: Colors.black),
                                   borderRadius: BorderRadius.circular(10)),
                               height: MediaQuery.of(context).size.height * 0.1,
-                              width: MediaQuery.of(context).size.width * 0.8,
+                              width: MediaQuery.of(context).size.width * 0.9,
                               padding: const EdgeInsets.all(10),
                               // color: Colors.green,
                               child: Row(
@@ -163,7 +163,7 @@ class _FAQState extends State<FAQ> {
                       },
                       child: _isExpanded2
                           ? Container(
-                              width: MediaQuery.of(context).size.width * 0.8,
+                              width: MediaQuery.of(context).size.width * 0.9,
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(10),
                                   border: Border.all(color: Colors.black)),
@@ -188,7 +188,7 @@ class _FAQState extends State<FAQ> {
                                           MediaQuery.of(context).size.height *
                                               0.1,
                                       width: MediaQuery.of(context).size.width *
-                                          0.8,
+                                          0.9,
                                       padding: const EdgeInsets.all(10),
                                       // color: Colors.green,
                                       child: Row(
@@ -252,7 +252,7 @@ class _FAQState extends State<FAQ> {
                                   border: Border.all(color: Colors.black),
                                   borderRadius: BorderRadius.circular(10)),
                               height: MediaQuery.of(context).size.height * 0.1,
-                              width: MediaQuery.of(context).size.width * 0.8,
+                              width: MediaQuery.of(context).size.width * 0.9,
                               padding: const EdgeInsets.all(10),
                               // color: Colors.green,
                               child: Row(
@@ -270,11 +270,11 @@ class _FAQState extends State<FAQ> {
                                                     .width *
                                                 0.6,
                                             child: const Text(
-                                                "I'm not familiar with trading, how can I get started with CommonCents?",
-                                                style: TextStyle(
-                                                  overflow: TextOverflow.visible
-                                                ),
-                                                ),
+                                              "I'm not familiar with trading, how can I get started with CommonCents?",
+                                              style: TextStyle(
+                                                  overflow:
+                                                      TextOverflow.visible),
+                                            ),
                                           )),
                                     ],
                                   ),
@@ -293,7 +293,7 @@ class _FAQState extends State<FAQ> {
                       },
                       child: _isExpanded3
                           ? Container(
-                              width: MediaQuery.of(context).size.width * 0.8,
+                              width: MediaQuery.of(context).size.width * 0.9,
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(10),
                                   border: Border.all(color: Colors.black)),
@@ -302,7 +302,7 @@ class _FAQState extends State<FAQ> {
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(10),
                                 ),
-                                width: MediaQuery.of(context).size.width * 0.8,
+                                width: MediaQuery.of(context).size.width * 0.9,
                                 padding: const EdgeInsets.all(0),
                                 // height: MediaQuery.of(context).size.height * 0.23,
                                 child: Column(
@@ -318,7 +318,7 @@ class _FAQState extends State<FAQ> {
                                           MediaQuery.of(context).size.height *
                                               0.1,
                                       width: MediaQuery.of(context).size.width *
-                                          0.8,
+                                          0.9,
                                       padding: const EdgeInsets.all(10),
                                       // color: Colors.green,
                                       child: Row(
@@ -338,11 +338,11 @@ class _FAQState extends State<FAQ> {
                                                           .width *
                                                       0.6,
                                                   child: Text(
-                                                      "What trading market is CommonCents \nfocused on?",
-                                                      style: TextStyle(
-                                                    overflow: TextOverflow.visible
+                                                    "What trading market is CommonCents \nfocused on?",
+                                                    style: TextStyle(
+                                                        overflow: TextOverflow
+                                                            .visible),
                                                   ),
-                                                      ),
                                                 ),
                                               ),
                                             ],
@@ -351,7 +351,9 @@ class _FAQState extends State<FAQ> {
                                         ],
                                       ),
                                     ),
-                                    Container(padding: const EdgeInsets.only(bottom: 10),
+                                    Container(
+                                      padding:
+                                          const EdgeInsets.only(bottom: 10),
                                       decoration: const BoxDecoration(
                                           border: Border(
                                               top: BorderSide(
@@ -365,7 +367,8 @@ class _FAQState extends State<FAQ> {
                                           Padding(
                                             padding: EdgeInsets.symmetric(
                                                 horizontal: 5),
-                                            child: Container(margin: const EdgeInsets.all(5),
+                                            child: Container(
+                                              margin: const EdgeInsets.all(5),
                                               child: Text(
                                                   "CommonCents only focuses on synthetic trading\nas it is one of the markets that people are afraid\n of getting into due to the risks. CommonCents\n exists to educate the concepts of those who\nhave the desire to leap into synthetic trading."),
                                             ),
@@ -384,7 +387,7 @@ class _FAQState extends State<FAQ> {
                                   border: Border.all(color: Colors.black),
                                   borderRadius: BorderRadius.circular(10)),
                               height: MediaQuery.of(context).size.height * 0.1,
-                              width: MediaQuery.of(context).size.width * 0.8,
+                              width: MediaQuery.of(context).size.width * 0.9,
                               padding: const EdgeInsets.all(10),
                               // color: Colors.green,
                               child: Row(
@@ -422,7 +425,7 @@ class _FAQState extends State<FAQ> {
                       },
                       child: _isExpanded4
                           ? Container(
-                              width: MediaQuery.of(context).size.width * 0.8,
+                              width: MediaQuery.of(context).size.width * 0.9,
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(10),
                                   border: Border.all(color: Colors.black)),
@@ -431,7 +434,7 @@ class _FAQState extends State<FAQ> {
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(10),
                                 ),
-                                width: MediaQuery.of(context).size.width * 0.8,
+                                width: MediaQuery.of(context).size.width * 0.9,
                                 padding: const EdgeInsets.all(0),
                                 // height: MediaQuery.of(context).size.height * 0.23,
                                 child: Column(
@@ -447,7 +450,7 @@ class _FAQState extends State<FAQ> {
                                           MediaQuery.of(context).size.height *
                                               0.1,
                                       width: MediaQuery.of(context).size.width *
-                                          0.8,
+                                          0.9,
                                       padding: const EdgeInsets.all(10),
                                       // color: Colors.green,
                                       child: Row(
@@ -465,6 +468,11 @@ class _FAQState extends State<FAQ> {
                                               ),
                                             ],
                                           ),
+                                          SizedBox(
+                                              width: MediaQuery.of(context)
+                                                      .size
+                                                      .width *
+                                                  0.1),
                                           const Icon(Icons.expand_more),
                                         ],
                                       ),
@@ -503,7 +511,7 @@ class _FAQState extends State<FAQ> {
                                   border: Border.all(color: Colors.black),
                                   borderRadius: BorderRadius.circular(10)),
                               height: MediaQuery.of(context).size.height * 0.1,
-                              width: MediaQuery.of(context).size.width * 0.8,
+                              width: MediaQuery.of(context).size.width * 0.9,
                               padding: const EdgeInsets.all(10),
                               // color: Colors.green,
                               child: Row(
@@ -520,6 +528,7 @@ class _FAQState extends State<FAQ> {
                                       ),
                                     ],
                                   ),
+                                  SizedBox(width: MediaQuery.of(context).size.width*0.1),
                                   const Icon(Icons.expand_more),
                                 ],
                               ),
@@ -535,7 +544,7 @@ class _FAQState extends State<FAQ> {
                       },
                       child: _isExpanded5
                           ? Container(
-                              width: MediaQuery.of(context).size.width * 0.8,
+                              width: MediaQuery.of(context).size.width * 0.9,
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(10),
                                   border: Border.all(color: Colors.black)),
@@ -544,7 +553,7 @@ class _FAQState extends State<FAQ> {
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(10),
                                 ),
-                                width: MediaQuery.of(context).size.width * 0.8,
+                                width: MediaQuery.of(context).size.width * 0.9,
                                 padding: const EdgeInsets.all(0),
                                 // height: MediaQuery.of(context).size.height * 0.23,
                                 child: Column(
@@ -560,7 +569,7 @@ class _FAQState extends State<FAQ> {
                                           MediaQuery.of(context).size.height *
                                               0.1,
                                       width: MediaQuery.of(context).size.width *
-                                          0.8,
+                                          0.9,
                                       padding: const EdgeInsets.all(10),
                                       // color: Colors.green,
                                       child: Row(
@@ -616,14 +625,15 @@ class _FAQState extends State<FAQ> {
                                   border: Border.all(color: Colors.black),
                                   borderRadius: BorderRadius.circular(10)),
                               height: MediaQuery.of(context).size.height * 0.1,
-                              width: MediaQuery.of(context).size.width * 0.8,
+                              width: MediaQuery.of(context).size.width * 0.9,
                               padding: const EdgeInsets.all(10),
                               // color: Colors.green,
                               child: Container(
                                 child: Row(
                                   children: [
                                     Row(
-                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
                                       children: const [
                                         Icon(FontAwesomeIcons.userSecret),
                                         Padding(
