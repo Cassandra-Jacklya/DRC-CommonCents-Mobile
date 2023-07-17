@@ -283,20 +283,6 @@ class _OnboardingState extends State<Onboarding> with SingleTickerProviderStateM
                 )
               ],
             ),
-            // !isRotated 
-            // ? Positioned(
-            //   height: 46.17,
-            //   width: 42,
-            //   top: 375,
-            //   left: 160,
-            //   child: Container(
-            //     decoration: const BoxDecoration(
-            //       image: DecorationImage(image: AssetImage("assets/images/commoncents-logo.png"),
-            //       )
-            //     ),
-            //   ),
-            // )
-            
             Positioned(
                 height: 46.17,
                 width: 42,

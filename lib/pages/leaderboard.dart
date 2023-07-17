@@ -19,7 +19,7 @@ class _LeaderboardState extends State<Leaderboard> {
     // Iterate through each document and retrieve netWorth field
     await Future.forEach(querySnapshot.docs, (userDoc) async {
       Map<String, dynamic> userData = userDoc.data() as Map<String, dynamic>;
-      String userId = userDoc.id;
+      String userId = userData['displayName'] ?? userData['email'];
       double netWorth = 0;
 
       // Retrieve the trade summary document for the user
@@ -35,9 +35,9 @@ class _LeaderboardState extends State<Leaderboard> {
         netWorth = tradeSummaryData!['netWorth']?.toDouble() ?? 0;
       }
 
-      String? photo = userData['photoURL'];
+      String? photo = userData['photoURL'] ?? 'https://www.seekpng.com/png/detail/966-9665493_my-profile-icon-blank-profile-image-circle.png';
 
-      rankedUsers.add({'userId': userId, 'netWorth': netWorth, 'photo': photo});
+      rankedUsers.add({'userId': userId, 'netWorth': netWorth, 'photo': photo,});
     });
 
     // Sort the rankedUsers list in descending order based on netWorth
@@ -60,8 +60,6 @@ class _LeaderboardState extends State<Leaderboard> {
   @override
   Widget build(BuildContext context) {
     if (ranking.isNotEmpty) {
-      final screenWidth = MediaQuery.of(context).size.width;
-      final screenHeight = MediaQuery.of(context).size.height;
       return Scaffold(
         appBar: AppBar(
           shadowColor: Colors.transparent,
@@ -77,14 +75,24 @@ class _LeaderboardState extends State<Leaderboard> {
           children: [
             Stack(
               children: [
-                Image.asset('assets/images/leaderboard.png'),
+                // Positioned(
+                //   top: 100,
+                //   left: 0,
+                //   child: Image.asset('assets/images/Ellipse 20.png', 
+                //   scale: 0.9,),
+                // ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 25),
+                  child: Image.asset('assets/images/leaderboard.png'),
+                ),
                 Container(
-                  height: MediaQuery.of(context).size.height * 0.4,
+                  // height: MediaQuery.of(context).size.height * 0.4,
+                  height: 300,
                   color: Colors.transparent,
                   child: Stack(
                     children: [
                       Positioned(
-                        top: 28,
+                        top: 53,
                         right: 147,
                         child: Container(
                           width: 90,
@@ -101,7 +109,11 @@ class _LeaderboardState extends State<Leaderboard> {
                         ),
                       ),
                       Positioned(
-                        top: 70,
+                        top: 215,
+                        left: 165,
+                        child: Text(ranking[0]['userId'], overflow: TextOverflow.ellipsis)),
+                      Positioned(
+                        top: 95,
                         right: 28,
                         child: Container(
                           width: 90,
@@ -111,7 +123,8 @@ class _LeaderboardState extends State<Leaderboard> {
                             color: Colors.grey[500],
                           ),
                           child: ranking.length < 2 
-                          ? CircleAvatar()
+                          ? const CircleAvatar(
+                            backgroundColor: Color(0xFFD9D9D9))
                           : CircleAvatar(
                             backgroundImage:
                                 NetworkImage(ranking[1]['photo'] ?? "https://www.seekpng.com/png/detail/966-9665493_my-profile-icon-blank-profile-image-circle.png"),
@@ -120,7 +133,12 @@ class _LeaderboardState extends State<Leaderboard> {
                         ),
                       ),
                       Positioned(
-                        top: 70,
+                        top: 260,
+                        left: 60,
+                        child: Text(ranking[1]['userId'], overflow: TextOverflow.ellipsis)
+                      ),
+                      Positioned(
+                        top: 95,
                         left: 28,
                         child: Container(
                           width: 90,
@@ -140,6 +158,11 @@ class _LeaderboardState extends State<Leaderboard> {
                           ),
                         ),
                       ),
+                      Positioned(
+                        top: 260,
+                        right: 45,
+                        child: Text(ranking[2]['userId'], overflow: TextOverflow.ellipsis,)
+                      ),
                       Center(child: Image.asset('assets/videos/confetti.gif')),
                     ],
                   ),
@@ -150,52 +173,54 @@ class _LeaderboardState extends State<Leaderboard> {
             Expanded(
               child: ListView.builder(
                 itemCount: ranking.length > 3 ? ranking.length - 3 : 0,
-                itemBuilder: (context, index) {
+                itemBuilder: (context, index) {                  
                   final number = index + 3;
-                  ranking[number]['displayName'];
                   return Container(
-                    height: 75,
+                    height: 64,
                     margin: const EdgeInsets.all(10),
                     padding: const EdgeInsets.all(10),
                     decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        border: Border.all(color: Colors.black)),
+                      color: Colors.white,
+                        borderRadius: BorderRadius.circular(20),
+                        border: Border.all(color: const Color(0xFF5D5D5D),),
+                        boxShadow: const [
+                          BoxShadow(
+                            color: Color(0xFF5D5D5D),
+                            blurRadius: 4,
+                            offset: Offset(2, 3), // Shadow position
+                          ),
+                        ],
+                    ),
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Text(
-                          number.toString(),
-                          style: const TextStyle(fontSize: 30),
-                        ),
-                        Container(
-                          margin: const EdgeInsets.symmetric(horizontal: 15),
-                          height: 60,
-                          width: 60,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: Colors.grey[300],
-                          ),
-                          child: CircleAvatar(
-                            backgroundImage:
-                                NetworkImage(ranking[number]['photo'] ?? "https://www.seekpng.com/png/detail/966-9665493_my-profile-icon-blank-profile-image-circle.png"),
-                          ),
-                        ),
-                        Container(
-                          margin: const EdgeInsets.only(top: 5),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                ranking[number]['displayName'] ?? 'Anonymous',
-                                style: const TextStyle(fontFamily: 'Roboto'),
+                        Row(
+                          children: [
+                            Text(
+                              number.toString(),
+                              style: const TextStyle(fontSize: 20),
+                            ),
+                            Container(
+                              margin: const EdgeInsets.symmetric(horizontal: 15),
+                              height: 60,
+                              width: 60,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: Colors.grey[300],
                               ),
-                              // Text(
-                              //     "${ranking[number]['balance'].toStringAsFixed(2)} USD",
-                              //     style: const TextStyle(fontFamily: "Roboto"))
-                            ],
-                          ),
+                              child: CircleAvatar(
+                                backgroundImage:
+                                  NetworkImage(ranking[number]['photo'] ?? "https://www.seekpng.com/png/detail/966-9665493_my-profile-icon-blank-profile-image-circle.png",
+                                ),
+                                onBackgroundImageError: (exception, stackTrace) {
+                                  const NetworkImage("https://www.seekpng.com/png/detail/966-9665493_my-profile-icon-blank-profile-image-circle.png");
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
+                        Text(
+                          ranking[number]['userId'] ?? '',
+                          style: const TextStyle(fontFamily: 'Roboto', fontSize: 14, overflow: TextOverflow.ellipsis),
                         ),
                       ],
                     ),
@@ -227,7 +252,10 @@ class _LeaderboardState extends State<Leaderboard> {
         ),
       );
     } else {
-      return Container();
+      return SizedBox(
+        height: 20,
+        width: 20,
+        child: Center(child: const CircularProgressIndicator()));
     }
   }
 }

@@ -48,7 +48,7 @@ class _HomePageState extends State<HomePage> {
 
   List<String> content = [
     'Stock trading broadly refers to any buying and selling of stock, but is colloquially used to refer to more shorter-term investments made by very active investors.',
-    'Commodities are known to be a risky investment propositions because their market is impacted by uncertainties such as unusual weather patterns, epidemics, and disasters both natural and human-made.',
+    'Commodity is a risky investment because their market is impacted by uncertainties such as unusual weather patterns, epidemics, and disasters both natural and human-made.',
     'A basket trade is a type of order used by traders to buy or sell a group of securities simultaneously. These baskets are typically composed of securities that have some common characteristics.',
     'Cryptocurrency is buying or selling digital currencies with the aim of making a profit from the changing value of the underlying asset. They use cryptography for security and operate on a blockchain.',
     "Foreign exchange market is a global marketplace for exchanging national currencies which is the world's largest and most liquid asset markets due to the worldwide reach of trade, commerce and finance. ",
@@ -146,18 +146,15 @@ class _HomePageState extends State<HomePage> {
                         scrollDirection: Axis.horizontal,
                         itemCount: 6,
                         itemBuilder: (context, index) {
-                          return Padding(
-                            padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
-                            child: MarketCard(
-                              image: images[index],
-                              title: title[index],
-                              content: content[index]
-                            ),
+                          return MarketCard(
+                            image: images[index],
+                            title: title[index],
+                            content: content[index]
                           );
                         },
                       ),
                     ),
-                    const SizedBox(height: 30),
+                    const SizedBox(height: 12),
                     Container(
                       width: double.infinity,
                       margin: const EdgeInsets.symmetric(horizontal: 15),

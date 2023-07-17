@@ -200,43 +200,15 @@ class _LoginViewState extends State<LoginView>
                             listener: (context, state) {
                               if (state is AppStateInitial) {
                               } else if (state is AppStateLoggedIn) {
-                                showDialog<String>(
-                                    barrierDismissible: false,
-                                    context: context,
-                                    builder: (BuildContext context) =>
-                                        AlertDialog(
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(20),
-                                          ),
-                                          title: const Text('Login Successful!',
-                                          ),
-                                          content: Text(
-                                              'You are logged in as ${state.email}',
-                                              textAlign: TextAlign.center,
-                                              ),
-                                          actions: <Widget>[
-                                            TextButton(
-                                              onPressed: () {
-                                                Navigator.pushReplacement(
-                                                  context,
-                                                  PageRouteBuilder(
-                                                      pageBuilder: (context,
-                                                              anim1, anim2) =>
-                                                          const HomePage(),
-                                                      transitionDuration:
-                                                          Duration.zero),
-                                                );
-                                              },
-                                              child:
-                                                  const Text('Go to home page',
-                                                  style: TextStyle(
-                                                    color: Color(0xFF3366FF)
-                                                  ),
-                                                  ),
-                                            )
-                                          ],
-                                        ));
+                                Navigator.pushReplacement(
+                                  context,
+                                  PageRouteBuilder(
+                                      pageBuilder: (context,
+                                              anim1, anim2) =>
+                                          const HomePage(),
+                                      transitionDuration:
+                                          Duration.zero),
+                                );
                               } else {
                                 const Text("not working");
                               }

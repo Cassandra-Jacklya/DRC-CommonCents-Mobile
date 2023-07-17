@@ -103,276 +103,287 @@ class _PostModalState extends State<PostModal> {
   Widget build(BuildContext context) {
     Map<String, dynamic> data = widget.post;
     List comments = data['comments'];
-    print("Here: $comments");
-    print(widget.post['authorImage']);
-    return SingleChildScrollView(
-      child: Container(
-        color: Colors.white,
-        height: MediaQuery.of(context).size.height * 0.7,
-        width: MediaQuery.of(context).size.width,
-        child: Column(
-          children: [
-            Container(
-              margin: const EdgeInsets.all(5),
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8),
-                  color: Colors.grey[200]),
-              padding: const EdgeInsets.all(10),
-              child: Column(
-                children: [
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Flexible(
-                        child: Column(
-                          children: [
-                            CircleAvatar(
-                              backgroundImage: NetworkImage(
-                                widget.post['authorImage'] ??
-                                    'https://www.seekpng.com/png/detail/966-9665493_my-profile-icon-blank-profile-image-circle.png',
-                              ),
-                              radius: 40,
-                            ),
-                            const SizedBox(height: 10),
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width * 0.15,
-                              child: Center(
-                                child: Text(
-                                  widget.post['author'],
-                                  style: const TextStyle(
-                                    fontSize: 13,
+    return GestureDetector(
+      onTap: () {
+        FocusScopeNode currentFocus = FocusScope.of(context);
+        if (!currentFocus.hasPrimaryFocus) {
+          currentFocus.unfocus();
+        }
+      },
+      child: SingleChildScrollView(
+        child: Container(
+          color: Colors.white,
+          height: 550,
+          width: double.infinity,
+          child: Column(
+            children: [
+              Container(
+                margin: const EdgeInsets.all(5),
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(8),
+                    color: Colors.grey[200]),
+                padding: const EdgeInsets.all(10),
+                child: Column(
+                  children: [
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Flexible(
+                          child: Column(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(top: 10),
+                                child: CircleAvatar(
+                                  backgroundImage: NetworkImage(
+                                    widget.post['authorImage'] ??
+                                        'https://www.seekpng.com/png/detail/966-9665493_my-profile-icon-blank-profile-image-circle.png',
                                   ),
-                                  overflow: TextOverflow.ellipsis,
+                                  radius: 30,
                                 ),
                               ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Container(
-                        margin: const EdgeInsets.all(10),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              children: [
-                                Container(
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.5,
-                                  padding: const EdgeInsets.all(1),
+                              const SizedBox(height: 10),
+                              SizedBox(
+                                child: Center(
                                   child: Text(
-                                    widget.post['title'],
+                                    widget.post['author'],
                                     style: const TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.w800,
+                                      fontSize: 13,
                                     ),
                                     overflow: TextOverflow.ellipsis,
                                   ),
                                 ),
-                                Container(
-                                  child: Text(
-                                    widget.formattedDate,
-                                    style: const TextStyle(
-                                      fontSize: 12,
-                                      color: Colors.black,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 5),
-                            Container(
-                              width: MediaQuery.of(context).size.width * 0.63,
-                              padding: const EdgeInsets.all(1),
-                              child: Text(
-                                widget.post['details'],
-                                style: const TextStyle(fontSize: 15),
-                                overflow: TextOverflow.ellipsis,
-                                maxLines: 3,
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 5),
-                  Container(
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(10)),
-                      child: widget.isLoggedin
-                          ? Row(
-                              children: [
-                                Container(
-                                  margin: const EdgeInsets.symmetric(
-                                      horizontal: 10),
-                                  child: CircleAvatar(
-                                    backgroundImage: NetworkImage(
-                                      user!.photoURL ??
-                                          'https://www.seekpng.com/png/detail/966-9665493_my-profile-icon-blank-profile-image-circle.png',
-                                    ),
-                                    radius: 20,
-                                  ),
-                                ),
-                                Expanded(
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                      vertical: 8,
-                                      horizontal: 12,
-                                    ), // Adjust the padding values as needed
-                                    child: TextFormField(
-                                      scrollPadding: const EdgeInsets.all(10),
-                                      controller: _comment,
-                                      enableSuggestions: false,
-                                      autocorrect: false,
-                                      decoration: InputDecoration(
-                                        isDense:
-                                            true, // Reduce the overall height
-                                        border: OutlineInputBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                          borderSide: const BorderSide(
-                                              color: Color(0xFF5F5F5F)),
-                                        ),
-                                        labelText: 'Comment',
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                GestureDetector(
-                                  onTap: () async {
-                                    if (_comment.text.isEmpty) {
-                                    } else {
-                                      storeComment(
-                                          data['id'],
-                                          user!.displayName ?? user!.email!,
-                                          user!.photoURL ??
-                                              "https://www.seekpng.com/png/detail/966-9665493_my-profile-icon-blank-profile-image-circle.png",
-                                          _comment.text);
-                                    }
-                                    // await Future.delayed(Duration(milliseconds: 500));
-                                    // Navigator.of(context).pop();
-                                  },
-                                  child: Container(
-                                    padding: const EdgeInsets.all(5),
-                                    margin: const EdgeInsets.symmetric(
-                                        horizontal: 10),
-                                    decoration: BoxDecoration(
-                                        color: _comment.text == ""
-                                            ? Colors.grey[300]
-                                            : Colors.greenAccent,
-                                        borderRadius: BorderRadius.circular(5)),
-                                    child: const Icon(Iconsax.send),
-                                  ),
-                                ),
-                              ],
-                            )
-                          : Container()),
-                ],
-              ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.05,
-                ),
-                Container(
-                  margin: const EdgeInsets.symmetric(vertical: 10),
-                  child: const Text(
-                    "Comments",
-                    style: TextStyle(fontSize: 30, fontWeight: FontWeight.w700),
-                  ),
-                ),
-              ],
-            ),
-            Expanded(
-              child: Container(
-                  child: comments.isEmpty
-                      ? Container(
-                          decoration: BoxDecoration(
-                              color: Colors.grey[200],
-                              borderRadius: BorderRadius.circular(10)),
-                          height: MediaQuery.of(context).size.height * 0.2,
-                          width: MediaQuery.of(context).size.width,
-                          child: const Center(
-                              child: Text(
-                            "No comments yet!",
-                            style: TextStyle(fontSize: 25),
-                          )),
-                        )
-                      : ListView.builder(
-                          shrinkWrap: true,
-                          itemCount: comments.length,
-                          itemBuilder: (BuildContext context, int index) {
-                            // Sort comments based on timestamp in descending order
-                            comments.sort((a, b) =>
-                                a['timestamp'].compareTo(b['timestamp']));
-
-                            return Container(
-                              margin: const EdgeInsets.symmetric(
-                                  vertical: 10, horizontal: 10),
-                              padding: const EdgeInsets.all(5),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                color: Colors.grey[200],
-                              ),
-                              child: Row(
+                        Container(
+                          margin: const EdgeInsets.all(10),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
                                 children: [
                                   Container(
-                                    margin: const EdgeInsets.all(5),
-                                    child: Column(
-                                      children: [
-                                        CircleAvatar(
-                                          backgroundImage: NetworkImage(
-                                            comments[index]['authorImage'] ??
-                                                'https://www.seekpng.com/png/detail/966-9665493_my-profile-icon-blank-profile-image-circle.png',
-                                          ),
-                                          radius: 20,
-                                        ),
-                                        Container(
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              0.15,
-                                          child: Center(
-                                            child: Text(
-                                              comments[index]['author'],
-                                              style: const TextStyle(
-                                                fontSize: 13,
-                                              ),
-                                              overflow: TextOverflow.ellipsis,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
+                                    width: 193,
+                                    padding: const EdgeInsets.all(1),
+                                    child: Text(
+                                      widget.post['title'],
+                                      style: const TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.w800,
+                                      ),
+                                      overflow: TextOverflow.ellipsis,
                                     ),
                                   ),
-                                  Expanded(
-                                    child: Container(
-                                      margin: const EdgeInsets.all(5),
-                                      child: Text(comments[index]['content']),
+                                  Container(
+                                    child: Text(
+                                      widget.formattedDate,
+                                      style: const TextStyle(
+                                        fontSize: 12,
+                                        color: Colors.black,
+                                      ),
                                     ),
                                   ),
                                 ],
                               ),
-                            );
-                          },
-                        )),
-            ),
-            SizedBox(
-              width: MediaQuery.of(context).size.width,
-              child: Container(
-                margin: const EdgeInsets.all(5),
-                decoration: BoxDecoration(
-                  color: Colors.grey[200],
-                  borderRadius: BorderRadius.circular(10),
+                              const SizedBox(height: 5),
+                              Container(
+                                // width: MediaQuery.of(context).size.width * 0.63,
+                                width: 170,
+                                padding: const EdgeInsets.all(1),
+                                child: Text(
+                                  widget.post['details'],
+                                  style: const TextStyle(fontSize: 15),
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 3,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 5),
+                    Container(
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(10)),
+                        child: widget.isLoggedin
+                            ? Row(
+                                children: [
+                                  Container(
+                                    margin: const EdgeInsets.symmetric(
+                                        horizontal: 10),
+                                    child: CircleAvatar(
+                                      backgroundImage: NetworkImage(
+                                        user!.photoURL ??
+                                            'https://www.seekpng.com/png/detail/966-9665493_my-profile-icon-blank-profile-image-circle.png',
+                                      ),
+                                      radius: 20,
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                        vertical: 8,
+                                        horizontal: 12,
+                                      ), // Adjust the padding values as needed
+                                      child: TextFormField(
+                                        scrollPadding: const EdgeInsets.all(10),
+                                        controller: _comment,
+                                        enableSuggestions: false,
+                                        autocorrect: false,
+                                        decoration: InputDecoration(
+                                          isDense:
+                                              true, // Reduce the overall height
+                                          border: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                            borderSide: const BorderSide(
+                                                color: Color(0xFF5F5F5F)),
+                                          ),
+                                          labelText: 'Comment',
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  GestureDetector(
+                                    onTap: () async {
+                                      if (_comment.text.isEmpty) {
+                                      } else {
+                                        storeComment(
+                                            data['id'],
+                                            user!.displayName ?? user!.email!,
+                                            user!.photoURL ??
+                                                "https://www.seekpng.com/png/detail/966-9665493_my-profile-icon-blank-profile-image-circle.png",
+                                            _comment.text);
+                                      }
+                                      // await Future.delayed(Duration(milliseconds: 500));
+                                      // Navigator.of(context).pop();
+                                    },
+                                    child: Container(
+                                      padding: const EdgeInsets.all(5),
+                                      margin: const EdgeInsets.symmetric(
+                                          horizontal: 10),
+                                      decoration: BoxDecoration(
+                                          color: _comment.text == ""
+                                              ? Colors.grey[300]
+                                              : Colors.greenAccent,
+                                          borderRadius: BorderRadius.circular(5)),
+                                      child: const Icon(Iconsax.send),
+                                    ),
+                                  ),
+                                ],
+                              )
+                            : Container()),
+                  ],
                 ),
               ),
-            ),
-          ],
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  const SizedBox(width: 10,),
+                  Container(
+                    margin: const EdgeInsets.symmetric(vertical: 10),
+                    child: const Text(
+                      "Comments",
+                      style: TextStyle(fontSize: 30, fontWeight: FontWeight.w700),
+                    ),
+                  ),
+                ],
+              ),
+              Expanded(
+                child: Container(
+                    child: comments.isEmpty
+                        ? Container(
+                            decoration: BoxDecoration(
+                                color: Colors.grey[200],
+                                borderRadius: BorderRadius.circular(10)),
+                            // height: MediaQuery.of(context).size.height * 0.2,
+                            // width: MediaQuery.of(context).size.width,
+                            child: const Center(
+                                child: Text(
+                              "No comments yet!",
+                              style: TextStyle(fontSize: 25),
+                            )),
+                          )
+                        : ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: comments.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              // Sort comments based on timestamp in descending order
+                              comments.sort((a, b) =>
+                                  a['timestamp'].compareTo(b['timestamp']));
+    
+                              return Container(
+                                margin: const EdgeInsets.symmetric(
+                                    vertical: 10, horizontal: 10),
+                                padding: const EdgeInsets.all(5),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  color: Color(0xFFD9D9D9),
+                                  // border: Border(bottom: BorderSide(color: Colors.black))
+                                ),
+                                child: Row(
+                                  children: [
+                                    Container(
+                                      margin: const EdgeInsets.all(5),
+                                      child: Column(
+                                        children: [
+                                          CircleAvatar(
+                                            backgroundImage: NetworkImage(
+                                              comments[index]['authorImage'] ??
+                                                  'https://www.seekpng.com/png/detail/966-9665493_my-profile-icon-blank-profile-image-circle.png',
+                                            ),
+                                            radius: 20,
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.only(top: 5),
+                                            child: SizedBox(
+                                              // width: MediaQuery.of(context)
+                                              //         .size
+                                              //         .width *
+                                              //     0.15,
+                                              width: 50,
+                                              child: Center(
+                                                child: Text(
+                                                  comments[index]['author'],
+                                                  style: const TextStyle(
+                                                    fontSize: 13,
+                                                  ),
+                                                  overflow: TextOverflow.ellipsis,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    Expanded(
+                                      child: Container(
+                                        margin: const EdgeInsets.all(5),
+                                        child: Text(comments[index]['content']),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
+                          )),
+              ),
+              SizedBox(
+                // width: MediaQuery.of(context).size.width,
+                child: Container(
+                  margin: const EdgeInsets.all(5),
+                  decoration: BoxDecoration(
+                    color: Colors.grey[200],
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

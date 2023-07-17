@@ -130,6 +130,11 @@ class _MyAccountState extends State<MyAccount> {
                           width: 87,
                           decoration: BoxDecoration(
                             image: DecorationImage(
+//                               Image.network('Your image url...',
+//     errorBuilder: (BuildContext context, Object exception, StackTrace stackTrace) {
+//         return Text('Your error widget...');
+//     },
+// ),
                               image: widget.photoUrl.isNotEmpty
                                   ? NetworkImage(widget.photoUrl)
                                   : const NetworkImage(
@@ -145,8 +150,6 @@ class _MyAccountState extends State<MyAccount> {
                   Padding(
                     padding: const EdgeInsets.only(left: 30),
                     child: SizedBox(
-                      // width: MediaQuery.of(context).size.width * 0.5,
-                      // width: 80,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -225,9 +228,7 @@ class _MyAccountState extends State<MyAccount> {
                           color: Colors.black), 
                     ),
                     labelText: widget.email,
-                    labelStyle: const TextStyle(color: Colors.black),
-                    suffixIcon: const Icon(Icons.person),
-                    suffixIconColor: Colors.black
+                    labelStyle: const TextStyle(color: Color(0xFFCCCCCC)),
                   ),
                 ),
               ),

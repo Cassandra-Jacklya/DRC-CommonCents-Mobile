@@ -725,108 +725,116 @@ class _PostSomethingState extends State<PostSomething> {
 
   @override
   Widget build(BuildContext context) {
-    return AlertDialog(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10),
-      ),
-      titlePadding: EdgeInsets.zero,
-      title: Container(
-        height: 60,
-        decoration: const BoxDecoration(
-            color: Color(0XFF3366FF),
-            borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(10), topRight: Radius.circular(10))),
-        padding: const EdgeInsets.all(10),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              'Share Something',
-              style: Theme.of(context).textTheme.displayLarge!.merge(
-                    const TextStyle(
-                      fontSize: 18,
-                      color: Colors.white,
-                    ),
-                  ),
-            ),
-          ],
+    return GestureDetector(
+      onTap: () {
+        FocusScopeNode currentFocus = FocusScope.of(context);
+        if (!currentFocus.hasPrimaryFocus) {
+          currentFocus.unfocus();
+        }
+      },
+      child: AlertDialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
         ),
-      ),
-      content: Container(
-        // height: MediaQuery.of(context).size.height * 0.4,
-        height: 300,
-        padding: const EdgeInsets.only(top: 10),
-        child: Column(children: [
-          TextFormField(
-            controller: _titleController,
-            decoration: InputDecoration(
-              labelText: "Title",
-              border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                  borderSide: const BorderSide(color: Color(0xFF5F5F5F))),
+        titlePadding: EdgeInsets.zero,
+        title: Container(
+          height: 60,
+          decoration: const BoxDecoration(
+              color: Color(0XFF3366FF),
+              borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(10), topRight: Radius.circular(10))),
+          padding: const EdgeInsets.all(10),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                'Share Something',
+                style: Theme.of(context).textTheme.displayLarge!.merge(
+                      const TextStyle(
+                        fontSize: 18,
+                        color: Colors.white,
+                      ),
+                    ),
+              ),
+            ],
+          ),
+        ),
+        content: Container(
+          // height: MediaQuery.of(context).size.height * 0.4,
+          height: 300,
+          padding: const EdgeInsets.only(top: 10),
+          child: Column(children: [
+            TextFormField(
+              controller: _titleController,
+              decoration: InputDecoration(
+                labelText: "Title",
+                border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: const BorderSide(color: Color(0xFF5F5F5F))),
+              ),
+              maxLength: 100,
+              maxLines: 1,
             ),
-            maxLength: 100,
-            maxLines: 1,
-          ),
-          TextFormField(
-            onChanged: (value) {
-              setState(() {
-                canPost = value.isNotEmpty;
-              });
-            },
-            controller: _postController,
-            decoration: InputDecoration(
-              labelText: "Post",
-              border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                  borderSide: const BorderSide(color: Color(0xFF5F5F5F))),
+            TextFormField(
+              onChanged: (value) {
+                setState(() {
+                  canPost = value.isNotEmpty;
+                });
+              },
+              controller: _postController,
+              decoration: InputDecoration(
+                labelText: "Post",
+                border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: const BorderSide(color: Color(0xFF5F5F5F))),
+              ),
+              maxLength: 300,
+              maxLines: 5,
             ),
-            maxLength: 300,
-            maxLines: 5,
-          ),
-          const SizedBox(
-            height: 10,
-          ),
-          GestureDetector(
-            onTap: () {
-              if (_postController.text.isEmpty ||
-                  _titleController.text.isEmpty) {
-              } else {
-                createPost(
-                  user!.displayName,
-                  user!.photoURL,
-                  _postController.text,
-                  DateTime.now().millisecondsSinceEpoch,
-                  _titleController.text,
-                );
-                Navigator.of(context).pop();
-                widget.refreshPosts();
-              }
-            },
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Container(
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color:
-                          canPost ? const Color(0XFF3366FF) : Colors.grey[400]),
-                  // width: MediaQuery.of(context).size.width * 0.4,
-                  // height: MediaQuery.of(context).size.height * 0.05,
-                  width: 100,
-                  height: 42,
-                  child: const Center(
-                    child: Text(
-                      "Post",
-                      style: TextStyle(color: Colors.white),
+            const SizedBox(
+              height: 10,
+            ),
+            GestureDetector(
+              onTap: () {
+                if (_postController.text.isEmpty ||
+                    _titleController.text.isEmpty) {
+                } else {
+                  createPost(
+                    user!.displayName,
+                    user!.photoURL,
+                    _postController.text,
+                    DateTime.now().millisecondsSinceEpoch,
+                    _titleController.text,
+                  );
+                  Navigator.of(context).pop();
+                  widget.refreshPosts();
+                }
+              },
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Container(
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color:
+                            canPost ? const Color(0XFF3366FF) : Colors.grey[400]),
+                    // width: MediaQuery.of(context).size.width * 0.4,
+                    // height: MediaQuery.of(context).size.height * 0.05,
+                    width: 100,
+                    height: 42,
+                    child: const Center(
+                      child: Text(
+                        "Post",
+                        style: TextStyle(color: Colors.white),
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-        ]),
+          ]),
+        ),
       ),
     );
   }

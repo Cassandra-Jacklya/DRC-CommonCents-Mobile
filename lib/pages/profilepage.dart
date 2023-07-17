@@ -23,7 +23,7 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
   String photoUrl = 'https://www.seekpng.com/png/detail/966-9665493_my-profile-icon-blank-profile-image-circle.png';
   String displayName = '';
-  double balance = 0.0;
+  double balance = 0.00;
   String email = '';
   late Map<String, dynamic> forTradeHisitory;
   User? user = FirebaseAuth.instance.currentUser;
@@ -51,7 +51,7 @@ class _ProfilePageState extends State<ProfilePage> {
         if (data != null) {
           setState(() {
             photoUrl = data['photoURL'] ?? "https://www.seekpng.com/png/detail/966-9665493_my-profile-icon-blank-profile-image-circle.png";// Provide a default value if 'photoURL' is null
-            displayName = data['displayName'] ?? data['email']; // Provide a default value if 'displayName' is null
+            displayName = data['displayName'] == '' ? data['email'] : data['displayName']; // Provide a default value if 'displayName' is null
             balance = data['balance'].toDouble(); // Provide a default value if 'balance' is null
             email = data['email'];
           });
@@ -201,7 +201,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           children: [
                             Text(
                               displayName,
-                              style: const TextStyle(fontFamily: 'Roboto'),
+                              style: const TextStyle(fontFamily: 'Roboto', overflow: TextOverflow.ellipsis),
                             ),
                             Row(
                               children: [
@@ -221,26 +221,6 @@ class _ProfilePageState extends State<ProfilePage> {
                                   ),
                                 )
                               ],
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(top: 10),
-                              child: SizedBox(
-                                height: 30,
-                                width: 130,
-                                child: ElevatedButton(onPressed: () {
-                                  
-                                },
-                                style: ButtonStyle(
-                                  backgroundColor: MaterialStateProperty.all(const Color(0xFF6699FF)),
-                                  shape: MaterialStateProperty.all(RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10)
-                                  ))
-                                ),
-                                child: const Text("Reset balance",
-                                  style: TextStyle(color: Colors.white, fontSize: 12
-                                  ),
-                                )),
-                              ),
                             ),
                           ],
                         ),

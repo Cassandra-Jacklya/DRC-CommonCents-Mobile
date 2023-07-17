@@ -332,23 +332,29 @@ class _SimulationPageState extends State<SimulationPage> {
                                                           chartunit);
                                                 },
                                                 child: Container(
-                                                  margin: const EdgeInsets
-                                                          .symmetric(
-                                                      horizontal: 8),
-                                                  width: 80,
-                                                  height: 50,
+                                                   margin: const EdgeInsets.symmetric(
+                                                        horizontal: 8),
+                                                  width: 70,
+                                                  height: 31,
                                                   decoration: BoxDecoration(
-                                                    color: isSelected
-                                                        ? Colors.blue
-                                                        : Colors.white,
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            10),
+                                                      color: isSelected
+                                                          ? const Color(0xFF5F5F5F)
+                                                          : Colors.white,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              5),
                                                   ),
                                                   child: Center(
                                                       child: Text(
                                                           candleTimeUnit[
-                                                              index])),
+                                                              index],
+                                                              style: TextStyle(
+                                                              color: isSelected
+                                                              ? Colors.white
+                                                              : Colors.black
+                                                            ),
+                                                          )
+                                                        ),
                                                 ),
                                               );
                                             },
