@@ -13,6 +13,17 @@ class _FavouritesPageState extends State<FavouritesPage> {
   User? user = FirebaseAuth.instance.currentUser;
 
   List<Map<String, dynamic>> favouritePosts = [];
+  Future<void> refreshFavouritePosts() async {
+    setState(() {
+      favouritePosts = []; // Clear the existing posts list
+    });
+
+    await getFavoritePosts().then((result) {
+      setState(() {
+        favouritePosts = result;
+      });
+    });
+  }
 
   void removePostFromFavorites(Map<String, dynamic> post) async {
     try {
@@ -106,7 +117,11 @@ class _FavouritesPageState extends State<FavouritesPage> {
   Widget build(BuildContext context) {
     _favouritesFuture = getFavoritePosts();
     return Scaffold(
-      appBar: AppBar(title: const Text("Favourites", style: TextStyle(color: Colors.white),),
+      appBar: AppBar(
+        title: const Text(
+          "Favourites",
+          style: TextStyle(color: Colors.white),
+        ),
         backgroundColor: const Color(0XFF3366FF),
       ),
       body: FutureBuilder<List<Map<String, dynamic>>>(
@@ -157,7 +172,7 @@ class _FavouritesPageState extends State<FavouritesPage> {
                                 isFavorite: true,
                                 hoursAgo: hoursAgo,
                                 isLoggedin: true,
-                                refreshForumPage: null,
+                                refreshForumPage: refreshFavouritePosts,
                               );
                             },
                           );
@@ -218,16 +233,14 @@ class _FavouritesPageState extends State<FavouritesPage> {
                                                       .size
                                                       .width *
                                                   0.5,
-                                              padding:
-                                                  const EdgeInsets.all(1),
+                                              padding: const EdgeInsets.all(1),
                                               child: Text(
                                                 post['title'],
                                                 style: const TextStyle(
                                                   fontSize: 20,
                                                   fontWeight: FontWeight.w800,
                                                 ),
-                                                overflow:
-                                                    TextOverflow.ellipsis,
+                                                overflow: TextOverflow.ellipsis,
                                               ),
                                             ),
                                             Container(
