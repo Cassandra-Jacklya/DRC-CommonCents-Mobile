@@ -55,7 +55,7 @@ class _MarketsState extends State<Markets> {
               shadowColor: Colors.transparent,
               toolbarHeight: 60,
               backgroundColor: const Color(0xFF3366FF),
-              foregroundColor: Colors.black,
+              foregroundColor: Colors.white,
               title: const Text("Markets"),
               // leading: IconButton(
               //   icon: const Icon(Icons.arrow_back),

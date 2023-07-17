@@ -33,6 +33,7 @@ class _CandleStickChartState extends State<CandleStickChart> {
 
   @override
   Widget build(BuildContext context) {
+    candleStickCubit.clearStockData();
     connectToWebSocket(
         context: context,
         isCandle: widget.isCandle,
@@ -50,7 +51,8 @@ class _CandleStickChartState extends State<CandleStickChart> {
               child: BlocBuilder<CandlestickCubit, List<Map<String, dynamic>>>(
                 builder: (context, candleData) {
                   if (candleData.isNotEmpty) {
-                    // print(candleData.length);
+                    print(candleData);
+                    print(candleData.length);
                     List<ChartData> chartData = candleData.map((data) {
                       double x = data['epoch'];
                       double open = data['open'];

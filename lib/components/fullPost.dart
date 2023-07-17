@@ -71,7 +71,8 @@ class _PostModalState extends State<PostModal> {
       });
     }
 
-    // Fetch the updated comments data after adding the new comment
+    // Call the refreshForumPage callback to refresh the forum page
+    widget.refreshForumPage?.call();
     final updatedCommentsSnapshot = await postRef.collection('comments').get();
     final updatedComments =
         updatedCommentsSnapshot.docs.map((doc) => doc.data()).toList();
@@ -81,6 +82,9 @@ class _PostModalState extends State<PostModal> {
 
     // Call the refreshModal callback to refresh the modal with the updated comments
     refreshModal(updatedComments);
+
+    // Call the refreshModal callback to refresh the modal
+    // refreshModal();
   }
 
   @override
@@ -100,6 +104,7 @@ class _PostModalState extends State<PostModal> {
     Map<String, dynamic> data = widget.post;
     List comments = data['comments'];
     print("Here: $comments");
+    print(widget.post['authorImage'] );
     return SingleChildScrollView(
       child: Container(
         color: Colors.white,
@@ -133,7 +138,7 @@ class _PostModalState extends State<PostModal> {
                               width: MediaQuery.of(context).size.width * 0.15,
                               child: Center(
                                 child: Text(
-                                  widget.post['author'] ?? 'Anonymous',
+                                  widget.post['author'],
                                   style: const TextStyle(
                                     fontSize: 13,
                                   ),
@@ -218,7 +223,7 @@ class _PostModalState extends State<PostModal> {
                                       horizontal: 12,
                                     ), // Adjust the padding values as needed
                                     child: TextFormField(
-                                      scrollPadding: EdgeInsets.all(10),
+                                      scrollPadding: const EdgeInsets.all(10),
                                       controller: _comment,
                                       enableSuggestions: false,
                                       autocorrect: false,
@@ -241,8 +246,8 @@ class _PostModalState extends State<PostModal> {
                                     print("Legit: $data");
                                     storeComment(
                                         data['id'],
-                                        user!.displayName ?? "Anonymous",
-                                        user!.photoURL ?? "",
+                                        user!.displayName ?? user!.email!,
+                                        user!.photoURL ?? "https://www.seekpng.com/png/detail/966-9665493_my-profile-icon-blank-profile-image-circle.png",
                                         _comment.text);
                                     // await Future.delayed(Duration(milliseconds: 500));
                                     // Navigator.of(context).pop();
@@ -331,8 +336,7 @@ class _PostModalState extends State<PostModal> {
                                               0.15,
                                           child: Center(
                                             child: Text(
-                                              comments[index]['author'] ??
-                                                  'Anonymous',
+                                              comments[index]['author'],
                                               style: const TextStyle(
                                                 fontSize: 13,
                                               ),

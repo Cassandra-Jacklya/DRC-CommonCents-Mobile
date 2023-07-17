@@ -263,6 +263,7 @@ class _OnboardingState extends State<Onboarding> with SingleTickerProviderStateM
                 ),
               ),
             ),
+            const SizedBox(height: 10),
             Padding(
               padding: const EdgeInsets.fromLTRB(0, 12, 0 ,0),
               child: GestureDetector(

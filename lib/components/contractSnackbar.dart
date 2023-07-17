@@ -51,8 +51,6 @@ class _SnackBarContentState extends State<SnackBarContent> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      // height: MediaQuery.of(context).size.height * 0.3,
-      // width: MediaQuery.of(context).size.width,
       height: 100,
       width: 100,
       child: Row(

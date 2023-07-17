@@ -209,9 +209,12 @@ class _LoginViewState extends State<LoginView>
                                             borderRadius:
                                                 BorderRadius.circular(20),
                                           ),
-                                          title: const Text('Login Successful!'),
+                                          title: const Text('Login Successful!',
+                                          ),
                                           content: Text(
-                                              'You are logged in as ${state.email}'),
+                                              'You are logged in as ${state.email}',
+                                              textAlign: TextAlign.center,
+                                              ),
                                           actions: <Widget>[
                                             TextButton(
                                               onPressed: () {
@@ -226,7 +229,11 @@ class _LoginViewState extends State<LoginView>
                                                 );
                                               },
                                               child:
-                                                  const Text('Go to home page'),
+                                                  const Text('Go to home page',
+                                                  style: TextStyle(
+                                                    color: Color(0xFF3366FF)
+                                                  ),
+                                                  ),
                                             )
                                           ],
                                         ));

@@ -8,6 +8,7 @@ import 'package:commoncents/pages/tradeHistory.dart';
 import 'package:commoncents/pages/help_support.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:iconsax/iconsax.dart';
 
 import '../components/appbar.dart';
@@ -20,7 +21,7 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  String photoUrl = '';
+  String photoUrl = 'https://www.seekpng.com/png/detail/966-9665493_my-profile-icon-blank-profile-image-circle.png';
   String displayName = '';
   double balance = 0.0;
   String email = '';
@@ -49,15 +50,10 @@ class _ProfilePageState extends State<ProfilePage> {
         forTradeHisitory = docSnapshot.data()!;
         if (data != null) {
           setState(() {
-            photoUrl = data['photoURL'] ??
-                user.photoURL ??
-                ''; // Provide a default value if 'photoURL' is null
-            displayName = data['displayName'] ??
-                user.displayName ??
-                'nope'; // Provide a default value if 'displayName' is null
-            balance = data['balance']?.toDouble() ??
-                0.0; // Provide a default value if 'balance' is null
-            email = data['email'] ?? '';
+            photoUrl = data['photoURL'] ?? "https://www.seekpng.com/png/detail/966-9665493_my-profile-icon-blank-profile-image-circle.png";// Provide a default value if 'photoURL' is null
+            displayName = data['displayName'] ?? data['email']; // Provide a default value if 'displayName' is null
+            balance = data['balance'].toDouble(); // Provide a default value if 'balance' is null
+            email = data['email'];
           });
         }
       }
@@ -117,7 +113,7 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget build(BuildContext context) {
     if (user == null) {
       return Scaffold(
-        appBar: CustomAppBar(
+        appBar: const CustomAppBar(
             title: 'Profile',
             logo: "assets/images/commoncents-logo.png",
             isTradingPage: false),
@@ -178,28 +174,26 @@ class _ProfilePageState extends State<ProfilePage> {
                     children: [
                       Hero(
                         tag: 'test',
-                        child: Container(
-                          margin: const EdgeInsets.only(right: 10),
-                          height: 80,
-                          width: 80,
-                          decoration: BoxDecoration(
-                            color: Colors.grey[400],
-                            borderRadius: BorderRadius.circular(50),
-                          ),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(50),
-                            child: photoUrl.isNotEmpty
-                                ? Image.network(photoUrl, fit: BoxFit.cover)
-                                : Image.network(
-                                    'https://www.seekpng.com/png/detail/966-9665493_my-profile-icon-blank-profile-image-circle.png',
-                                    fit: BoxFit.cover,
-                                  ),
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 15),
+                          child: Container(
+                            margin: const EdgeInsets.only(right: 10),
+                            height: 80,
+                            width: 80,
+                            decoration: BoxDecoration(
+                              color: Colors.grey[400],
+                              borderRadius: BorderRadius.circular(50),
+                            ),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(50),
+                              child: Image.network(photoUrl, fit: BoxFit.cover),
+                            ),
                           ),
                         ),
                       ),
                       Container(
                         margin: const EdgeInsets.only(top: 5),
-                        height: 70,
+                        height: 78,
                         width: 200,
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -209,8 +203,45 @@ class _ProfilePageState extends State<ProfilePage> {
                               displayName,
                               style: const TextStyle(fontFamily: 'Roboto'),
                             ),
-                            Text(balance.toStringAsFixed(2),
-                                style: const TextStyle(fontFamily: "Roboto"))
+                            Row(
+                              children: [
+                                const Padding(
+                                  padding: EdgeInsets.fromLTRB(0, 0, 5, 0),
+                                  child: Icon(FontAwesomeIcons.wallet,
+                                    size: 13,
+                                  ),
+                                ),
+                                Text(balance.toStringAsFixed(2),
+                                    style: const TextStyle(fontFamily: "Roboto", fontWeight: FontWeight.bold),
+                                ),
+                                const Padding(
+                                  padding: EdgeInsets.only(left: 5),
+                                  child: Text("USD",
+                                    style: TextStyle(fontFamily: "Roboto", fontWeight: FontWeight.bold),
+                                  ),
+                                )
+                              ],
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 10),
+                              child: SizedBox(
+                                height: 30,
+                                width: 130,
+                                child: ElevatedButton(onPressed: () {
+                                  
+                                },
+                                style: ButtonStyle(
+                                  backgroundColor: MaterialStateProperty.all(const Color(0xFF6699FF)),
+                                  shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10)
+                                  ))
+                                ),
+                                child: const Text("Reset balance",
+                                  style: TextStyle(color: Colors.white, fontSize: 12
+                                  ),
+                                )),
+                              ),
+                            ),
                           ],
                         ),
                       ),
@@ -225,13 +256,15 @@ class _ProfilePageState extends State<ProfilePage> {
                           },
                           child: Transform.scale(
                             scale: 1.5, // Adjust the scale factor as needed
-                            child: const Icon(Iconsax.logout),
+                            child: const Icon(Iconsax.logout,
+                              size: 20,
+                            ),
                           )),
                     ],
                   ),
                 ),
                 Container(
-                  width: MediaQuery.of(context).size.width,
+                  // width: MediaQuery.of(context).size.width,
                   margin: const EdgeInsets.all(10),
                   padding: const EdgeInsets.all(10),
                   child: Column(

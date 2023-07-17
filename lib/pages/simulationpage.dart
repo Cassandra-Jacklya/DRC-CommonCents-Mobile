@@ -32,6 +32,7 @@ import '../cubit/candlestick_cubit.dart';
 import '../cubit/login_cubit.dart';
 import '../cubit/navbar_cubit.dart';
 import '../cubit/news_tabbar_cubit.dart';
+import '../cubit/resetwallet_cubit.dart';
 import '../cubit/stock_data_cubit.dart';
 import '../cubit/ticks_cubit.dart';
 import '../apistore/PriceProposal.dart';
@@ -53,6 +54,7 @@ class SimulationPage extends StatefulWidget {
 }
 
 class _SimulationPageState extends State<SimulationPage> {
+
   late IsCandleCubit isCandleCubit;
   late String markettype;
   late double ticks;
@@ -82,7 +84,14 @@ class _SimulationPageState extends State<SimulationPage> {
 
   @override
   void initState() {
+    super.initState();
     isCandle = false;
+  }
+
+  @override
+  void didChangeDependencies() {
+    isCandleCubit = context.watch<IsCandleCubit>();
+    super.didChangeDependencies();
   }
 
   @override
@@ -117,10 +126,11 @@ class _SimulationPageState extends State<SimulationPage> {
         BlocProvider<ChartTimeCubit>(create: (context) => ChartTimeCubit()),
         BlocProvider<LiveLinePriceCubit>(
             create: (context) => LiveLinePriceCubit()),
-        BlocProvider<candlePriceCubit>(create: (context) => candlePriceCubit())
+        BlocProvider<candlePriceCubit>(create: (context) => candlePriceCubit()),
+        BlocProvider<ResetWalletBloc>(create: (context) => ResetWalletBloc(),)
       ],
       child: Scaffold(
-        // resizeToAvoidBottomInset: true,
+        resizeToAvoidBottomInset: false,
         appBar: const CustomAppBar(
           title: "Trading Simulation",
           logo: "assets/images/commoncents-logo.png",
@@ -143,67 +153,81 @@ class _SimulationPageState extends State<SimulationPage> {
                     );
                   } else {
                     //logged in
-                    BlocProvider.of<LoginStateBloc>(context)
-                        .initFirebase('', '');
                     return Column(
                       children: [
                         const SizedBox(height: 5),
                         Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            BlocBuilder<MarketsCubit, String>(
-                                builder: (context, state) {
-                              return GestureDetector(
-                                onTap: () {
-                                  unsubscribe();
-                                  closeWebSocket();
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              Markets(market: widget.market)));
-                                },
-                                child: Container(
-                                  padding: const EdgeInsets.only(left: 15),
-                                  margin: const EdgeInsets.all(10),
-                                  height: 60,
-                                  color: Colors.grey[300],
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(widget.market),
-                                      const IconButton(
-                                        onPressed: null,
-                                        icon: Icon(
-                                          Icons.keyboard_arrow_down_sharp,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              );
-                            }),
-                            GestureDetector(
-                              child: Container(
-                                height: 60,
-                                color: Colors.grey[300],
-                                child: IconButton(
-                                  onPressed: () {
-                                    setState(() {
+                            Row( 
+                              children: [
+                                BlocBuilder<MarketsCubit, String>(
+                                    builder: (context, state) {
+                                  return GestureDetector(
+                                    onTap: () {
                                       unsubscribe();
                                       closeWebSocket();
-                                      isCandle = !isCandle;
-                                      // isCandleCubit.isItCandles(isCandle);
-                                    });
-                                  },
-                                  icon: isCandle
-                                      ? const Icon(Icons.line_axis)
-                                      : const Icon(Icons.candlestick_chart),
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  Markets(market: widget.market)));
+                                    },
+                                    child: Container(
+                                      padding: const EdgeInsets.only(left: 15),
+                                      margin: const EdgeInsets.all(10),
+                                      height: 44,
+                                      decoration: BoxDecoration(
+                                        border: Border.all(
+                                          color: const Color(0xFF5F5F5F),
+                                        ),
+                                        borderRadius: BorderRadius.circular(5)
+                                      ),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text(widget.market),
+                                          const IconButton(
+                                            onPressed: null,
+                                            icon: Icon(
+                                              Icons.keyboard_arrow_down_sharp,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  );
+                                }),
+                                GestureDetector(
+                                  child: Container(
+                                    height: 44,
+                                    decoration: BoxDecoration(
+                                      border: Border.all(
+                                        color: const Color(0xFF5F5F5F),
+                                      ),
+                                      borderRadius: BorderRadius.circular(5)
+                                    ),
+                                    child: IconButton(
+                                      onPressed: () {
+                                        setState(() {
+                                          unsubscribe();
+                                          closeWebSocket();
+                                          isCandle = !isCandle;
+                                          // isCandleCubit.isItCandles(isCandle);
+                                        });
+                                      },
+                                      icon: isCandle
+                                          ? const Icon(Icons.line_axis)
+                                          : const Icon(Icons.candlestick_chart),
+                                    ),
+                                  ),
                                 ),
-                              ),
+                              ],
                             ),
-                            WalletButton(
-                              loginStateBloc: LoginStateBloc(),
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
+                              child: WalletButton(),
                             ),
                           ],
                         ),
@@ -248,28 +272,74 @@ class _SimulationPageState extends State<SimulationPage> {
                                     ),
                                   ),
                                 ),
-                                Container(
-                                    height: 50,
-                                    child: !isCandle
-                                        ? ListView.builder(
-                                            //line time
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 20),
+                                  child: SizedBox(
+                                      height: 40,
+                                      child: !isCandle
+                                          ? ListView.builder(
+                                              //line time
+                                              scrollDirection: Axis.horizontal,
+                                              itemCount: timeUnit.length,
+                                              itemBuilder: (context, index) {
+                                                final unit = timeUnit[index];
+                                                final isSelected =
+                                                    (unit == state);
+                                                return GestureDetector(
+                                                  onTap: () {
+                                                    unsubscribe();
+                                                    BlocProvider.of<
+                                                                LineTimeCubit>(
+                                                            context)
+                                                        .updateLineTime(unit);
+                                                  },
+                                                  child: Container(
+                                                    //candle time
+                                                    margin: EdgeInsets.symmetric(
+                                                        horizontal: 8),
+                                                    width: 70,
+                                                    height: 31,
+                                                    decoration: BoxDecoration(
+                                                      color: isSelected
+                                                          ? const Color(0xFF5F5F5F)
+                                                          : Colors.white,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              5),
+                                                    ),
+                                                    child: Center(
+                                                        child: Text(
+                                                            timeUnit[index],
+                                                            style: TextStyle(
+                                                              color: isSelected
+                                                              ? Colors.white
+                                                              : Colors.black
+                                                            ),
+                                                        )),
+                                                  ),
+                                                );
+                                              },
+                                            )
+                                          : ListView.builder(
                                             scrollDirection: Axis.horizontal,
-                                            itemCount: timeUnit.length,
+                                            itemCount: candleTimeUnit.length,
                                             itemBuilder: (context, index) {
-                                              final unit = timeUnit[index];
+                                              final chartunit =
+                                                  candleTimeUnit[index];
                                               final isSelected =
-                                                  (unit == state);
+                                                  (chartunit == charttime);
                                               return GestureDetector(
                                                 onTap: () {
-                                                  unsubscribe();
+                                                  unsubscribeCandle();
                                                   BlocProvider.of<
-                                                              LineTimeCubit>(
+                                                              ChartTimeCubit>(
                                                           context)
-                                                      .updateLineTime(unit);
+                                                      .updateChartTime(
+                                                          chartunit);
                                                 },
                                                 child: Container(
-                                                  //candle time
-                                                  margin: EdgeInsets.symmetric(
+                                                  margin: const EdgeInsets
+                                                          .symmetric(
                                                       horizontal: 8),
                                                   width: 80,
                                                   height: 50,
@@ -283,53 +353,13 @@ class _SimulationPageState extends State<SimulationPage> {
                                                   ),
                                                   child: Center(
                                                       child: Text(
-                                                          timeUnit[index])),
+                                                          candleTimeUnit[
+                                                              index])),
                                                 ),
                                               );
                                             },
-                                          )
-                                        : Center(
-                                            //candle time
-                                            child: ListView.builder(
-                                              scrollDirection: Axis.horizontal,
-                                              itemCount: candleTimeUnit.length,
-                                              itemBuilder: (context, index) {
-                                                final chartunit =
-                                                    candleTimeUnit[index];
-                                                final isSelected =
-                                                    (chartunit == charttime);
-                                                return GestureDetector(
-                                                  onTap: () {
-                                                    unsubscribeCandle();
-                                                    BlocProvider.of<
-                                                                ChartTimeCubit>(
-                                                            context)
-                                                        .updateChartTime(
-                                                            chartunit);
-                                                  },
-                                                  child: Container(
-                                                    margin: const EdgeInsets
-                                                            .symmetric(
-                                                        horizontal: 8),
-                                                    width: 80,
-                                                    height: 50,
-                                                    decoration: BoxDecoration(
-                                                      color: isSelected
-                                                          ? Colors.blue
-                                                          : Colors.white,
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              10),
-                                                    ),
-                                                    child: Center(
-                                                        child: Text(
-                                                            candleTimeUnit[
-                                                                index])),
-                                                  ),
-                                                );
-                                              },
-                                            ),
                                           )),
+                                ),
                               ],
                             );
                           });
@@ -343,43 +373,55 @@ class _SimulationPageState extends State<SimulationPage> {
                                 // Container(
                                 //   child: isCandle ? ChartTime() : LineTime(),
                                 // ),
-                                Container(
-                                    child: isCandle
-                                        ? ChartPrice(
-                                            market:
-                                                formatMarkets(widget.market))
-                                        : LiveLinePrice(
-                                            market:
-                                                formatMarkets(widget.market))),
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 17),
+                                  child: Container(
+                                      child: isCandle
+                                          ? ChartPrice(
+                                              market:
+                                                  formatMarkets(widget.market))
+                                          : LiveLinePrice(
+                                              market:
+                                                  formatMarkets(widget.market))),
+                                ),
                                 BlocBuilder<TicksCubit, double>(
                                     builder: (context, selectedValue) {
-                                  return Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
-                                    children: [
-                                      const Text("Ticks"),
-                                      TicksGauge()
-                                    ],
+                                  return Padding(
+                                    padding: const EdgeInsets.only(top: 30),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceEvenly,
+                                      children: [
+                                        const Text("Ticks"),
+                                        TicksGauge()
+                                      ],
+                                    ),
                                   );
                                 }),
-                                const SizedBox(height: 20),
+                                const SizedBox(height: 12),
                                 BlocBuilder<StakePayoutCubit, int>(
                                   builder: (context, index) {
                                     return Container(
+                                      height: 45,
                                       child: ToggleSwitch(
-                                        minWidth: 90.0,
+                                        minWidth: 269,
                                         initialLabelIndex: context
                                             .read<StakePayoutCubit>()
                                             .state,
-                                        cornerRadius: 20.0,
+                                        cornerRadius: 5,
+                                        borderColor: const [
+                                          Color(0xFF5F5F5F),
+                                          Color(0xFF5F5F5F)
+                                        ],
+                                        borderWidth: 2,
                                         activeFgColor: Colors.white,
-                                        inactiveBgColor: Colors.grey,
-                                        inactiveFgColor: Colors.white,
+                                        inactiveBgColor: Colors.white,
+                                        inactiveFgColor: Colors.black,
                                         totalSwitches: 2,
                                         labels: const ['Stake', 'Payout'],
                                         activeBgColors: const [
-                                          [Colors.greenAccent],
-                                          [Colors.blueAccent]
+                                          [Color(0xFF5F5F5F)],
+                                          [Color(0xFF5F5F5F)]
                                         ],
                                         onToggle: (index) {
                                           context
@@ -390,7 +432,7 @@ class _SimulationPageState extends State<SimulationPage> {
                                     );
                                   },
                                 ),
-                                const SizedBox(height: 20),
+                                const SizedBox(height: 14),
                                 BlocBuilder<CurrentAmountCubit, int>(
                                     builder: (context, amount) {
                                   return const IntegerExample();
@@ -442,7 +484,7 @@ class _SimulationPageState extends State<SimulationPage> {
                                             borderRadius:
                                                 BorderRadius.circular(10)),
                                         height: 45,
-                                        width: 140,
+                                        width: 128,
                                         child: Row(
                                             mainAxisAlignment:
                                                 MainAxisAlignment.spaceAround,
@@ -493,7 +535,7 @@ class _SimulationPageState extends State<SimulationPage> {
                                             borderRadius:
                                                 BorderRadius.circular(10)),
                                         height: 45,
-                                        width: 140,
+                                        width: 128,
                                         child: Row(
                                             mainAxisAlignment:
                                                 MainAxisAlignment.spaceAround,
@@ -505,7 +547,7 @@ class _SimulationPageState extends State<SimulationPage> {
                                     ),
                                   ],
                                 ),
-                                const SizedBox(height: 20),
+                                const SizedBox(height: 40),
                               ],
                             ),
                           ),

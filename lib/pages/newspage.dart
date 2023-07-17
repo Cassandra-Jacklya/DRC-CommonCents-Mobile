@@ -3,6 +3,7 @@ import 'package:commoncents/components/navbar.dart';
 import 'package:commoncents/components/newscontainer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:iconsax/iconsax.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../components/appbar.dart';
 import '../components/news_tabbar.dart';
@@ -91,15 +92,15 @@ class _NewsPageState extends State<NewsPage> {
                       child: Container(
                         decoration: BoxDecoration(
                           color: Colors.white,
-                          borderRadius: BorderRadius.circular(20),
-                          border: Border.all(color: Colors.grey),
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(color: Colors.black),
                         ),
                         padding: const EdgeInsets.only(left: 20),
                         margin: const EdgeInsets.only(
-                          top: 10,
-                          left: 10,
-                          right: 10,
-                          bottom: 20,
+                          top: 24,
+                          left: 16,
+                          right: 16,
+                          bottom: 10,
                         ),
                         child: Row(
                           children: [
@@ -119,7 +120,8 @@ class _NewsPageState extends State<NewsPage> {
                               padding: const EdgeInsets.all(8),
                               child: IconButton(
                                 onPressed: () {},
-                                icon: const Icon(Icons.search),
+                                icon: const Icon(Iconsax.search_normal_1),
+                                iconSize: 20,
                               ),
                             ),
                           ],
@@ -128,8 +130,9 @@ class _NewsPageState extends State<NewsPage> {
                     ),
                   ],
                 ),
+                const SizedBox(height: 22,),
                 NewsTabBar(onTopicChanged: _handleTopicChanged),
-                const SizedBox(height: 30),
+                const SizedBox(height: 20),
                 Expanded(
                   child: FutureBuilder<List<dynamic>>(
                     future: _lazyFuture,

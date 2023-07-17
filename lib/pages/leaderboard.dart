@@ -41,8 +41,9 @@ class _LeaderboardState extends State<Leaderboard> {
     });
 
     // Sort the rankedUsers list in descending order based on netWorth
-    rankedUsers.sort((a, b) => b['netWorth'].compareTo(a['netWorth']));
-
+    if (rankedUsers != []) {
+      rankedUsers.sort((a, b) => b['netWorth'].compareTo(a['netWorth']));
+    }
     return rankedUsers;
   }
 
@@ -65,12 +66,12 @@ class _LeaderboardState extends State<Leaderboard> {
         appBar: AppBar(
           shadowColor: Colors.transparent,
           toolbarHeight: 60,
-          backgroundColor: Color(0XFF3366FF),
+          backgroundColor: const Color(0XFF3366FF),
           title: const Text(
             "Leaderboard",
             style: TextStyle(color: Colors.white),
           ),
-          foregroundColor: Colors.black,
+          foregroundColor: Colors.white,
         ),
         body: Column(
           children: [
@@ -83,8 +84,8 @@ class _LeaderboardState extends State<Leaderboard> {
                   child: Stack(
                     children: [
                       Positioned(
-                        top: screenHeight * 0.029,
-                        right: screenWidth * 0.375,
+                        top: 28,
+                        right: 147,
                         child: Container(
                           width: 90,
                           height: 90,
@@ -95,13 +96,13 @@ class _LeaderboardState extends State<Leaderboard> {
                           child: CircleAvatar(
                             radius: 20,
                             backgroundImage:
-                                NetworkImage(ranking[0]['photo'] ?? ''),
+                                NetworkImage(ranking[0]['photo'] ?? "https://www.seekpng.com/png/detail/966-9665493_my-profile-icon-blank-profile-image-circle.png"),
                           ),
                         ),
                       ),
                       Positioned(
-                        top: screenHeight * 0.082,
-                        right: screenWidth * 0.068,
+                        top: 70,
+                        right: 28,
                         child: Container(
                           width: 90,
                           height: 90,
@@ -109,15 +110,18 @@ class _LeaderboardState extends State<Leaderboard> {
                             shape: BoxShape.circle,
                             color: Colors.grey[500],
                           ),
-                          child: CircleAvatar(
+                          child: ranking.length < 2 
+                          ? CircleAvatar()
+                          : CircleAvatar(
                             backgroundImage:
-                                NetworkImage(ranking[1]['photo'] ?? ''),
-                          ),
+                                NetworkImage(ranking[1]['photo'] ?? "https://www.seekpng.com/png/detail/966-9665493_my-profile-icon-blank-profile-image-circle.png"),
+                          )
+                          ,
                         ),
                       ),
                       Positioned(
-                        top: screenHeight * 0.082,
-                        left: screenWidth * 0.067,
+                        top: 70,
+                        left: 28,
                         child: Container(
                           width: 90,
                           height: 90,
@@ -125,10 +129,14 @@ class _LeaderboardState extends State<Leaderboard> {
                             shape: BoxShape.circle,
                             color: Colors.grey[500],
                           ),
-                          child: CircleAvatar(
+                          child: ranking.length < 3
+                          ? const CircleAvatar(
+                            backgroundColor: Color(0xFFD9D9D9),
+                          )
+                          : CircleAvatar(
                             radius: 20,
                             backgroundImage:
-                                NetworkImage(ranking[2]['photo'] ?? ''),
+                                NetworkImage(ranking[2]['photo'] ?? "https://www.seekpng.com/png/detail/966-9665493_my-profile-icon-blank-profile-image-circle.png"),
                           ),
                         ),
                       ),
@@ -138,6 +146,7 @@ class _LeaderboardState extends State<Leaderboard> {
                 ),
               ],
             ),
+            ranking.length > 3 ? 
             Expanded(
               child: ListView.builder(
                 itemCount: ranking.length > 3 ? ranking.length - 3 : 0,
@@ -169,7 +178,7 @@ class _LeaderboardState extends State<Leaderboard> {
                           ),
                           child: CircleAvatar(
                             backgroundImage:
-                                NetworkImage(ranking[number]['photo'] ?? ''),
+                                NetworkImage(ranking[number]['photo'] ?? "https://www.seekpng.com/png/detail/966-9665493_my-profile-icon-blank-profile-image-circle.png"),
                           ),
                         ),
                         Container(
@@ -211,7 +220,9 @@ class _LeaderboardState extends State<Leaderboard> {
                   // );
                 },
               ),
-            ),
+            )
+            : const Text("End of leaderboard")
+            ,
           ],
         ),
       );

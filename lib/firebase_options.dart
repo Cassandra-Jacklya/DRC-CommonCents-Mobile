@@ -44,39 +44,42 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyDZWaGK24RNEFrp8ZqjihHuVwCIQZuq9vc',
-    appId: '1:402359730833:web:d6bf41b7998ff86168f530',
-    messagingSenderId: '402359730833',
-    projectId: 'commoncents-7b521',
-    authDomain: 'commoncents-7b521.firebaseapp.com',
-    storageBucket: 'commoncents-7b521.appspot.com',
+    apiKey: 'AIzaSyBanb-RpzdBmT1K0ldfTbberdxFzbUj824',
+    appId: '1:860551647147:web:8d8683f8a4d543e5718cee',
+    messagingSenderId: '860551647147',
+    projectId: 'drc-project-99da9',
+    authDomain: 'drc-project-99da9.firebaseapp.com',
+    storageBucket: 'drc-project-99da9.appspot.com',
+    measurementId: 'G-D8WZX9D7H2',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyB-KSqF7HFuvqApCYi5a-ZNXx0Vfu2es4Y',
-    appId: '1:402359730833:android:184aeaba3a7df78668f530',
-    messagingSenderId: '402359730833',
-    projectId: 'commoncents-7b521',
-    storageBucket: 'commoncents-7b521.appspot.com',
+    apiKey: 'AIzaSyAazSEKlllGbElUFPUrsdvpwjf93CMahPA',
+    appId: '1:860551647147:android:1f1df83dec479088718cee',
+    messagingSenderId: '860551647147',
+    projectId: 'drc-project-99da9',
+    storageBucket: 'drc-project-99da9.appspot.com',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyAchxouvB27dZVc7tDkrlJl-u8Gvtjl1J4',
-    appId: '1:402359730833:ios:ace17503069c54ca68f530',
-    messagingSenderId: '402359730833',
-    projectId: 'commoncents-7b521',
-    storageBucket: 'commoncents-7b521.appspot.com',
-    iosClientId: '402359730833-ca340bhra5lhrn2a19i64j51ebucrjpq.apps.googleusercontent.com',
+    apiKey: 'AIzaSyD5Sozbsc8hHSEAD9TA8zS1ktTuFQ99FKU',
+    appId: '1:860551647147:ios:d1af2f279a7b18fd718cee',
+    messagingSenderId: '860551647147',
+    projectId: 'drc-project-99da9',
+    storageBucket: 'drc-project-99da9.appspot.com',
+    androidClientId: '860551647147-85p0u9gbchd2lnjp3mfdg2okif7q1rqd.apps.googleusercontent.com',
+    iosClientId: '860551647147-hshrp9q3c46ndh0so08ma1ran0pftgmj.apps.googleusercontent.com',
     iosBundleId: 'com.example.commoncents',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyAchxouvB27dZVc7tDkrlJl-u8Gvtjl1J4',
-    appId: '1:402359730833:ios:ace17503069c54ca68f530',
-    messagingSenderId: '402359730833',
-    projectId: 'commoncents-7b521',
-    storageBucket: 'commoncents-7b521.appspot.com',
-    iosClientId: '402359730833-ca340bhra5lhrn2a19i64j51ebucrjpq.apps.googleusercontent.com',
+    apiKey: 'AIzaSyD5Sozbsc8hHSEAD9TA8zS1ktTuFQ99FKU',
+    appId: '1:860551647147:ios:d1af2f279a7b18fd718cee',
+    messagingSenderId: '860551647147',
+    projectId: 'drc-project-99da9',
+    storageBucket: 'drc-project-99da9.appspot.com',
+    androidClientId: '860551647147-85p0u9gbchd2lnjp3mfdg2okif7q1rqd.apps.googleusercontent.com',
+    iosClientId: '860551647147-hshrp9q3c46ndh0so08ma1ran0pftgmj.apps.googleusercontent.com',
     iosBundleId: 'com.example.commoncents',
   );
 }

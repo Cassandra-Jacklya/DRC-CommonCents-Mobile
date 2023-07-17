@@ -16,22 +16,29 @@ class _HelpSupportState extends State<HelpSupport> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          title: const Text("Help and Support"),
-          backgroundColor: const Color(0XFF3366FF),
-          shadowColor: Colors.transparent,
-        ),
-        body: SingleChildScrollView(
-          scrollDirection: Axis.vertical,
-          child: Center(
+    return GestureDetector(
+      onTap: () {
+        FocusScopeNode currentFocus = FocusScope.of(context);
+        if (!currentFocus.hasPrimaryFocus) {
+          currentFocus.unfocus();
+        }
+      },
+      child: Scaffold(
+          appBar: AppBar(
+            title: const Text("Help and Support"),
+            backgroundColor: const Color(0XFF3366FF),
+            shadowColor: Colors.transparent,
+          ),
+          body: SingleChildScrollView(
+            scrollDirection: Axis.vertical,
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 80, 0, 0),
+                  padding: const EdgeInsets.fromLTRB(0, 30, 0, 0),
                   child: SizedBox(
-                    height: 70,
-                    width: 311,
+                    height: 57,
+                    width: 283,
                     child: TextFormField(
                       controller: _email,
                       enableSuggestions: false,
@@ -42,16 +49,17 @@ class _HelpSupportState extends State<HelpSupport> {
                             borderRadius: BorderRadius.circular(10),
                             borderSide:
                                 const BorderSide(color: Color(0xFF5F5F5F))),
-                        labelText: user!.email,
+                        labelText: "Email*",
+                        hintText: user!.email,
                       ),
                     ),
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 30, 0, 0),
+                  padding: const EdgeInsets.fromLTRB(0, 27, 0, 0),
                   child: SizedBox(
-                    height: 80,
-                    width: 311,
+                    height: 221,
+                    width: 283,
                     child: TextFormField(
                       maxLines: 15,
                       controller: _enquiry,
@@ -63,7 +71,7 @@ class _HelpSupportState extends State<HelpSupport> {
                             borderRadius: BorderRadius.circular(10),
                             borderSide:
                                 const BorderSide(color: Color(0xFF5F5F5F))),
-                        labelText: 'Enquiry',
+                        hintText: 'How may we help you?',
                       ),
                     ),
                   ),
@@ -85,12 +93,12 @@ class _HelpSupportState extends State<HelpSupport> {
                             decoration: BoxDecoration(
                                 color: const Color(0XFF3366FF),
                                 borderRadius: BorderRadius.circular(10)),
-                            margin: const EdgeInsets.only(right: 25),
-                            height: 50,
-                            width: 120,
+                            margin: const EdgeInsets.only(right: 45),
+                            height: 42,
+                            width: 91,
                             child: const Center(
                               child: Text("Submit",
-                                  style: TextStyle(color: Colors.white)),
+                                  style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
                             ),
                           ),
                         )
@@ -100,7 +108,7 @@ class _HelpSupportState extends State<HelpSupport> {
                 ),
               ],
             ),
-          ),
-        ));
+          )),
+    );
   }
 }

@@ -74,7 +74,6 @@ class _LineChartState extends State<MyLineChart> {
       market: formatMarkets(widget.market),
       selectedTimeUnit: widget.timeunit,
     );
-    print("Line Chart $selectedTimeUnit");
     return Scaffold(
       body: Center(
         child: Column(
@@ -174,7 +173,7 @@ class _LineChartState extends State<MyLineChart> {
                         ],
                       );
                     } else {
-                      return Center(
+                      return const Center(
                         child: SizedBox(
                             height: 20,
                             width: 20,

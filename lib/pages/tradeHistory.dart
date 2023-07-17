@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:commoncents/components/formatMarkets.dart';
+import 'package:commoncents/pages/simulationpage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../components/popup.dart';
@@ -32,8 +33,8 @@ class _TradeHistoryState extends State<TradeHistory> {
             docSnapshot.docs.where((doc) => doc.id != 'tradeSummary').toList();
 
         tradeHistoryDocs.sort((a, b) {
-          final aTimestamp = (a.data() as Map<String, dynamic>)['timestamp'];
-          final bTimestamp = (b.data() as Map<String, dynamic>)['timestamp'];
+          final aTimestamp = (a.data())['timestamp'];
+          final bTimestamp = (b.data())['timestamp'];
           return bTimestamp.compareTo(aTimestamp);
         });
 
@@ -170,44 +171,42 @@ class _TradeHistoryState extends State<TradeHistory> {
                     ),
                   );
                 } else {
-                  return Center(
-                      child: Column(
-                    children: [
-                      Image.asset('assets/images/no-profile.jpg'),
-                      const Text(
-                        "You are not logged in.",
-                        style: TextStyle(fontWeight: FontWeight.w800),
-                      ),
-                      const SizedBox(height: 10),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const Text("Please "),
-                          GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => const LoginView()),
-                              );
-                            },
-                            child: const Text(
-                              "Log in ",
-                              style: TextStyle(
-                                color: Color(0XFF3366FF),
-                                decoration: TextDecoration.underline,
-                              ),
+                  return Scaffold(
+                    backgroundColor: Colors.white,
+                    body: Column(
+                      children: [
+                        Image.asset('assets/images/no-profile.jpg'),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Text("Start ", style: TextStyle(fontFamily: 'Roboto'),),
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.pushReplacement(
+                                  context,
+                                  PageRouteBuilder(
+                                      pageBuilder: (context, anim1, anim2) => const SimulationPage(market: "Volatility 50",),
+                                      transitionDuration: Duration.zero),
+                                );
+                              },
+                              child: const Text("trading ", style: TextStyle(color: Color(0xFF3366FF), fontWeight: FontWeight.bold, fontFamily: 'Roboto',
+                                decoration: TextDecoration.underline
+                              ),),
                             ),
-                          ),
-                          const Text("to view your profile")
-                        ],
-                      )
-                    ],
-                  ));
+                            const Text("now!", style: TextStyle(fontFamily: 'Roboto'),)
+                          ],
+                        )
+                      ],
+                    ),
+
+                  );
                 }
               } else {
-                return const Text('Havent Start Trading yet.');
+                return const CircularProgressIndicator();
               }
-            })));
+            }
+          )
+        )
+      );
   }
 }

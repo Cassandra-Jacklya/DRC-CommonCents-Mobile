@@ -45,11 +45,11 @@ class _ForgotPasswordState extends State<ForgotPassword> {
     String email = '';
     TextEditingController _reset = TextEditingController();
     return AlertDialog(
-      title: Text('Forgot Password'),
+      title: const Text('Forgot Password'),
       content: Form(
         child: TextFormField(
           controller: _reset,
-          decoration: InputDecoration(
+          decoration: const InputDecoration(
             labelText: 'Enter your email',
           ),
           validator: (value) {

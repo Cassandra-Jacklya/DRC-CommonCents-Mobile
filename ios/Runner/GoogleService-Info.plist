@@ -3,21 +3,23 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>402359730833-ca340bhra5lhrn2a19i64j51ebucrjpq.apps.googleusercontent.com</string>
+	<string>860551647147-hshrp9q3c46ndh0so08ma1ran0pftgmj.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.402359730833-ca340bhra5lhrn2a19i64j51ebucrjpq</string>
+	<string>com.googleusercontent.apps.860551647147-hshrp9q3c46ndh0so08ma1ran0pftgmj</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>860551647147-85p0u9gbchd2lnjp3mfdg2okif7q1rqd.apps.googleusercontent.com</string>
 	<key>API_KEY</key>
-	<string>AIzaSyAchxouvB27dZVc7tDkrlJl-u8Gvtjl1J4</string>
+	<string>AIzaSyD5Sozbsc8hHSEAD9TA8zS1ktTuFQ99FKU</string>
 	<key>GCM_SENDER_ID</key>
-	<string>402359730833</string>
+	<string>860551647147</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
 	<string>com.example.commoncents</string>
 	<key>PROJECT_ID</key>
-	<string>commoncents-7b521</string>
+	<string>drc-project-99da9</string>
 	<key>STORAGE_BUCKET</key>
-	<string>commoncents-7b521.appspot.com</string>
+	<string>drc-project-99da9.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -29,6 +31,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:402359730833:ios:ace17503069c54ca68f530</string>
+	<string>1:860551647147:ios:d1af2f279a7b18fd718cee</string>
 </dict>
 </plist>

@@ -1,37 +1,45 @@
 {
   "project_info": {
-    "project_number": "402359730833",
-    "project_id": "commoncents-7b521",
-    "storage_bucket": "commoncents-7b521.appspot.com"
+    "project_number": "860551647147",
+    "project_id": "drc-project-99da9",
+    "storage_bucket": "drc-project-99da9.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:402359730833:android:184aeaba3a7df78668f530",
+        "mobilesdk_app_id": "1:860551647147:android:1f1df83dec479088718cee",
         "android_client_info": {
           "package_name": "com.example.commoncents"
         }
       },
       "oauth_client": [
         {
-          "client_id": "402359730833-tuhucehgfkoerhfjhe4463g625seu5v2.apps.googleusercontent.com",
+          "client_id": "860551647147-85p0u9gbchd2lnjp3mfdg2okif7q1rqd.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.commoncents",
+            "certificate_hash": "c90b66d21272409b42a29dac354ccaee296e8ac8"
+          }
+        },
+        {
+          "client_id": "860551647147-hjmk50tfnqnagl0vvna2u8kr2ujchav6.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyB-KSqF7HFuvqApCYi5a-ZNXx0Vfu2es4Y"
+          "current_key": "AIzaSyAazSEKlllGbElUFPUrsdvpwjf93CMahPA"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "402359730833-tuhucehgfkoerhfjhe4463g625seu5v2.apps.googleusercontent.com",
+              "client_id": "860551647147-bl7jtohb01u3eo3kfen9u9n2ebmru62j.apps.googleusercontent.com",
               "client_type": 3
             },
             {
-              "client_id": "402359730833-ca340bhra5lhrn2a19i64j51ebucrjpq.apps.googleusercontent.com",
+              "client_id": "860551647147-hshrp9q3c46ndh0so08ma1ran0pftgmj.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
                 "bundle_id": "com.example.commoncents"

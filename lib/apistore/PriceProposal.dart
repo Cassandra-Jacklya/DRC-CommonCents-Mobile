@@ -70,8 +70,7 @@ Future<double> getUpdatedBalance(String userId, double capital) async {
   return 0;
 }
 
-void handleBuyResponse(
-    BuildContext context, Map<String, dynamic> decodedData) async {
+void handleBuyResponse(BuildContext context, Map<String, dynamic> decodedData) async {
   late double buyingPrice;
   late double sellingPrice;
   late double capital;
@@ -80,6 +79,7 @@ void handleBuyResponse(
   late String tradeStatus;
   late int duration;
 
+  print("yo");
   final Map<String, dynamic> proposal = decodedData['proposal'];
   capital = decodedData['echo_req']['amount'].toDouble();
   duration = decodedData['echo_req']['duration'];
@@ -182,4 +182,5 @@ void handleBuyResponse(
       });
     }
   });
+  // updateSnackbarVisibility(false);
 }

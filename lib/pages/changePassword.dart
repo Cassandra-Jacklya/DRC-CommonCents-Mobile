@@ -163,7 +163,6 @@ class _ChangePasswordState extends State<ChangePassword> {
                   ),
                   margin: const EdgeInsets.only(top: 10, right: 30),
                   height: 50,
-                  // width: MediaQuery.of(context).size.width * 0.3,
                   width: 300,
                   child: const Center(
                     child: Text(

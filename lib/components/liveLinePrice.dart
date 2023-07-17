@@ -52,7 +52,7 @@ class _LiveLinePriceState extends State<LiveLinePrice> {
 
   void handleLineResponse(dynamic data) {
     final decodedData = jsonDecode(data);
-    linePrice = decodedData['tick']['quote'];
+    linePrice = decodedData['tick']['quote'].toDouble();
     final liveLinePriceData = BlocProvider.of<LiveLinePriceCubit>(context);
     liveLinePriceData.updateLiveLinePrice(linePrice);
   }
