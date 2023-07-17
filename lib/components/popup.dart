@@ -887,6 +887,9 @@ class ResetBalance extends StatelessWidget {
         )
       ],
       child: Dialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10)
+        ),
         child: Container(
           height: 140,
           width: 120,
@@ -899,7 +902,7 @@ class ResetBalance extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Text("Current balance:"),
+                      const Text("Current demo funds:"),
                       const Flexible(
                         child: Divider(
                           color: Color(
@@ -909,7 +912,16 @@ class ResetBalance extends StatelessWidget {
                           endIndent: 10,
                         ),
                       ),
-                      Text(state.balance.toString()),
+                      Row(
+                        children: [
+                          Text(state.balance.toString(),
+                            style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                          ),
+                          const Text("USD",
+                            style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                          )
+                        ],
+                      ),
                     ],
                   ),
                   GestureDetector(
@@ -945,7 +957,9 @@ class ResetBalance extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Text("Current balance:"),
+                      const Text("Current demo funds:",
+                        style: TextStyle(fontSize: 15),
+                      ),
                       const Flexible(
                         child: Divider(
                           color: Color(
@@ -955,7 +969,16 @@ class ResetBalance extends StatelessWidget {
                           endIndent: 10,
                         ),
                       ),
-                      Text(state.balance.toString()),
+                      Row(
+                        children: [
+                          Text(state.balance.toString(),
+                            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                          ),
+                          const Text(" USD",
+                            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                          )
+                        ],
+                      ),
                     ],
                   ),
                   GestureDetector(

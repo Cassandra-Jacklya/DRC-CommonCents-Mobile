@@ -212,8 +212,8 @@ class _SimulationPageState extends State<SimulationPage> {
                                         });
                                       },
                                       icon: isCandle
-                                          ? const Icon(Icons.line_axis)
-                                          : const Icon(Icons.candlestick_chart),
+                                          ? const Icon(Icons.candlestick_chart)
+                                          : const Icon(Icons.line_axis)
                                     ),
                                   ),
                                 ),
@@ -231,6 +231,97 @@ class _SimulationPageState extends State<SimulationPage> {
                               builder: (context, state) {
                             return Column(
                               children: [
+                                SizedBox(
+                                    height: 40,
+                                    child: !isCandle
+                                        ? ListView.builder(
+                                            //line time
+                                            scrollDirection: Axis.horizontal,
+                                            itemCount: timeUnit.length,
+                                            itemBuilder: (context, index) {
+                                              final unit = timeUnit[index];
+                                              final isSelected =
+                                                  (unit == state);
+                                              return GestureDetector(
+                                                onTap: () {
+                                                  unsubscribe();
+                                                  BlocProvider.of<
+                                                              LineTimeCubit>(
+                                                          context)
+                                                      .updateLineTime(unit);
+                                                },
+                                                child: Container(
+                                                  //candle time
+                                                  margin: EdgeInsets.symmetric(
+                                                      horizontal: 8),
+                                                  width: 70,
+                                                  height: 31,
+                                                  decoration: BoxDecoration(
+                                                    color: isSelected
+                                                        ? const Color(0xFF5F5F5F)
+                                                        : Colors.white,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            5),
+                                                  ),
+                                                  child: Center(
+                                                      child: Text(
+                                                          timeUnit[index],
+                                                          style: TextStyle(
+                                                            color: isSelected
+                                                            ? Colors.white
+                                                            : Colors.black
+                                                          ),
+                                                      )),
+                                                ),
+                                              );
+                                            },
+                                          )
+                                        : ListView.builder(
+                                          scrollDirection: Axis.horizontal,
+                                          itemCount: candleTimeUnit.length,
+                                          itemBuilder: (context, index) {
+                                            final chartunit =
+                                                candleTimeUnit[index];
+                                            final isSelected =
+                                                (chartunit == charttime);
+                                            return GestureDetector(
+                                              onTap: () {
+                                                unsubscribeCandle();
+                                                BlocProvider.of<
+                                                            ChartTimeCubit>(
+                                                        context)
+                                                    .updateChartTime(
+                                                        chartunit);
+                                              },
+                                              child: Container(
+                                                 margin: const EdgeInsets.symmetric(
+                                                      horizontal: 8),
+                                                width: 70,
+                                                height: 31,
+                                                decoration: BoxDecoration(
+                                                    color: isSelected
+                                                        ? const Color(0xFF5F5F5F)
+                                                        : Colors.white,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            5),
+                                                ),
+                                                child: Center(
+                                                    child: Text(
+                                                        candleTimeUnit[
+                                                            index],
+                                                            style: TextStyle(
+                                                            color: isSelected
+                                                            ? Colors.white
+                                                            : Colors.black
+                                                          ),
+                                                        )
+                                                      ),
+                                              ),
+                                            );
+                                          },
+                                        )),
                                 Padding(
                                   padding:
                                       const EdgeInsets.fromLTRB(0, 0, 15, 0),
@@ -242,123 +333,29 @@ class _SimulationPageState extends State<SimulationPage> {
                                     color: Colors.grey[300],
                                     child: Center(
                                       child: isCandle
-                                          ? BlocBuilder<MarketsCubit, String>(
-                                              builder: (context, market) {
-                                              return CandleStickChart(
-                                                  isCandle: isCandle,
-                                                  market: widget.market,
-                                                  timeunit: charttime
-                                                  // context
-                                                  //     .read<ChartTimeCubit>()
-                                                  //     .state,
-                                                  );
-                                            })
-                                          : BlocBuilder<MarketsCubit, String>(
-                                              builder: (context, market) {
-                                                return MyLineChart(
-                                                  isMini: false,
-                                                  isCandle: isCandle,
-                                                  market: widget.market,
-                                                  timeunit: state,
-                                                );
-                                              },
-                                            ),
+                                        ? BlocBuilder<MarketsCubit, String>(
+                                          builder: (context, market) {
+                                          return CandleStickChart(
+                                              isCandle: isCandle,
+                                              market: widget.market,
+                                              timeunit: charttime
+                                              // context
+                                              //     .read<ChartTimeCubit>()
+                                              //     .state,
+                                              );
+                                        })
+                                      : BlocBuilder<MarketsCubit, String>(
+                                          builder: (context, market) {
+                                            return MyLineChart(
+                                              isMini: false,
+                                              isCandle: isCandle,
+                                              market: widget.market,
+                                              timeunit: state,
+                                            );
+                                          },
+                                        ),
                                     ),
                                   ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 20),
-                                  child: SizedBox(
-                                      height: 40,
-                                      child: !isCandle
-                                          ? ListView.builder(
-                                              //line time
-                                              scrollDirection: Axis.horizontal,
-                                              itemCount: timeUnit.length,
-                                              itemBuilder: (context, index) {
-                                                final unit = timeUnit[index];
-                                                final isSelected =
-                                                    (unit == state);
-                                                return GestureDetector(
-                                                  onTap: () {
-                                                    unsubscribe();
-                                                    BlocProvider.of<
-                                                                LineTimeCubit>(
-                                                            context)
-                                                        .updateLineTime(unit);
-                                                  },
-                                                  child: Container(
-                                                    //candle time
-                                                    margin: EdgeInsets.symmetric(
-                                                        horizontal: 8),
-                                                    width: 70,
-                                                    height: 31,
-                                                    decoration: BoxDecoration(
-                                                      color: isSelected
-                                                          ? const Color(0xFF5F5F5F)
-                                                          : Colors.white,
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              5),
-                                                    ),
-                                                    child: Center(
-                                                        child: Text(
-                                                            timeUnit[index],
-                                                            style: TextStyle(
-                                                              color: isSelected
-                                                              ? Colors.white
-                                                              : Colors.black
-                                                            ),
-                                                        )),
-                                                  ),
-                                                );
-                                              },
-                                            )
-                                          : ListView.builder(
-                                            scrollDirection: Axis.horizontal,
-                                            itemCount: candleTimeUnit.length,
-                                            itemBuilder: (context, index) {
-                                              final chartunit =
-                                                  candleTimeUnit[index];
-                                              final isSelected =
-                                                  (chartunit == charttime);
-                                              return GestureDetector(
-                                                onTap: () {
-                                                  unsubscribeCandle();
-                                                  BlocProvider.of<
-                                                              ChartTimeCubit>(
-                                                          context)
-                                                      .updateChartTime(
-                                                          chartunit);
-                                                },
-                                                child: Container(
-                                                   margin: const EdgeInsets.symmetric(
-                                                        horizontal: 8),
-                                                  width: 70,
-                                                  height: 31,
-                                                  decoration: BoxDecoration(
-                                                      color: isSelected
-                                                          ? const Color(0xFF5F5F5F)
-                                                          : Colors.white,
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              5),
-                                                  ),
-                                                  child: Center(
-                                                      child: Text(
-                                                          candleTimeUnit[
-                                                              index],
-                                                              style: TextStyle(
-                                                              color: isSelected
-                                                              ? Colors.white
-                                                              : Colors.black
-                                                            ),
-                                                          )
-                                                        ),
-                                                ),
-                                              );
-                                            },
-                                          )),
                                 ),
                               ],
                             );
@@ -376,13 +373,13 @@ class _SimulationPageState extends State<SimulationPage> {
                                   Padding(
                                     padding: const EdgeInsets.only(top: 17),
                                     child: Container(
-                                        child: isCandle
-                                            ? ChartPrice(
-                                                market:
-                                                    formatMarkets(widget.market))
-                                            : LiveLinePrice(
-                                                market:
-                                                    formatMarkets(widget.market))),
+                                      child: isCandle
+                                        ? ChartPrice(
+                                          market:
+                                            formatMarkets(widget.market))
+                                        : LiveLinePrice(
+                                          market:
+                                            formatMarkets(widget.market))),
                                   ),
                                   BlocBuilder<TicksCubit, double>(
                                       builder: (context, selectedValue) {

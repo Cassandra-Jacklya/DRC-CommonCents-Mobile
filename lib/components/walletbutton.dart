@@ -1,10 +1,7 @@
-import 'dart:ffi';
-
 import 'package:commoncents/components/popup.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:iconsax/iconsax.dart';
 
 import '../cubit/login_cubit.dart';
 import '../cubit/resetwallet_cubit.dart';
@@ -23,7 +20,8 @@ class WalletButton extends StatelessWidget {
           if (state is AppStateInitial) {
           } else if (state is AppStateLoggedIn) {
             return Stack(
-              children: [GestureDetector(
+              children: [
+                GestureDetector(
                 onTap: () {   
                   showDialog(
                     context: context,
@@ -36,15 +34,38 @@ class WalletButton extends StatelessWidget {
                   margin: const EdgeInsets.all(10),
                   padding: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
-                    border: Border.all(color: const Color(0xFF5F5F5F), width: 1),
+                    color: Colors.white,
+                    border: Border.all(color: Color(0xFF3366ff), width: 1),
                     borderRadius: BorderRadius.circular(10),
+                    boxShadow: [
+                      BoxShadow(color: const Color(0xFF3366ff), 
+                        offset: Offset(2, 2)
+                      )
+                    ]
                   ),
-                  child: Text(double.parse(state.balance).toStringAsFixed(2))),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text("Demo Funds:",
+                        style: TextStyle(fontSize: 12),
+                      ),
+                      Row(
+                        children: [
+                          Text(double.parse(state.balance).toStringAsFixed(2),
+                            style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                          ),
+                          const Text(" USD", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),)
+                        ],
+                      ),
+                    ],
+                  )),
               ),
               const Positioned(
                 top: 0,
                 right: 0,
-                child: Icon(FontAwesomeIcons.wallet),
+                child: Icon(FontAwesomeIcons.wallet,
+                  size: 20,
+                ),
               ),]
             );
           } else if (state is AppStateError) {

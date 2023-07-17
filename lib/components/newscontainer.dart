@@ -18,12 +18,70 @@ class NewsContainer extends StatelessWidget {
       itemCount: feeds?.length,
       itemBuilder: (context, index) {
         final news = feeds?[index];
-        print(feeds?.length);
         return GestureDetector(
           onTap: () async {
             // print(news['url']);
-            Uri url = Uri.parse(news['url']);
-            launchUrl(url);
+            showDialog(
+              context: context,
+              builder: (BuildContext newsContext) {
+                return AlertDialog(
+                  titlePadding: EdgeInsets.zero,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  title: Container(
+                    decoration: const BoxDecoration(
+                      color: Colors.transparent,
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(10),
+                        topRight: Radius.circular(10),
+                      ),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(20, 20, 20, 5),
+                      child: const Text('This action will exit CommonCents',
+                        style: TextStyle(fontSize: 16, color: Color(0xFF3366FF)),
+                      ),
+                    ),
+                  ),
+                  content: Container(
+                    height: 100,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                            'Redirecting to',
+                              style: TextStyle(fontSize: 14),
+                            ),
+                        Text(news['url'], 
+                          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                        )
+                      ],
+                    ),
+                  ),
+                  actions: <Widget>[
+                    TextButton(
+                      child: const Text('Cancel',
+                        style: TextStyle(color: Color(0xFF3366FF)),
+                      ),
+                      onPressed: () {
+                        Navigator.of(newsContext).pop();
+                      },
+                    ),
+                    TextButton(
+                      child: const Text('Continue', 
+                        style: TextStyle(color: Color(0xFF3366FF)),
+                      ),
+                      onPressed: () {
+                        Uri url = Uri.parse(news['url']);
+                        launchUrl(url,);
+                      },
+                    ),
+                  ],
+                );
+              },
+            );
           },
           child: Container(
             margin: const EdgeInsets.fromLTRB(10, 0, 10, 1),
@@ -32,8 +90,67 @@ class NewsContainer extends StatelessWidget {
             color: Colors.white,
             child: GestureDetector(
               onTap: () async {
-                Uri url = Uri.parse(news['url']);
-                launchUrl(url);
+                showDialog(
+                  context: context,
+                  builder: (BuildContext newsContext) {
+                    return AlertDialog(
+                      titlePadding: EdgeInsets.zero,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      title: Container(
+                        decoration: const BoxDecoration(
+                          color: Colors.transparent,
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(10),
+                            topRight: Radius.circular(10),
+                          ),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.fromLTRB(20, 20, 20, 5),
+                          child: const Text('This action will exit CommonCents',
+                            style: TextStyle(fontSize: 16, color: Color(0xFF3366FF)),
+                          ),
+                        ),
+                      ),
+                      content: Container(
+                        height: 100,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                                'Redirecting to ',
+                                  style: TextStyle(fontSize: 14),
+                                ),
+                            Text(news['url'],
+                              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                            )
+                          ],
+                        ),
+                      ),
+                      actions: <Widget>[
+                        TextButton(
+                          child: const Text('Cancel',
+                            style: TextStyle(color: Color(0xFF3366FF)),
+                          ),
+                          onPressed: () {
+                            Navigator.of(newsContext).pop();
+                          },
+                        ),
+                        TextButton(
+                          child: const Text('Continue',
+                            style: TextStyle(color: Color(0xFF3366FF),
+                          ),),
+                          onPressed: () {
+                            Uri url = Uri.parse(news['url']);
+                            launchUrl(url,);
+                          },
+                        ),
+                      ],
+                    );
+                  },
+                );
               },
               child: Card(
                 shape: const RoundedRectangleBorder(
@@ -58,7 +175,7 @@ class NewsContainer extends StatelessWidget {
                                 ? news['banner_image']
                                 : 'https://static.vecteezy.com/system/resources/previews/000/440/213/original/question-mark-vector-icon.jpg'
                               ),
-                              fit: BoxFit.cover
+                              fit: BoxFit.contain
                             ),
                             borderRadius: const BorderRadius.only(
                               topLeft: Radius.circular(10),

@@ -17,7 +17,7 @@ class _LineTimeState extends State<LineTime> {
       ],
       child: BlocBuilder<LineTimeCubit, String>(
         builder: (context, state) {
-          print("This is linetime: ${state}");
+          // print("This is linetime: ${state}");
           return Container(
             height: 50,
             child: ListView.builder(

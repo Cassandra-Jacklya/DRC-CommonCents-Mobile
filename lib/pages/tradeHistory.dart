@@ -54,13 +54,15 @@ class _TradeHistoryState extends State<TradeHistory> {
 
   @override
   Widget build(BuildContext context) {
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
     return Scaffold(
         appBar: AppBar(
           shadowColor: Colors.transparent,
           toolbarHeight: 60,
           backgroundColor: const Color(0XFF3366FF),
           title: const Text(
-            "Recent Trades",
+            "Trade History",
             style: TextStyle(color: Colors.white),
           ),
           foregroundColor: Colors.black,
@@ -75,7 +77,7 @@ class _TradeHistoryState extends State<TradeHistory> {
                 return Text("Error: ${snapshot.error}");
               } else if (snapshot.hasData) {
                 tradeDataList = snapshot.data!;
-                print(tradeDataList);
+                // print(tradeDataList);
                 if (tradeDataList.isNotEmpty) {
                   return Container(
                     margin: const EdgeInsets.only(bottom: 20),
@@ -176,24 +178,36 @@ class _TradeHistoryState extends State<TradeHistory> {
                     body: Column(
                       children: [
                         Image.asset('assets/images/no-profile.jpg'),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
+                        Column(
                           children: [
-                            const Text("Start ", style: TextStyle(fontFamily: 'Roboto'),),
-                            GestureDetector(
-                              onTap: () {
-                                Navigator.pushReplacement(
-                                  context,
-                                  PageRouteBuilder(
-                                      pageBuilder: (context, anim1, anim2) => const SimulationPage(market: "Volatility 50",),
-                                      transitionDuration: Duration.zero),
-                                );
-                              },
-                              child: const Text("trading ", style: TextStyle(color: Color(0xFF3366FF), fontWeight: FontWeight.bold, fontFamily: 'Roboto',
-                                decoration: TextDecoration.underline
-                              ),),
+                            const Text("You have not bought any trades.", 
+                              style: TextStyle(fontSize: 17),
                             ),
-                            const Text("now!", style: TextStyle(fontFamily: 'Roboto'),)
+                            Padding(
+                              padding: const EdgeInsets.only(top: 10),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  const Text("Start ", style: TextStyle(fontFamily: 'Roboto',
+                                    fontSize: 17
+                                  ),),
+                                  GestureDetector(
+                                    onTap: () {
+                                      Navigator.pushReplacement(
+                                        context,
+                                        PageRouteBuilder(
+                                            pageBuilder: (context, anim1, anim2) => const SimulationPage(market: "Volatility 50",),
+                                            transitionDuration: Duration.zero),
+                                      );
+                                    },
+                                    child: const Text("trading ", style: TextStyle(color: Color(0xFF3366FF), fontFamily: 'Roboto', fontSize: 17,
+                                      decoration: TextDecoration.underline
+                                    ),),
+                                  ),
+                                  const Text("now!", style: TextStyle(fontFamily: 'Roboto', fontSize: 17),)
+                                ],
+                              ),
+                            ),
                           ],
                         )
                       ],
@@ -208,5 +222,32 @@ class _TradeHistoryState extends State<TradeHistory> {
           )
         )
       );
+    }
+    else {
+      return Scaffold(
+        appBar: AppBar(
+          shadowColor: Colors.transparent,
+          toolbarHeight: 60,
+          backgroundColor: const Color(0XFF3366FF),
+          title: const Text(
+            "Trade History",
+            style: TextStyle(color: Colors.white),
+          ),
+          foregroundColor: Colors.black,
+          iconTheme: const IconThemeData(color: Colors.white),
+        ),
+        body: Center(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: const [
+              Text("Log in",
+                style: TextStyle(color: Color(0xFF3366FF), fontSize: 17),
+              ),
+              Text(" to view your trade history.")
+            ],
+          ),
+        ),
+      );
+    }
   }
 }

@@ -79,7 +79,7 @@ void handleBuyResponse(BuildContext context, Map<String, dynamic> decodedData) a
   late String tradeStatus;
   late int duration;
 
-  print("yo");
+  // print("yo");
   final Map<String, dynamic> proposal = decodedData['proposal'];
   capital = decodedData['echo_req']['amount'].toDouble();
   duration = decodedData['echo_req']['duration'];

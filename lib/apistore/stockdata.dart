@@ -87,7 +87,7 @@ Map<String, dynamic> CandleHistoryRequest(
   if (selectedTimeUnit == "Minutes") {
     granularity = 60;
   } else if (selectedTimeUnit == "Hours") {
-    print("yesrrisss");
+    // print("yesrrisss");
     granularity = 3600;
   } else if (selectedTimeUnit == "Days") {
     granularity = 86400;
@@ -227,7 +227,7 @@ Future<void> handleResponse(
         if (selectedTimeUnit == 'Minutes') {
           if (currentTime.minute == lastTime.minute) {
             // They are in the same minute
-                  print("I am candle $selectedTimeUnit");
+                  // print("I am candle $selectedTimeUnit");
             lastItem['high'] = high;
             lastItem['low'] = low;
             lastItem['close'] = close;
@@ -245,7 +245,7 @@ Future<void> handleResponse(
         if (selectedTimeUnit == 'Hours') {
           if (currentTime.hour == lastTime.hour) {
             // They are in the same minute
-                  print("I am candle $selectedTimeUnit");
+                  // print("I am candle $selectedTimeUnit");
             lastItem['high'] = high;
             lastItem['low'] = low;
             lastItem['close'] = close;
@@ -262,7 +262,7 @@ Future<void> handleResponse(
         }
         if (selectedTimeUnit == 'Days') {
           if (currentTime.day == lastTime.day) {
-            print("I am candle $selectedTimeUnit");
+            // print("I am candle $selectedTimeUnit");
             // They are in the same minute
             lastItem['high'] = high;
             lastItem['low'] = low;
@@ -359,7 +359,7 @@ Future<void> handleResponse(
       double utcTimeDouble = utcTime.millisecondsSinceEpoch.toDouble() / 1000;
 
       if (selectedTimeUnit == "Minutes") {
-        print("Ticks in $selectedTimeUnit");
+        // print("Ticks in $selectedTimeUnit");
         final lastTick = ticks.last;
         final lastTickEpoch = lastTick['epoch'] as double;
         final lastTickTime =
@@ -368,15 +368,15 @@ Future<void> handleResponse(
         final newTickTime =
             DateTime.fromMillisecondsSinceEpoch(utcTimeDouble.toInt() * 1000);
 
-        print(
-            "Previous ${lastTickTime.minute} & Current ${newTickTime.minute}");
+        // print(
+            // "Previous ${lastTickTime.minute} & Current ${newTickTime.minute}");
 
         if (lastTickTime.minute == newTickTime.minute) {
           lastTick['close'] = price;
           stockDataCubit.updateSameStockData(ticks);
           if (ticks.length >= 2) {
             final lastTwoItems = ticks.sublist(ticks.length - 2);
-            print("Last two items in ticks: $lastTwoItems");
+            // print("Last two items in ticks: $lastTwoItems");
           }
           // print("data :$ticks");
           return;

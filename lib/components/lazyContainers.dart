@@ -21,8 +21,8 @@ class _LazyContainerState extends State<LazyContainer> {
     super.initState();
     lazyFeeds = widget.feeds!.sublist(0,8);
     controller.addListener(() {
-      print(controller.position.maxScrollExtent);
-      print(controller.offset);
+      // print(controller.position.maxScrollExtent);
+      // print(controller.offset);
       if(controller.position.maxScrollExtent == controller.offset){
         fetch();
       }
@@ -63,7 +63,7 @@ class _LazyContainerState extends State<LazyContainer> {
                 children: [
                   GestureDetector(
                     onTap: () async {
-                      print(news['url']);
+                      // print(news['url']);
                       Uri url = Uri.parse(news['url']);
                       launchUrl(url);
                     },

@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 import '../apistore/miniChartData.dart';
+import '../pages/simulationpage.dart';
 
 class CarouselChart extends StatefulWidget {
   const CarouselChart({Key? key}) : super(key: key);
@@ -65,87 +66,115 @@ class _CarouselChartState extends State<CarouselChart> {
       itemCount: items.length,
       itemBuilder: (BuildContext context, int index) {
         final market = items[index];
-        return Container(
-          margin: const EdgeInsets.symmetric(horizontal: 4.0),
-          child: Column(
-            children: [
-              Text(formatMarkets(market)),
-              BlocBuilder<MiniChartCubit, List<Map<String, dynamic>>>(
-                bloc: minichartCubit,
-                builder: (context, miniData) {
-                  if (miniData.isNotEmpty) {
-                    var dataForMarket = miniData.firstWhere(
-                      (entry) => entry.containsKey(formatMarkets(market)),
-                      orElse: () => {},
-                    );
-                    var spots = <FlSpot>[];
-                    if (dataForMarket.isNotEmpty) {
-                      var data = dataForMarket[formatMarkets(market)];
-                      for (var item in data) {
-                        double x = item['epoch'];
-                        double y = item['close'];
-                        spots.add(FlSpot(x, y));
-                      }
-                    }
-                    if (spots.isNotEmpty) {
-                      return Column(
-                        children: [
-                          SizedBox(
-                            height: 120,
-                            width: 120,
-                            child: SfCartesianChart(
-                              plotAreaBorderColor: Colors.transparent,
-                              borderWidth: 0,
-                              primaryXAxis: DateTimeAxis(
-                                isVisible: false,
-                              ),
-                              primaryYAxis: NumericAxis(isVisible: false),
-                              series: <ChartSeries>[
-                                LineSeries<FlSpot, DateTime>(
-                                  dataSource: spots,
-                                  xValueMapper: (FlSpot spot, _) =>
-                                      DateTime.fromMillisecondsSinceEpoch(
-                                          spot.x.toInt() * 1000,
-                                          isUtc: true),
-                                  yValueMapper: (FlSpot spot, _) => spot.y,
-                                  yAxisName: 'secondaryYAxis',
-                                  width: 2.0,
-                                  color: spots.isNotEmpty &&
-                                          spots[spots.length - 2].y >
-                                              spots.last.y
-                                      ? Colors.redAccent
-                                      : Colors.greenAccent,
-                                ),
-                              ],
-                            ),
-                          ),
-                          Container(
-                            padding: const EdgeInsets.all(5),
-                            decoration: BoxDecoration(
-                              color: spots.isNotEmpty &&
-                                      spots[spots.length - 2].y > spots.last.y
-                                  ? Colors.redAccent
-                                  : Colors.greenAccent,
-                              borderRadius:
-                                  const BorderRadius.all(Radius.circular(10)),
-                            ),
-                            child: Text(
-                              spots.last.y.toString(),
-                              // style: TextStyle(color: Colors.white),
-                            ),
-                          )
-                        ],
+        return Stack(
+          children: [
+            Container(
+            margin: const EdgeInsets.symmetric(horizontal: 4.0),
+            child: Column(
+              children: [
+                Text(formatMarkets(market)),
+                BlocBuilder<MiniChartCubit, List<Map<String, dynamic>>>(
+                  bloc: minichartCubit,
+                  builder: (context, miniData) {
+                    if (miniData.isNotEmpty) {
+                      var dataForMarket = miniData.firstWhere(
+                        (entry) => entry.containsKey(formatMarkets(market)),
+                        orElse: () => {},
                       );
+                      var spots = <FlSpot>[];
+                      if (dataForMarket.isNotEmpty) {
+                        var data = dataForMarket[formatMarkets(market)];
+                        for (var item in data) {
+                          double x = item['epoch'];
+                          double y = item['close'];
+                          spots.add(FlSpot(x, y));
+                        }
+                      }
+                      if (spots.isNotEmpty) {
+                        return Column(
+                          children: [
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.pushReplacement(
+                                  context,
+                                  PageRouteBuilder(
+                                      pageBuilder: (context, anim1, anim2) => SimulationPage(market: market),
+                                      transitionDuration: Duration.zero),
+                                );
+                              },
+                              child: SizedBox(
+                                height: 120,
+                                width: 120,
+                                child: SfCartesianChart(
+                                  plotAreaBorderColor: Colors.transparent,
+                                  borderWidth: 0,
+                                  primaryXAxis: DateTimeAxis(
+                                    isVisible: false,
+                                  ),
+                                  primaryYAxis: NumericAxis(isVisible: false),
+                                  series: <ChartSeries>[
+                                    LineSeries<FlSpot, DateTime>(
+                                      dataSource: spots,
+                                      xValueMapper: (FlSpot spot, _) =>
+                                          DateTime.fromMillisecondsSinceEpoch(
+                                              spot.x.toInt() * 1000,
+                                              isUtc: true),
+                                      yValueMapper: (FlSpot spot, _) => spot.y,
+                                      yAxisName: 'secondaryYAxis',
+                                      width: 2.0,
+                                      color: spots.isNotEmpty &&
+                                              spots[spots.length - 2].y >
+                                                  spots.last.y
+                                          ? Colors.redAccent
+                                          : Colors.greenAccent,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            Container(
+                              padding: const EdgeInsets.all(5),
+                              decoration: BoxDecoration(
+                                color: spots.isNotEmpty &&
+                                        spots[spots.length - 2].y > spots.last.y
+                                    ? Colors.redAccent
+                                    : Colors.greenAccent,
+                                borderRadius:
+                                    const BorderRadius.all(Radius.circular(10)),
+                              ),
+                              child: Text(
+                                spots.last.y.toString(),
+                                // style: TextStyle(color: Colors.white),
+                              ),
+                            )
+                          ],
+                        );
+                      } else {
+                        return Container();
+                      }
                     } else {
                       return Container();
                     }
-                  } else {
-                    return Container();
-                  }
-                },
-              ),
-            ],
+                  },
+                ),
+              ],
+            ),
           ),
+          GestureDetector(
+              onTap: () {
+                Navigator.pushReplacement(
+                  context,
+                  PageRouteBuilder(
+                      pageBuilder: (context, anim1, anim2) => SimulationPage(market: market),
+                      transitionDuration: Duration.zero),
+                );
+              },
+              child: Container(height: 120,
+                width: 120,
+                color: Colors.transparent,
+              ),
+            ),
+          ]
         );
       },
     ));
