@@ -54,7 +54,6 @@ class SimulationPage extends StatefulWidget {
 }
 
 class _SimulationPageState extends State<SimulationPage> {
-
   late IsCandleCubit isCandleCubit;
   late String markettype;
   late double ticks;
@@ -67,20 +66,6 @@ class _SimulationPageState extends State<SimulationPage> {
     'Hours',
     'Days',
   ];
-
-  void showSnackbar(String message, int duration) {
-    final snackbar = SnackBar(
-      content: SnackBarContent(
-        message: message,
-        initialDuration: duration,
-      ),
-      duration: Duration(seconds: duration),
-      behavior: SnackBarBehavior.fixed,
-      dismissDirection: DismissDirection.none,
-    );
-
-    ScaffoldMessenger.of(context).showSnackBar(snackbar);
-  }
 
   @override
   void initState() {
@@ -121,7 +106,9 @@ class _SimulationPageState extends State<SimulationPage> {
         BlocProvider<LiveLinePriceCubit>(
             create: (context) => LiveLinePriceCubit()),
         BlocProvider<candlePriceCubit>(create: (context) => candlePriceCubit()),
-        BlocProvider<ResetWalletBloc>(create: (context) => ResetWalletBloc(),)
+        BlocProvider<ResetWalletBloc>(
+          create: (context) => ResetWalletBloc(),
+        )
       ],
       child: Scaffold(
         resizeToAvoidBottomInset: true,
@@ -141,10 +128,9 @@ class _SimulationPageState extends State<SimulationPage> {
                   if (user == null) {
                     //not logged in
                     return BlocBuilder<MarketsCubit, String>(
-                      builder: (context,state) {
-                        return SimulationPageGuest(market: widget.market);
-                      }
-                    );
+                        builder: (context, state) {
+                      return SimulationPageGuest(market: widget.market);
+                    });
                   } else {
                     //logged in
                     return Column(
@@ -153,7 +139,7 @@ class _SimulationPageState extends State<SimulationPage> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Row( 
+                            Row(
                               children: [
                                 BlocBuilder<MarketsCubit, String>(
                                     builder: (context, state) {
@@ -164,19 +150,19 @@ class _SimulationPageState extends State<SimulationPage> {
                                       Navigator.push(
                                           context,
                                           MaterialPageRoute(
-                                              builder: (context) =>
-                                                  Markets(market: widget.market)));
+                                              builder: (context) => Markets(
+                                                  market: widget.market)));
                                     },
                                     child: Container(
                                       padding: const EdgeInsets.only(left: 15),
                                       margin: const EdgeInsets.all(10),
                                       height: 44,
                                       decoration: BoxDecoration(
-                                        border: Border.all(
-                                          color: const Color(0xFF5F5F5F),
-                                        ),
-                                        borderRadius: BorderRadius.circular(5)
-                                      ),
+                                          border: Border.all(
+                                            color: const Color(0xFF5F5F5F),
+                                          ),
+                                          borderRadius:
+                                              BorderRadius.circular(5)),
                                       child: Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,
@@ -197,24 +183,23 @@ class _SimulationPageState extends State<SimulationPage> {
                                   child: Container(
                                     height: 44,
                                     decoration: BoxDecoration(
-                                      border: Border.all(
-                                        color: const Color(0xFF5F5F5F),
-                                      ),
-                                      borderRadius: BorderRadius.circular(5)
-                                    ),
+                                        border: Border.all(
+                                          color: const Color(0xFF5F5F5F),
+                                        ),
+                                        borderRadius: BorderRadius.circular(5)),
                                     child: IconButton(
-                                      onPressed: () {
-                                        setState(() {
-                                          unsubscribe();
-                                          closeWebSocket();
-                                          isCandle = !isCandle;
-                                          // isCandleCubit.isItCandles(isCandle);
-                                        });
-                                      },
-                                      icon: isCandle
-                                          ? const Icon(Icons.candlestick_chart)
-                                          : const Icon(Icons.line_axis)
-                                    ),
+                                        onPressed: () {
+                                          setState(() {
+                                            unsubscribe();
+                                            closeWebSocket();
+                                            isCandle = !isCandle;
+                                            // isCandleCubit.isItCandles(isCandle);
+                                          });
+                                        },
+                                        icon: isCandle
+                                            ? const Icon(
+                                                Icons.candlestick_chart)
+                                            : const Icon(Icons.line_axis)),
                                   ),
                                 ),
                               ],
@@ -258,7 +243,8 @@ class _SimulationPageState extends State<SimulationPage> {
                                                   height: 31,
                                                   decoration: BoxDecoration(
                                                     color: isSelected
-                                                        ? const Color(0xFF5F5F5F)
+                                                        ? const Color(
+                                                            0xFF5F5F5F)
                                                         : Colors.white,
                                                     borderRadius:
                                                         BorderRadius.circular(
@@ -266,62 +252,59 @@ class _SimulationPageState extends State<SimulationPage> {
                                                   ),
                                                   child: Center(
                                                       child: Text(
-                                                          timeUnit[index],
-                                                          style: TextStyle(
-                                                            color: isSelected
+                                                    timeUnit[index],
+                                                    style: TextStyle(
+                                                        color: isSelected
                                                             ? Colors.white
-                                                            : Colors.black
-                                                          ),
-                                                      )),
+                                                            : Colors.black),
+                                                  )),
                                                 ),
                                               );
                                             },
                                           )
                                         : ListView.builder(
-                                          scrollDirection: Axis.horizontal,
-                                          itemCount: candleTimeUnit.length,
-                                          itemBuilder: (context, index) {
-                                            final chartunit =
-                                                candleTimeUnit[index];
-                                            final isSelected =
-                                                (chartunit == charttime);
-                                            return GestureDetector(
-                                              onTap: () {
-                                                unsubscribeCandle();
-                                                BlocProvider.of<
-                                                            ChartTimeCubit>(
-                                                        context)
-                                                    .updateChartTime(
-                                                        chartunit);
-                                              },
-                                              child: Container(
-                                                 margin: const EdgeInsets.symmetric(
-                                                      horizontal: 8),
-                                                width: 70,
-                                                height: 31,
-                                                decoration: BoxDecoration(
+                                            scrollDirection: Axis.horizontal,
+                                            itemCount: candleTimeUnit.length,
+                                            itemBuilder: (context, index) {
+                                              final chartunit =
+                                                  candleTimeUnit[index];
+                                              final isSelected =
+                                                  (chartunit == charttime);
+                                              return GestureDetector(
+                                                onTap: () {
+                                                  unsubscribeCandle();
+                                                  BlocProvider.of<
+                                                              ChartTimeCubit>(
+                                                          context)
+                                                      .updateChartTime(
+                                                          chartunit);
+                                                },
+                                                child: Container(
+                                                  margin: const EdgeInsets
+                                                      .symmetric(horizontal: 8),
+                                                  width: 70,
+                                                  height: 31,
+                                                  decoration: BoxDecoration(
                                                     color: isSelected
-                                                        ? const Color(0xFF5F5F5F)
+                                                        ? const Color(
+                                                            0xFF5F5F5F)
                                                         : Colors.white,
                                                     borderRadius:
                                                         BorderRadius.circular(
                                                             5),
-                                                ),
-                                                child: Center(
-                                                    child: Text(
-                                                        candleTimeUnit[
-                                                            index],
-                                                            style: TextStyle(
-                                                            color: isSelected
+                                                  ),
+                                                  child: Center(
+                                                      child: Text(
+                                                    candleTimeUnit[index],
+                                                    style: TextStyle(
+                                                        color: isSelected
                                                             ? Colors.white
-                                                            : Colors.black
-                                                          ),
-                                                        )
-                                                      ),
-                                              ),
-                                            );
-                                          },
-                                        )),
+                                                            : Colors.black),
+                                                  )),
+                                                ),
+                                              );
+                                            },
+                                          )),
                                 Padding(
                                   padding:
                                       const EdgeInsets.fromLTRB(0, 0, 15, 0),
@@ -333,27 +316,27 @@ class _SimulationPageState extends State<SimulationPage> {
                                     color: Colors.grey[300],
                                     child: Center(
                                       child: isCandle
-                                        ? BlocBuilder<MarketsCubit, String>(
-                                          builder: (context, market) {
-                                          return CandleStickChart(
-                                              isCandle: isCandle,
-                                              market: widget.market,
-                                              timeunit: charttime
-                                              // context
-                                              //     .read<ChartTimeCubit>()
-                                              //     .state,
-                                              );
-                                        })
-                                      : BlocBuilder<MarketsCubit, String>(
-                                          builder: (context, market) {
-                                            return MyLineChart(
-                                              isMini: false,
-                                              isCandle: isCandle,
-                                              market: widget.market,
-                                              timeunit: state,
-                                            );
-                                          },
-                                        ),
+                                          ? BlocBuilder<MarketsCubit, String>(
+                                              builder: (context, market) {
+                                              return CandleStickChart(
+                                                  isCandle: isCandle,
+                                                  market: widget.market,
+                                                  timeunit: charttime
+                                                  // context
+                                                  //     .read<ChartTimeCubit>()
+                                                  //     .state,
+                                                  );
+                                            })
+                                          : BlocBuilder<MarketsCubit, String>(
+                                              builder: (context, market) {
+                                                return MyLineChart(
+                                                  isMini: false,
+                                                  isCandle: isCandle,
+                                                  market: widget.market,
+                                                  timeunit: state,
+                                                );
+                                              },
+                                            ),
                                     ),
                                   ),
                                 ),
@@ -362,7 +345,8 @@ class _SimulationPageState extends State<SimulationPage> {
                           });
                         }),
                         Expanded(
-                          child: Scaffold(resizeToAvoidBottomInset: true,
+                          child: Scaffold(
+                            resizeToAvoidBottomInset: true,
                             body: SingleChildScrollView(
                               scrollDirection: Axis.vertical,
                               child: Column(
@@ -373,13 +357,13 @@ class _SimulationPageState extends State<SimulationPage> {
                                   Padding(
                                     padding: const EdgeInsets.only(top: 17),
                                     child: Container(
-                                      child: isCandle
-                                        ? ChartPrice(
-                                          market:
-                                            formatMarkets(widget.market))
-                                        : LiveLinePrice(
-                                          market:
-                                            formatMarkets(widget.market))),
+                                        child: isCandle
+                                            ? ChartPrice(
+                                                market: formatMarkets(
+                                                    widget.market))
+                                            : LiveLinePrice(
+                                                market: formatMarkets(
+                                                    widget.market))),
                                   ),
                                   BlocBuilder<TicksCubit, double>(
                                       builder: (context, selectedValue) {
@@ -423,7 +407,8 @@ class _SimulationPageState extends State<SimulationPage> {
                                           onToggle: (index) {
                                             context
                                                 .read<StakePayoutCubit>()
-                                                .updateStakePayout(index as int);
+                                                .updateStakePayout(
+                                                    index as int);
                                           },
                                         ),
                                       );
@@ -444,15 +429,18 @@ class _SimulationPageState extends State<SimulationPage> {
                                           if (!isSnackbarVisible) {
                                             markettype =
                                                 formatMarkets(widget.market);
-                                            ticks =
-                                                context.read<TicksCubit>().state;
-                                            if (BlocProvider.of<StakePayoutCubit>(
+                                            ticks = context
+                                                .read<TicksCubit>()
+                                                .state;
+                                            if (BlocProvider.of<
+                                                            StakePayoutCubit>(
                                                         context)
                                                     .state ==
                                                 0) {
                                               stakePayout = 'stake';
                                             } else if (BlocProvider.of<
-                                                        StakePayoutCubit>(context)
+                                                            StakePayoutCubit>(
+                                                        context)
                                                     .state ==
                                                 1) {
                                               stakePayout = 'payout';
@@ -467,10 +455,15 @@ class _SimulationPageState extends State<SimulationPage> {
                                                 currentAmount,
                                                 "high",
                                                 markettype);
-                                            showSnackbar(
+                                            showAlertDialog(
+                                                context,
                                                 'Contract bought: Higher',
                                                 ticks.toInt());
-                                            isSnackbarVisible = true;
+
+                                            // showSnackbar(
+                                            //     'Contract bought: Higher',
+                                            //     ticks.toInt());
+                                            isSnackbarVisible = false;
                                           } else {}
                                         },
                                         child: Container(
@@ -497,15 +490,18 @@ class _SimulationPageState extends State<SimulationPage> {
                                             isSnackbarVisible = true;
                                             markettype =
                                                 formatMarkets(widget.market);
-                                            ticks =
-                                                context.read<TicksCubit>().state;
-                                            if (BlocProvider.of<StakePayoutCubit>(
+                                            ticks = context
+                                                .read<TicksCubit>()
+                                                .state;
+                                            if (BlocProvider.of<
+                                                            StakePayoutCubit>(
                                                         context)
                                                     .state ==
                                                 0) {
                                               stakePayout = 'stake';
                                             } else if (BlocProvider.of<
-                                                        StakePayoutCubit>(context)
+                                                            StakePayoutCubit>(
+                                                        context)
                                                     .state ==
                                                 1) {
                                               stakePayout = 'payout';
@@ -520,8 +516,11 @@ class _SimulationPageState extends State<SimulationPage> {
                                                 currentAmount,
                                                 "low",
                                                 markettype);
-                                            showSnackbar('Contract bought: Lower',
+                                            showAlertDialog(
+                                                context,
+                                                'Contract bought: Lower',
                                                 ticks.toInt());
+                                            isSnackbarVisible = false;
                                           } else {}
                                         },
                                         child: Container(
