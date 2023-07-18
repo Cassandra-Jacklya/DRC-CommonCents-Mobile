@@ -29,6 +29,31 @@ class _ForumPageState extends State<ForumPage> {
     });
   }
 
+  Future<void> deletePost(Map<String, dynamic> post) async {
+    try {
+      final postID = post['id']; // Get the unique post ID
+
+      // Delete the post document
+      await FirebaseFirestore.instance.collection('posts').doc(postID).delete();
+
+      // Delete the comments subcollection of the post
+      final commentsSnapshot = await FirebaseFirestore.instance
+          .collection('posts')
+          .doc(postID)
+          .collection('comments')
+          .get();
+
+      // Delete each comment document in the comments subcollection
+      for (final commentDoc in commentsSnapshot.docs) {
+        await commentDoc.reference.delete();
+      }
+
+      print('Post and associated comments deleted successfully.');
+    } catch (error) {
+      print('Failed to delete post and comments: $error');
+    }
+  }
+
   void savePost(Map<String, dynamic> post) async {
     try {
       final userId = user!.uid;
@@ -174,7 +199,9 @@ class _ForumPageState extends State<ForumPage> {
             isTradingPage: false),
         body: Container(
           child: postsList.isEmpty
-              ? const Center(child: CircularProgressIndicator(),)
+              ? const Center(
+                  child: CircularProgressIndicator(),
+                )
               : SingleChildScrollView(
                   child: Column(
                     children: [
@@ -602,6 +629,52 @@ class _ForumPageState extends State<ForumPage> {
                                           ),
                                           Row(
                                             children: [
+                                              Container(
+                                                  child:
+                                                      user!.displayName ==
+                                                              post['author']
+                                                          ? IconButton(
+                                                              icon: const Icon(
+                                                                  Icons.delete),
+                                                              onPressed: () {
+                                                                showDialog(
+                                                                  context:
+                                                                      context,
+                                                                  builder:
+                                                                      (BuildContext
+                                                                          context) {
+                                                                    return AlertDialog(
+                                                                      title: const Text(
+                                                                          "Delete Post"),
+                                                                      content:
+                                                                          const Text(
+                                                                              "Are you sure you want to delete this post?"),
+                                                                      actions: [
+                                                                        TextButton(
+                                                                          onPressed:
+                                                                              () {
+                                                                            Navigator.of(context).pop(); // Close the dialog
+                                                                          },
+                                                                          child:
+                                                                              const Text("Cancel"),
+                                                                        ),
+                                                                        TextButton(
+                                                                          onPressed:
+                                                                              () {
+                                                                           deletePost(post);
+                                                                            refreshPosts();
+                                                                            Navigator.of(context).pop(); // Close the dialog
+                                                                          },
+                                                                          child:
+                                                                              const Text("Delete"),
+                                                                        ),
+                                                                      ],
+                                                                    );
+                                                                  },
+                                                                );
+                                                              },
+                                                            )
+                                                          : Container()),
                                               Text(
                                                 '${post['comments'].length}',
                                                 style: const TextStyle(

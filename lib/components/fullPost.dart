@@ -36,6 +36,29 @@ class _PostModalState extends State<PostModal> {
     });
   }
 
+  Future<void> deleteComment(String commentId) async {
+    try {
+      final postId = widget.post['id'];
+
+      // Get the reference to the post document
+      final postRef =
+          FirebaseFirestore.instance.collection('posts').doc(postId);
+
+      // Delete the comment document from Firestore
+      await postRef.collection('comments').doc(commentId).delete();
+      print('Comment deleted successfully.');
+
+      // Refresh the comments list to remove the deleted comment
+      final updatedCommentsSnapshot =
+          await postRef.collection('comments').get();
+      final updatedComments =
+          updatedCommentsSnapshot.docs.map((doc) => doc.data()).toList();
+      refreshModal(updatedComments);
+    } catch (error) {
+      print('Failed to delete comment: $error');
+    }
+  }
+
   void storeComment(
     String postId,
     String author,
@@ -268,7 +291,8 @@ class _PostModalState extends State<PostModal> {
                                           color: _comment.text == ""
                                               ? Colors.grey[300]
                                               : Colors.greenAccent,
-                                          borderRadius: BorderRadius.circular(5)),
+                                          borderRadius:
+                                              BorderRadius.circular(5)),
                                       child: const Icon(Iconsax.send),
                                     ),
                                   ),
@@ -281,12 +305,15 @@ class _PostModalState extends State<PostModal> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  const SizedBox(width: 10,),
+                  const SizedBox(
+                    width: 10,
+                  ),
                   Container(
                     margin: const EdgeInsets.symmetric(vertical: 10),
                     child: const Text(
                       "Comments",
-                      style: TextStyle(fontSize: 30, fontWeight: FontWeight.w700),
+                      style:
+                          TextStyle(fontSize: 30, fontWeight: FontWeight.w700),
                     ),
                   ),
                 ],
@@ -313,58 +340,95 @@ class _PostModalState extends State<PostModal> {
                               // Sort comments based on timestamp in descending order
                               comments.sort((a, b) =>
                                   a['timestamp'].compareTo(b['timestamp']));
-    
-                              return Container(
-                                margin: const EdgeInsets.symmetric(
-                                    vertical: 10, horizontal: 10),
-                                padding: const EdgeInsets.all(5),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                  color: Color(0xFFD9D9D9),
-                                  // border: Border(bottom: BorderSide(color: Colors.black))
-                                ),
-                                child: Row(
-                                  children: [
-                                    Container(
-                                      margin: const EdgeInsets.all(5),
-                                      child: Column(
-                                        children: [
-                                          CircleAvatar(
-                                            backgroundImage: NetworkImage(
-                                              comments[index]['authorImage'] ??
-                                                  'https://www.seekpng.com/png/detail/966-9665493_my-profile-icon-blank-profile-image-circle.png',
+
+                              return GestureDetector(
+                                onLongPress: () {
+                                  if (comments[index]['author'] ==
+                                      user!.displayName) {
+                                    showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return AlertDialog(
+                                          title: const Text("Delete Comment"),
+                                          content: const Text(
+                                              "Are you sure you want to delete this comment?"),
+                                          actions: [
+                                            TextButton(
+                                              onPressed: () {
+                                                Navigator.of(context)
+                                                    .pop(); // Close the dialog
+                                              },
+                                              child: const Text("Cancel"),
                                             ),
-                                            radius: 20,
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.only(top: 5),
-                                            child: SizedBox(
-                                              // width: MediaQuery.of(context)
-                                              //         .size
-                                              //         .width *
-                                              //     0.15,
-                                              width: 50,
-                                              child: Center(
-                                                child: Text(
-                                                  comments[index]['author'],
-                                                  style: const TextStyle(
-                                                    fontSize: 13,
+                                            TextButton(
+                                              onPressed: () async {
+                                                print(comments[index]['id']);
+                                                await deleteComment(
+                                                    comments[index]['id']);
+                                                    
+                                                Navigator.of(context)
+                                                    .pop(); // Close the dialog
+                                              },
+                                              child: const Text("Delete"),
+                                            ),
+                                          ],
+                                        );
+                                      },
+                                    );
+                                  }
+                                },
+                                child: Container(
+                                  margin: const EdgeInsets.symmetric(
+                                      vertical: 10, horizontal: 10),
+                                  padding: const EdgeInsets.all(5),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    color: Color(0xFFD9D9D9),
+                                    // border: Border(bottom: BorderSide(color: Colors.black))
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      Container(
+                                        margin: const EdgeInsets.all(5),
+                                        child: Column(
+                                          children: [
+                                            CircleAvatar(
+                                              backgroundImage: NetworkImage(
+                                                comments[index]
+                                                        ['authorImage'] ??
+                                                    'https://www.seekpng.com/png/detail/966-9665493_my-profile-icon-blank-profile-image-circle.png',
+                                              ),
+                                              radius: 20,
+                                            ),
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.only(top: 5),
+                                              child: SizedBox(
+                                                width: 50,
+                                                child: Center(
+                                                  child: Text(
+                                                    comments[index]['author'],
+                                                    style: const TextStyle(
+                                                      fontSize: 13,
+                                                    ),
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
                                                   ),
-                                                  overflow: TextOverflow.ellipsis,
                                                 ),
                                               ),
                                             ),
-                                          ),
-                                        ],
+                                          ],
+                                        ),
                                       ),
-                                    ),
-                                    Expanded(
-                                      child: Container(
-                                        margin: const EdgeInsets.all(5),
-                                        child: Text(comments[index]['content']),
+                                      Expanded(
+                                        child: Container(
+                                          margin: const EdgeInsets.all(5),
+                                          child:
+                                              Text(comments[index]['content']),
+                                        ),
                                       ),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
                               );
                             },
