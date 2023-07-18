@@ -85,7 +85,6 @@ class _MarketsState extends State<Markets> {
                       ),
                       onTap: () {
                         setState(() {
-                          print("There:${newMarket}");
                           BlocProvider.of<MarketsCubit>(context).updateMarkets(newMarket);
                           Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => SimulationPage(market: newMarket,)));
                         });

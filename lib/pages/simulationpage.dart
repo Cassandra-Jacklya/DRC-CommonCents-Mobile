@@ -76,12 +76,13 @@ class _SimulationPageState extends State<SimulationPage> {
   @override
   void dispose() {
     closeWebSocket();
-
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    closeWebSocket();
+    // print("Hello");
     return MultiBlocProvider(
       providers: [
         BlocProvider<BottomNavBarCubit>(
@@ -349,11 +350,9 @@ class _SimulationPageState extends State<SimulationPage> {
                             resizeToAvoidBottomInset: true,
                             body: SingleChildScrollView(
                               scrollDirection: Axis.vertical,
+                              physics: const BouncingScrollPhysics(),
                               child: Column(
                                 children: [
-                                  // Container(
-                                  //   child: isCandle ? ChartTime() : LineTime(),
-                                  // ),
                                   Padding(
                                     padding: const EdgeInsets.only(top: 17),
                                     child: Container(
@@ -415,10 +414,11 @@ class _SimulationPageState extends State<SimulationPage> {
                                     },
                                   ),
                                   const SizedBox(height: 14),
-                                  BlocBuilder<CurrentAmountCubit, int>(
-                                      builder: (context, amount) {
-                                    return const IntegerExample();
-                                  }),
+                                  // BlocBuilder<CurrentAmountCubit, int>(
+                                  //     builder: (context, amount) {
+                                  //   return IntegerExample();
+                                  // }),
+                                  IntegerExample(),
                                   const SizedBox(height: 20),
                                   Row(
                                     mainAxisAlignment:

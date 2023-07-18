@@ -259,8 +259,6 @@ class _PostModalState extends State<PostModal> {
                                                 "https://www.seekpng.com/png/detail/966-9665493_my-profile-icon-blank-profile-image-circle.png",
                                             _comment.text);
                                       }
-                                      // await Future.delayed(Duration(milliseconds: 500));
-                                      // Navigator.of(context).pop();
                                     },
                                     child: Container(
                                       padding: const EdgeInsets.all(5),

@@ -173,7 +173,7 @@ void subscribeTicks(String market, String selectedTimeUnit) async {
 
 void unsubscribe() async {
   socket?.sink.add(jsonEncode(unsubscribeRequest));
-  // stockDataCubit.clearStockData();
+  stockDataCubit.clearStockData();
 }
 
 void unsubscribeCandle() async{
@@ -182,6 +182,7 @@ void unsubscribeCandle() async{
 }
 
 void closeWebSocket() {
+  print("I am closing websocket");
   socket?.sink.close();
 }
 
@@ -216,6 +217,7 @@ Future<void> handleResponse(
       final double close = double.parse(ohlc['close']);
       final double time = ohlc['open_time'].toDouble();
 
+  
       if (candles.isNotEmpty) {
         final lastItem = candles.last;
         final double lastEpoch = lastItem['epoch'];
