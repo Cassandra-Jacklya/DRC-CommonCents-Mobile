@@ -17,6 +17,7 @@ class ForumPage extends StatefulWidget {
 
 class _ForumPageState extends State<ForumPage> {
   User? user = FirebaseAuth.instance.currentUser;
+
   Future<void> refreshPosts() async {
     setState(() {
       postsList = []; // Clear the existing posts list
@@ -25,6 +26,8 @@ class _ForumPageState extends State<ForumPage> {
     await loadPosts().then((result) {
       setState(() {
         postsList = result;
+        print("Hola ${postsList.length}");
+
       });
     });
   }
@@ -742,6 +745,7 @@ class _ForumPageState extends State<ForumPage> {
                     return PostSomething(
                       // Pass the callback function to the PostSomething dialog
                       refreshPosts: () {
+                        postsList = [];
                         loadPosts().then((result) {
                           setState(() {
                             postsList = result;
