@@ -39,7 +39,7 @@ class _IntegerExampleState extends State<IntegerExample> {
         IconButton(
           icon: const Icon(Icons.remove),
           onPressed: () {
-            if (currentAmountCubit.state <=0) {
+            if (currentAmountCubit.state <= 0) {
             } else {
               currentAmountCubit.decrement(currentAmountCubit.state);
               _controller.text = currentAmountCubit.state.toString();
@@ -52,34 +52,53 @@ class _IntegerExampleState extends State<IntegerExample> {
               showDialog(
                 context: context,
                 builder: (BuildContext context) {
-                  return AlertDialog(
-                    alignment: Alignment.center,
-                    content: TextField(
-                      autofocus: true,
-                      textAlign: TextAlign.center,
-                      controller: _controller,
-                      keyboardType: TextInputType.number,
-                      inputFormatters: [
-                        _amountFormatter
-                      ], // Apply the formatter
-                      onSubmitted: (value) {
-                        final amount = int.tryParse(value) ?? 0;
-                        // Limit the input to a range of 0 to 500
-                        final limitedAmount = amount.clamp(0, 500);
-                        currentAmountCubit.setCurrentAmount(limitedAmount);
-                      },
-                      decoration: InputDecoration(
-                        hintText: currentAmountCubit.state == 0
-                            ? 'USD'
-                            : currentAmountCubit.state.toString(),
-                      ),
-                    ),
-                    actions: <Widget>[
-                      TextButton(
-                        child: Text('OK'),
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
+                  final TextEditingController dialogController =
+                      TextEditingController();
+
+                  return Stack(
+                    children: [
+                      // const ModalBarrier(
+                      //     color: Colors.transparent, dismissible: false),
+                      AlertDialog(
+                        // Prevent dismissing on tap outside the dialog
+                        alignment: Alignment.center,
+                        content: RawKeyboardListener(
+                          focusNode: FocusNode(),
+                          onKey: (RawKeyEvent event) {
+                            if (event is RawKeyDownEvent &&
+                                event.logicalKey == LogicalKeyboardKey.enter) {
+                              final amount =
+                                  int.tryParse(dialogController.text) ?? 0;
+                              // Limit the input to a range of 0 to 500
+                              final limitedAmount = amount.clamp(0, 500);
+                              currentAmountCubit
+                                  .setCurrentAmount(limitedAmount);
+                              Navigator.of(context)
+                                  .pop(); // Dismiss the dialog when the Enter key is pressed
+                            }
+                          },
+                          child: TextField(
+                            autofocus: false,
+                            textAlign: TextAlign.center,
+                            controller: dialogController,
+                            keyboardType: TextInputType.number,
+                            inputFormatters: [
+                              _amountFormatter
+                            ], // Apply the formatter
+                            onSubmitted: (value) {
+                              final amount = int.tryParse(value) ?? 0;
+                              // Limit the input to a range of 0 to 500
+                              final limitedAmount = amount.clamp(0, 500);
+                              currentAmountCubit
+                                  .setCurrentAmount(limitedAmount);
+                            },
+                            decoration: InputDecoration(
+                              hintText: currentAmountCubit.state == 0
+                                  ? 'USD'
+                                  : currentAmountCubit.state.toString(),
+                            ),
+                          ),
+                        ),
                       ),
                     ],
                   );
@@ -112,7 +131,7 @@ class _IntegerExampleState extends State<IntegerExample> {
         IconButton(
           icon: const Icon(Icons.add),
           onPressed: () {
-            if (currentAmountCubit.state >=500) {
+            if (currentAmountCubit.state >= 500) {
             } else {
               currentAmountCubit.increment(currentAmountCubit.state);
               _controller.text = currentAmountCubit.state.toString();

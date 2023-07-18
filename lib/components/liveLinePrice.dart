@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:ffi';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -16,6 +17,7 @@ class LiveLinePrice extends StatefulWidget {
 }
 
 class _LiveLinePriceState extends State<LiveLinePrice> {
+  late List<double> linePriceList = [];
   late double linePrice = 0.0;
   WebSocketChannel? socket;
   static const String appId = '1089';
@@ -53,8 +55,12 @@ class _LiveLinePriceState extends State<LiveLinePrice> {
   void handleLineResponse(dynamic data) {
     final decodedData = jsonDecode(data);
     linePrice = decodedData['tick']['quote'].toDouble();
+    linePriceList.add(linePrice);
+    if (linePriceList.length > 2) {
+      linePriceList.removeAt(0);
+    }
     final liveLinePriceData = BlocProvider.of<LiveLinePriceCubit>(context);
-    liveLinePriceData.updateLiveLinePrice(linePrice);
+    liveLinePriceData.updateLiveLinePrice(linePriceList);
   }
 
   void handleLineError(dynamic error) {
@@ -79,10 +85,29 @@ class _LiveLinePriceState extends State<LiveLinePrice> {
 
   @override
   Widget build(BuildContext context) {
-    print(widget.market);
-    return BlocBuilder<LiveLinePriceCubit, double>(
+    return BlocBuilder<LiveLinePriceCubit, List<double>>(
       builder: (context, state) {
-        return Text("Spot price: ${state.toStringAsFixed(2)}");
+        if (state.isNotEmpty) {
+          late double price = state.last;
+          return Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: state.length < 2
+                    ? Colors.white
+                    : state.first > state.last
+                        ? Colors.red
+                        : Colors.green,
+              ),
+              child:
+                  // Text("Spot price: ${state.toStringAsFixed(2)}")
+                  Text("Spot price: ${price.toStringAsFixed(2)}",
+                      style: const TextStyle(color: Colors.white)));
+        } else {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        }
       },
     );
   }

@@ -1,3 +1,4 @@
+import 'package:commoncents/apistore/miniChartData.dart';
 import 'package:commoncents/apistore/news_lazyLoading.dart';
 import 'package:commoncents/components/carousel_chart.dart';
 import 'package:commoncents/components/navbar.dart';
@@ -59,6 +60,12 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     _newsFuture =getNews();
+  }
+
+  @override
+  void dispose(){
+    closeMiniWebSocket();
+    super.dispose();
   }
 
   @override

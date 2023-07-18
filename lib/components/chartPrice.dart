@@ -17,7 +17,11 @@ class ChartPrice extends StatefulWidget {
 }
 
 class _ChartPriceState extends State<ChartPrice> {
-  late List<Map<String, dynamic>> ohlc;
+  late List<Map<String, dynamic>> ohlcList = [];
+  late Color highcurrent = Colors.transparent;
+  late Color lowcurrent = Colors.transparent;
+  late Color opencurrent = Colors.transparent;
+
   WebSocketChannel? socket;
   static const String appId = '1089';
   final Uri url = Uri.parse(
@@ -59,16 +63,24 @@ class _ChartPriceState extends State<ChartPrice> {
   void handleLineResponse(dynamic data) {
     final decodedData = jsonDecode(data);
     if (decodedData['msg_type'] == "ohlc") {
-      String close = decodedData['ohlc']['close'];
-      String high = decodedData['ohlc']['high'];
-      String low = decodedData['ohlc']['low'];
-      String open = decodedData['ohlc']['open'];
+      double close = double.parse(decodedData['ohlc']['close']);
+      double high = double.parse(decodedData['ohlc']['high']);
+      double low = double.parse(decodedData['ohlc']['low']);
+      double open = double.parse(decodedData['ohlc']['open']);
 
-      List<Map<String, dynamic>> dataList = [
-        {'close': close, 'high': high, 'low': low, 'open': open},
-      ];
+      Map<String, dynamic> data = {
+        'close': close,
+        'high': high,
+        'low': low,
+        'open': open
+      };
+
+      ohlcList.add(data);
+      if (ohlcList.length > 2) {
+        ohlcList.removeAt(0);
+      }
       final candlePrice = BlocProvider.of<candlePriceCubit>(context);
-      candlePrice.updateLiveLinePrice(dataList);
+      candlePrice.updateLiveLinePrice(ohlcList);
     }
   }
 
@@ -96,13 +108,16 @@ class _ChartPriceState extends State<ChartPrice> {
   Widget build(BuildContext context) {
     return BlocBuilder<candlePriceCubit, List<Map<String, dynamic>>>(
       builder: (context, state) {
-        // Check if the state list has at least one item
         if (state.isNotEmpty) {
-          // Extract the values from the first map in the list
-          String close = state[0]['close'].toString();
-          String high = state[0]['high'].toString();
-          String low = state[0]['low'].toString();
-          String open = state[0]['open'].toString();
+          double previousClose = state[0]['close'];
+          double previousHigh = state[0]['high'];
+          double previousLow = state[0]['low'];
+          double previousOpen = state[0]['open'];
+
+          double close = state[state.length - 1]['close'];
+          double high = state[state.length - 1]['high'];
+          double low = state[state.length - 1]['low'];
+          double open = state[state.length - 1]['open'];
 
           return Container(
             child: Column(
@@ -111,25 +126,136 @@ class _ChartPriceState extends State<ChartPrice> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text('Close: $close'),
+                    Container(
+                        padding: const EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: state.length < 2
+                              ? Colors.white
+                              : previousClose > close
+                                  ? Colors.red
+                                  : Colors.green,
+                        ),
+                        child: Text(
+                          'Close: ${close.toString()}',
+                          style: const TextStyle(color: Colors.white),
+                        )),
                     SizedBox(width: 10),
-                    Text('High: $high'),
+                    Container(
+                      padding: const EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: () {
+                          if (state.length < 2) {
+                            highcurrent = Colors.white;
+                            return Colors.white;
+                          } else {
+                            if (previousHigh > high) {
+                              highcurrent = Colors.red;
+                              return Colors.red;
+                            } else {
+                              if (previousHigh < high) {
+                                highcurrent = Colors.green;
+                                return Colors.green;
+                              } else {
+                                return highcurrent;
+                              }
+                            }
+                          }
+                        }(),
+                        border: Border.all(
+                          color: highcurrent == Colors.white
+                              ? Colors.black
+                              : Colors.transparent,
+                          width: 1.0,
+                        ),
+                      ),
+                      child: Text(
+                        'High: ${high.toString()}',
+                        style: const TextStyle(color: Colors.black),
+                      ),
+                    ),
                   ],
                 ),
                 SizedBox(height: 10),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text('Low: $low'),
+                    Container(
+                      padding: const EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: () {
+                          if (state.length < 2) {
+                            lowcurrent = Colors.white;
+                            return Colors.white;
+                          } else {
+                            if (previousLow > low) {
+                              lowcurrent = Colors.red;
+                              return Colors.red;
+                            } else {
+                              if (previousLow < low) {
+                                lowcurrent = Colors.green;
+                                return Colors.green;
+                              } else {
+                                return lowcurrent;
+                              }
+                            }
+                          }
+                        }(),
+                        border: Border.all(
+                          color: lowcurrent == Colors.white
+                              ? Colors.black
+                              : Colors.transparent,
+                          width: 1.0,
+                        ),
+                      ),
+                      child: Text(
+                        'Low: ${low.toString()}',
+                        style: const TextStyle(color: Colors.white),
+                      ),
+                    ),
                     SizedBox(width: 10),
-                    Text('Open: $open'),
+                    Container(
+                      padding: const EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: () {
+                          if (state.length < 2) {
+                            opencurrent = Colors.white;
+                            return Colors.white;
+                          } else {
+                            if (previousOpen > open) {
+                              opencurrent = Colors.red;
+                              return Colors.red;
+                            } else {
+                              if (previousOpen < open) {
+                                opencurrent = Colors.green;
+                                return Colors.green;
+                              } else {
+                                return opencurrent;
+                              }
+                            }
+                          }
+                        }(),
+                        border: Border.all(
+                          color: opencurrent == Colors.white
+                              ? Colors.black
+                              : Colors.transparent,
+                          width: 1.0,
+                        ),
+                      ),
+                      child: Text(
+                        'Open: ${open.toString()}',
+                        style: const TextStyle(color: Colors.black),
+                      ),
+                    ),
                   ],
                 ),
               ],
             ),
           );
         } else {
-          // Placeholder container when the state list is empty
           return Container();
         }
       },

@@ -1,10 +1,10 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class LiveLinePriceCubit extends Cubit<double> {
-  LiveLinePriceCubit() : super(0.0);
+class LiveLinePriceCubit extends Cubit<List<double>> {
+  LiveLinePriceCubit() : super([]);
 
-  void updateLiveLinePrice(double price) {
-    emit(price);
+  void updateLiveLinePrice(List<double> price) {
+    emit([...price]);
   }
 
 }

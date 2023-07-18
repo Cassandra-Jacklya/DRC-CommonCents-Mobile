@@ -226,13 +226,13 @@ class _LeaderboardState extends State<Leaderboard> {
                     ),
                   );
 
-                  // return Container(
-                  //   height: 75,
-                  //   margin: const EdgeInsets.all(10),
-                  //   child: Row(
-                  //     children: [
-                  //       Text(number.toString(),
-                  //           style: const TextStyle(fontSize: 30)),
+                                  // return Container(
+                                  //   height: 75,
+                                  //   margin: const EdgeInsets.all(10),
+                                  //   child: Row(
+                                  //     children: [
+                                  //       Text(number.toString(),
+                                  //           style: const TextStyle(fontSize: 30)),
 
                   //       Container(
                   //         margin: const EdgeInsets.symmetric(horizontal: 10),

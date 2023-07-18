@@ -50,19 +50,28 @@ class _SnackBarContentState extends State<SnackBarContent> {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 100,
-      width: 100,
-      child: Row(
-        children: [
-          Text(widget.message),
-          const SizedBox(width: 8),
-          Text(
-            '$timerSeconds',
-            style: const TextStyle(fontWeight: FontWeight.bold),
+    return Stack(
+      // Wrap the content in a Stack
+      children: [
+        SizedBox(
+          height: 220,
+          width: 100,
+          child: Row(
+            children: [
+              Text(widget.message),
+              const SizedBox(width: 8),
+              Text(
+                '$timerSeconds',
+                style: const TextStyle(fontWeight: FontWeight.bold),
+              ),
+            ],
           ),
-        ],
-      ),
+        ),
+        // ModalBarrier(
+        //   color: Colors.transparent, // Set the desired color for the barrier
+        //   dismissible: false,
+        // ),
+      ],
     );
   }
 }
