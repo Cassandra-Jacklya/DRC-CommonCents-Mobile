@@ -28,8 +28,11 @@ class MyLineChart extends StatefulWidget {
 }
 
 class _LineChartState extends State<MyLineChart> {
+  bool _isTooltipVisible = false;
+
   late StockDataCubit stockDataCubit;
   late String selectedTimeUnit = widget.timeunit;
+  late TooltipBehavior _tooltipBehavior;
   // late String selectedTimeUnit;
   List<FlSpot> spots = [];
   int initial = 50;
@@ -55,9 +58,11 @@ class _LineChartState extends State<MyLineChart> {
   void initState() {
     super.initState();
     stockDataCubit = StockDataCubit();
-    // lineTimeCubit =
-    //     BlocProvider.of<LineTimeCubit>(context); // Access LineTimeCubit state
-    // selectedTimeUnit = lineTimeCubit.state;
+    _tooltipBehavior = TooltipBehavior(
+      enable: true,
+      header: '',
+      format: 'point.y',
+    );
   }
 
   @override
@@ -81,8 +86,6 @@ class _LineChartState extends State<MyLineChart> {
             SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: SizedBox(
-                // height: widget.isMini ? 100 : MediaQuery.of(context).size.height * 0.3,
-                // width: widget.isMini ? 100: MediaQuery.of(context).size.width,
                 height: 280,
                 width: 380,
                 child: BlocBuilder<StockDataCubit, List<Map<String, dynamic>>>(
@@ -117,11 +120,22 @@ class _LineChartState extends State<MyLineChart> {
                       }
 
                       return SfCartesianChart(
+                        tooltipBehavior: _tooltipBehavior,
                         zoomPanBehavior: ZoomPanBehavior(
-                          enableSelectionZooming: true,
+                          // enableSelectionZooming: true,
                           enablePinching: true,
                           enablePanning: true,
                           zoomMode: ZoomMode.xy,
+                        ),
+                        trackballBehavior: TrackballBehavior(
+                          enable: true,
+                          shouldAlwaysShow: true,
+                          tooltipDisplayMode:
+                              TrackballDisplayMode.floatAllPoints,
+                          tooltipSettings: const InteractiveTooltip(
+                            enable: true,
+                            color: Colors.blue,
+                          ),
                         ),
                         primaryXAxis: DateTimeAxis(
                           isVisible: widget.isMini ? false : true,
@@ -139,26 +153,13 @@ class _LineChartState extends State<MyLineChart> {
                           maximum: DateTime.fromMillisecondsSinceEpoch(
                             stockData.last['epoch'].toInt() * 1000,
                             isUtc: true,
-                          ), // Set the maximum value of the x-axis
-                          // visibleMinimum: DateTime.fromMillisecondsSinceEpoch(
-                          //   stockData[initial]['epoch'].toInt() * 1000,
-                          //   isUtc: true,
-                          // ).subtract(const Duration(
-                          //     seconds: 10)), // Set the initial visible range
-                          // visibleMaximum: DateTime.fromMillisecondsSinceEpoch(
-                          //   stockData.last['epoch'].toInt() * 1000,
-                          //   isUtc: true,
-                          // ), // Display the time of the first item as axis title
+                          ),
                         ),
                         primaryYAxis: NumericAxis(
                           edgeLabelPlacement: EdgeLabelPlacement.shift,
                           opposedPosition: true,
                           isVisible: widget.isMini ? false : true,
-                          // minimum: minClose.floorToDouble(),
-                          // maximum: maxClose.floorToDouble() + 1.5,
                           desiredIntervals: 3,
-                          // interval: 1,
-                          // numberFormat: NumberFormat.simpleCurrency(decimalDigits: 2),
                         ),
                         series: <ChartSeries>[
                           LineSeries<FlSpot, DateTime>(
