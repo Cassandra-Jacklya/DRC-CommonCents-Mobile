@@ -172,7 +172,11 @@ class _ChartPriceState extends State<ChartPrice> {
                       ),
                       child: Text(
                         'High: ${high.toString()}',
-                        style: const TextStyle(color: Colors.black),
+                        style: TextStyle(
+                          color: highcurrent == Colors.white
+                              ? Colors.black
+                              : Colors.white,
+                        ),
                       ),
                     ),
                   ],
@@ -212,7 +216,11 @@ class _ChartPriceState extends State<ChartPrice> {
                       ),
                       child: Text(
                         'Low: ${low.toString()}',
-                        style: const TextStyle(color: Colors.white),
+                        style: TextStyle(
+                        color: lowcurrent == Colors.white
+                            ? Colors.black
+                            : Colors.white,
+                      ),
                       ),
                     ),
                     SizedBox(width: 10),
@@ -247,7 +255,11 @@ class _ChartPriceState extends State<ChartPrice> {
                       ),
                       child: Text(
                         'Open: ${open.toString()}',
-                        style: const TextStyle(color: Colors.black),
+                        style: TextStyle(
+                        color: opencurrent == Colors.white
+                            ? Colors.black
+                            : Colors.white,
+                      ),
                       ),
                     ),
                   ],
