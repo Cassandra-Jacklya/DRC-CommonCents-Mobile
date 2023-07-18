@@ -25,9 +25,8 @@ class _ForumPageState extends State<ForumPage> {
 
     await loadPosts().then((result) {
       setState(() {
+        postsList = [];
         postsList = result;
-        print("Hola ${postsList.length}");
-
       });
     });
   }
@@ -122,6 +121,8 @@ class _ForumPageState extends State<ForumPage> {
   }
 
   Future<List<Map<String, dynamic>>> loadPosts() async {
+    List<Map<String, dynamic>> postsList = []; // Declare the list here
+
     final docSnapshot =
         await FirebaseFirestore.instance.collection('posts').get();
 
@@ -130,6 +131,8 @@ class _ForumPageState extends State<ForumPage> {
       return postsList;
     } else {
       final postsDocs = docSnapshot.docs;
+
+      postsList.clear(); // Clear the list before adding new data
 
       for (final postDoc in postsDocs) {
         final post = postDoc.data();
@@ -142,7 +145,8 @@ class _ForumPageState extends State<ForumPage> {
 
         if (commentsSnapshot.docs.isNotEmpty) {
           for (final commentDoc in commentsSnapshot.docs) {
-            final commentData = commentDoc.data();
+            late Map<String, dynamic> commentData = {};
+            commentData = commentDoc.data();
             final comment = {
               'id': commentDoc.id,
               'author': commentData['author'],
@@ -154,7 +158,6 @@ class _ForumPageState extends State<ForumPage> {
             commentsList.add(comment);
           }
         }
-
         post['comments'] = commentsList;
 
         postsList.add(post);
@@ -664,7 +667,7 @@ class _ForumPageState extends State<ForumPage> {
                                                                         TextButton(
                                                                           onPressed:
                                                                               () {
-                                                                           deletePost(post);
+                                                                            deletePost(post);
                                                                             refreshPosts();
                                                                             Navigator.of(context).pop(); // Close the dialog
                                                                           },
