@@ -4,6 +4,7 @@ import 'package:commoncents/apistore/stockdata.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:numberpicker/numberpicker.dart';
 import '../cubit/numberpicker_cubit.dart';
 
 class IntegerExample extends StatefulWidget {
@@ -44,67 +45,21 @@ class _IntegerExampleState extends State<IntegerExample> {
           },
         ),
         Expanded(
-          child: GestureDetector(
-            onTap: () {
-                showDialog(
-                  context: context,
-                  // barrierDismissible: false,
-                  builder: (BuildContext usdContext) {
-                    return AlertDialog(
-                      alignment: Alignment.center,
-                      content: TextField(
-                        autofocus: true,
-                        textAlign: TextAlign.center,
-                        controller: _controller,
-                        keyboardType: TextInputType.number,
-                        inputFormatters: [
-                          _amountFormatter
-                        ], // Apply the formatter
-                        onSubmitted: (value) {
-                          final amount = int.tryParse(value) ?? 0;
-                          // Limit the input to a range of 0 to 500
-                          final limitedAmount = amount.clamp(0, 500);
-                          currentAmountCubit.setCurrentAmount(limitedAmount);
-                        },
-                        decoration: InputDecoration(
-                          hintText: currentAmountCubit.state == 0
-                              ? 'USD'
-                              : currentAmountCubit.state.toString(),
-                        ),
-                      ),
-                      actions: <Widget>[
-                        TextButton(
-                          child: const Text('OK'),
-                          onPressed: () {
-                            Navigator.of(usdContext).pop();
-                          },
-                        ),
-                      ],
-                    );
-                  },
-                );
-              },
-            
-            child: SizedBox(
-              height: 35,
-              child: TextField(
-                enabled: false,
-                textAlign: TextAlign.center,
-                controller: _controller,
-                keyboardType: TextInputType.number,
-                inputFormatters: [_amountFormatter], // Apply the formatter
-                onSubmitted: (value) {
-                  final amount = int.tryParse(value) ?? 0;
-                  // Limit the input to a range of 0 to 500
-                  final limitedAmount = amount.clamp(0, 500);
-                  currentAmountCubit.setCurrentAmount(limitedAmount);
-                },
-                decoration: InputDecoration(
-                  hintText: currentAmountCubit.state == 0
-                      ? 'USD'
-                      : currentAmountCubit.state.toString(),
-                ),
-              ),
+          child: NumberPicker(
+            value: currentAmountCubit.state,
+            minValue: 0,
+            maxValue: 500,
+            onChanged: (newValue) {
+              currentAmountCubit.setCurrentAmount(newValue);
+              _controller.text = newValue.toString();
+            },
+            axis: Axis.vertical,
+            itemCount: 1, // Customize the height of each item in the picker
+            // highlightSelectedValue: true,
+            textStyle: TextStyle(fontSize: 20), // Customize the font size
+            decoration: BoxDecoration(
+              border: Border.all(color:  const Color(0XFF5F5F5F), width: 2),
+              borderRadius: BorderRadius.circular(16),
             ),
           ),
         ),
