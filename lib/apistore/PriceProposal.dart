@@ -143,7 +143,7 @@ void handleBuyResponse(BuildContext context, Map<String, dynamic> decodedData) a
     'status': tradeStatus,
     'strategy': Highstrategy ? "Higher" : "Lower",
     'tickDuration': duration,
-    'timestamp': proposal['date_start']
+    'timestamp': DateTime.now().millisecondsSinceEpoch
   };
   await tradeDocRef.set(tradeData);
 
@@ -171,14 +171,14 @@ void handleBuyResponse(BuildContext context, Map<String, dynamic> decodedData) a
         'totalProfit': totalProfit,
         'totalLoss': totalLoss,
         'netWorth': netWorth,
-        'timestamp': proposal['date_start']
+        'timestamp': DateTime.now().millisecondsSinceEpoch
       });
     } else {
       tradeSummaryDocRef.set({
         'totalProfit': tradeStatus == 'Won' ? proposal['payout'] : 0,
         'totalLoss': tradeStatus == 'Lost' ? capital : 0,
         'netWorth': tradeStatus == 'Won' ? proposal['payout'] : capital * -1,
-        'timestamp': proposal['date_start']
+        'timestamp': DateTime.now().millisecondsSinceEpoch
       });
     }
   });

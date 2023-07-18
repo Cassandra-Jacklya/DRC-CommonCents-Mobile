@@ -33,9 +33,16 @@ class _HelpSupportState extends State<HelpSupport> {
             scrollDirection: Axis.vertical,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 30, 0, 0),
+                  padding: const EdgeInsets.only(top: 30, left: 30, right: 30),
+                  child: const Text("Once your enquiry has been sent, we will get in touch with you within 12 hours.",
+                    style: TextStyle(fontSize: 17),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(30, 30, 0, 0),
                   child: SizedBox(
                     height: 57,
                     width: 283,
@@ -56,7 +63,7 @@ class _HelpSupportState extends State<HelpSupport> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 27, 0, 0),
+                  padding: const EdgeInsets.fromLTRB(30, 27, 0, 0),
                   child: SizedBox(
                     height: 221,
                     width: 283,
@@ -93,7 +100,7 @@ class _HelpSupportState extends State<HelpSupport> {
                             decoration: BoxDecoration(
                                 color: const Color(0XFF3366FF),
                                 borderRadius: BorderRadius.circular(10)),
-                            margin: const EdgeInsets.only(right: 45),
+                            margin: const EdgeInsets.only(right: 70),
                             height: 42,
                             width: 91,
                             child: const Center(

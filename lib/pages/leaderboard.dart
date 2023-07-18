@@ -109,9 +109,18 @@ class _LeaderboardState extends State<Leaderboard> {
                         ),
                       ),
                       Positioned(
+                        top: 130,
+                        left: 175,
+                        child: CircleAvatar(
+                        backgroundColor: Color(0xFFd4af37),
+                        child: Text("1", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),),
+                      )),
+                      Positioned(
                         top: 215,
-                        left: 165,
-                        child: Text(ranking[0]['userId'], overflow: TextOverflow.ellipsis)),
+                        left: 170,
+                        child: Container(
+                          width: 100,
+                          child: Text(ranking[0]['userId'], overflow: TextOverflow.ellipsis))),
                       Positioned(
                         top: 95,
                         right: 28,
@@ -132,11 +141,13 @@ class _LeaderboardState extends State<Leaderboard> {
                           ,
                         ),
                       ),
+                      
                       Positioned(
                         top: 260,
                         left: 60,
                         child: Text(ranking[1]['userId'], overflow: TextOverflow.ellipsis)
                       ),
+                      
                       Positioned(
                         top: 95,
                         left: 28,
@@ -159,9 +170,62 @@ class _LeaderboardState extends State<Leaderboard> {
                         ),
                       ),
                       Positioned(
+                        top: 170,
+                        left: 55,
+                        child: CircleAvatar(
+                        backgroundColor: Color(0xFFc0c0c0),
+                        child: Text("2", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),),
+                      )),
+                      Positioned(
                         top: 260,
                         right: 45,
                         child: Text(ranking[2]['userId'], overflow: TextOverflow.ellipsis,)
+                      ),
+                      Positioned(
+                        top: 170,
+                        right: 50,
+                        child: CircleAvatar(
+                        backgroundColor: Color(0xFFcd7f32),
+                        child: Text("3", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),),
+                      )),
+                      Positioned(
+                        top: 240,
+                        right: 128,
+                        child: Container(
+                          width: 100,
+                          child: Row(
+                            children: [
+                              Text(ranking[0]['netWorth'].toStringAsFixed(2), style: TextStyle(fontSize: 14),),
+                              const Text(" USD", style: TextStyle(fontSize: 14),)
+                            ],
+                          ),
+                        )
+                      ),
+                      Positioned(
+                        top: 280,
+                        left: 35,
+                        child: Container(
+                          width: 100,
+                          child: Row(
+                            children: [
+                              Text(ranking[1]['netWorth'].toStringAsFixed(2), style: TextStyle(fontSize: 14),),
+                              const Text(" USD", style: TextStyle(fontSize: 14),)
+                            ],
+                          ),
+                        )
+                      ),
+                      Positioned(
+                        top: 280,
+                        right: 5,
+                        child: Container(
+                          width: 100,
+                          child: Row(
+                            children: [
+                              Text(ranking[2]['netWorth'].toStringAsFixed(2), style: TextStyle(fontSize: 14),),
+                              const Text(" USD", style: TextStyle(fontSize: 14),)
+                            ],
+                          ),
+                        )
                       ),
                       Center(child: Image.asset('assets/videos/confetti.gif')),
                     ],
@@ -169,12 +233,24 @@ class _LeaderboardState extends State<Leaderboard> {
                 ),
               ],
             ),
+            const SizedBox(height: 50,),
+            Padding(
+              padding: const EdgeInsets.only(left: 40, right: 25),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: const [
+                  Text("Name"),
+                  Text("Net Worth")
+                ],
+              ),
+            ),
             ranking.length > 3 ? 
             Expanded(
               child: ListView.builder(
                 itemCount: ranking.length > 3 ? ranking.length - 3 : 0,
-                itemBuilder: (context, index) {                  
+                itemBuilder: (context, index) {       
                   final number = index + 3;
+                  int currIndex = number + 1;       
                   return Container(
                     height: 64,
                     margin: const EdgeInsets.all(10),
@@ -192,17 +268,18 @@ class _LeaderboardState extends State<Leaderboard> {
                         ],
                     ),
                     child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Row(
                           children: [
                             Text(
-                              number.toString(),
-                              style: const TextStyle(fontSize: 20),
+                              currIndex.toString(),
+                              style: const TextStyle(fontSize: 17),
                             ),
                             Container(
                               margin: const EdgeInsets.symmetric(horizontal: 15),
                               height: 60,
-                              width: 60,
+                              width: 40,
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
                                 color: Colors.grey[300],
@@ -216,24 +293,39 @@ class _LeaderboardState extends State<Leaderboard> {
                                 },
                               ),
                             ),
+                            Container(
+                              width: 150,
+                              child: Text(
+                                ranking[number]['userId'] ?? '',
+                                style: const TextStyle(fontFamily: 'Roboto', fontSize: 14, overflow: TextOverflow.ellipsis),
+                              ),
+                            ),
                           ],
                         ),
-                        Text(
-                          ranking[number]['userId'] ?? '',
-                          style: const TextStyle(fontFamily: 'Roboto', fontSize: 14, overflow: TextOverflow.ellipsis),
+                        
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Row(
+                              children: [
+                                Text(ranking[number]['netWorth'].toString()),
+                                const Text(" USD", style: TextStyle(fontSize: 14),)
+                              ],
+                            ),
+                          ],
                         ),
                       ],
                     ),
                   );
-
-                                  // return Container(
-                                  //   height: 75,
-                                  //   margin: const EdgeInsets.all(10),
-                                  //   child: Row(
-                                  //     children: [
-                                  //       Text(number.toString(),
-                                  //           style: const TextStyle(fontSize: 30)),
-
+              
+                  // return Container(
+                  //   height: 75,
+                  //   margin: const EdgeInsets.all(10),
+                  //   child: Row(
+                  //     children: [
+                  //       Text(number.toString(),
+                  //           style: const TextStyle(fontSize: 30)),
+              
                   //       Container(
                   //         margin: const EdgeInsets.symmetric(horizontal: 10),
                   //         height: 60,

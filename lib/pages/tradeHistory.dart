@@ -3,6 +3,7 @@ import 'package:commoncents/components/formatMarkets.dart';
 import 'package:commoncents/pages/simulationpage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import '../components/popup.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -112,7 +113,7 @@ class _TradeHistoryState extends State<TradeHistory> {
                                 );
                               },
                               child: Container(
-                                padding: const EdgeInsets.all(15),
+                                padding: const EdgeInsets.all(10),
                                 margin: const EdgeInsets.only(
                                     top: 30, left: 10, right: 10),
                                 decoration: BoxDecoration(
@@ -127,7 +128,7 @@ class _TradeHistoryState extends State<TradeHistory> {
                                         offset: const Offset(0, 3),
                                       ),
                                     ]),
-                                height: 110,
+                                height: 120,
                                 width: MediaQuery.of(context).size.width * 0.9,
                                 child: Row(
                                   children: [
@@ -143,7 +144,7 @@ class _TradeHistoryState extends State<TradeHistory> {
                                       ),
                                     ),
                                     Container(
-                                      padding: const EdgeInsets.all(15),
+                                      padding: const EdgeInsets.only(top: 10),
                                       child: Column(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
@@ -151,15 +152,59 @@ class _TradeHistoryState extends State<TradeHistory> {
                                           Text(
                                             reverseMarkets(trade['marketType']),
                                             style:
-                                                const TextStyle(fontSize: 20),
+                                                const TextStyle(fontSize: 18),
                                           ),
                                           const SizedBox(height: 5),
-                                          Text(
-                                            "${trade['status'] == 'Won' ? '+${trade['additionalAmount']}' : '-${trade['askPrice']}'}  USD",
-                                            style:
-                                                const TextStyle(fontSize: 15),
-                                            textAlign: TextAlign.start,
+                                          // var date = DateTime.fromMillisecondsSinceEpoch(timestamp * 1000);
+                                          Row(
+                                            children: [
+                                              Text("Profit/Loss:  ",
+                                                style: TextStyle(
+                                                  color: trade['status'] == 'Won' ? Colors.greenAccent : Colors.redAccent
+                                                ),
+                                              ),
+                                              Text(
+                                                "${trade['status'] == 'Won' ? '+${trade['additionalAmount'].toStringAsFixed(2)}' : '-${trade['askPrice'].toStringAsFixed(2)}'} USD",
+                                                style:
+                                                    TextStyle(fontSize: 15, 
+                                                    color: trade['status'] == 'Won' ? Colors.greenAccent : Colors.redAccent
+                                                  ),
+                                                textAlign: TextAlign.start,
+                                              ),
+                                            ],
                                           ),
+                                          Padding(
+                                            padding: const EdgeInsets.only(top: 10),
+                                            child: Row(
+                                              children: [
+                                                Row(
+                                                  children: [
+                                                    Text(
+                                                      DateFormat.d().format(DateTime.fromMicrosecondsSinceEpoch(trade['timestamp'] * 1000)).toString(),
+                                                      style: TextStyle(fontSize: 13),
+                                                    ),
+                                                    const Text("/"),
+                                                    Text(
+                                                      DateFormat.M().format(DateTime.fromMicrosecondsSinceEpoch(trade['timestamp'] * 1000)).toString(),
+                                                      style: TextStyle(fontSize: 13),
+                                                    ),
+                                                    const Text("/"),
+                                                    Text(
+                                                      DateFormat.y().format(DateTime.fromMicrosecondsSinceEpoch(trade['timestamp'] * 1000)).toString(),
+                                                      style: TextStyle(fontSize: 13),
+                                                    ),
+                                                    const Text(", ")
+                                                  ],
+                                                ),
+                                                Padding(
+                                                  padding: const EdgeInsets.only(left: 5),
+                                                  child: Text(DateFormat.jms().format(DateTime.fromMicrosecondsSinceEpoch(trade['timestamp'] * 1000)).toString(),
+                                                    style: TextStyle(fontSize: 13),
+                                                  ),
+                                                )
+                                              ],
+                                            ),
+                                          )
                                         ],
                                       ),
                                     ),
@@ -177,7 +222,7 @@ class _TradeHistoryState extends State<TradeHistory> {
                     backgroundColor: Colors.white,
                     body: Column(
                       children: [
-                        Image.asset('assets/images/no-profile.jpg'),
+                        Image.asset("assets/images/no-trade-history.jpg"),
                         Column(
                           children: [
                             const Text("You have not bought any trades.", 
@@ -237,13 +282,18 @@ class _TradeHistoryState extends State<TradeHistory> {
           iconTheme: const IconThemeData(color: Colors.white),
         ),
         body: Center(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: const [
-              Text("Log in",
-                style: TextStyle(color: Color(0xFF3366FF), fontSize: 17),
+          child: Column(
+            children: [
+              Image.asset("assets/images/no-trade-history.jpg"),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: const [
+                  Text("Log in",
+                    style: TextStyle(color: Color(0xFF3366FF), fontSize: 17),
+                  ),
+                  Text(" to view your trade history.")
+                ],
               ),
-              Text(" to view your trade history.")
             ],
           ),
         ),

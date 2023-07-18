@@ -13,19 +13,7 @@ class IntegerExample extends StatefulWidget {
 
 class _IntegerExampleState extends State<IntegerExample> {
   final TextEditingController _controller = TextEditingController();
-
-  // @override
-  // void didChangeDependencies() {
-
-  //   super.didChangeDependencies();
-  // }
-
-  // @override
-  // void dispose() {
-  //   currentAmountCubit.close();
-  //   _controller.dispose();
-  //   super.dispose();
-  // }
+  double currentAmount = 0;
 
   final _amountFormatter =
       FilteringTextInputFormatter.allow(RegExp(r'^[0-9]{1,3}$'));
@@ -52,53 +40,37 @@ class _IntegerExampleState extends State<IntegerExample> {
               showDialog(
                 context: context,
                 builder: (BuildContext context) {
-                  final TextEditingController dialogController =
-                      TextEditingController();
-
-                  return Stack(
-                    children: [
-                      // const ModalBarrier(
-                      //     color: Colors.transparent, dismissible: false),
-                      AlertDialog(
-                        // Prevent dismissing on tap outside the dialog
-                        alignment: Alignment.center,
-                        content: RawKeyboardListener(
-                          focusNode: FocusNode(),
-                          onKey: (RawKeyEvent event) {
-                            if (event is RawKeyDownEvent &&
-                                event.logicalKey == LogicalKeyboardKey.enter) {
-                              final amount =
-                                  int.tryParse(dialogController.text) ?? 0;
-                              // Limit the input to a range of 0 to 500
-                              final limitedAmount = amount.clamp(0, 500);
-                              currentAmountCubit
-                                  .setCurrentAmount(limitedAmount);
-                              Navigator.of(context)
-                                  .pop(); // Dismiss the dialog when the Enter key is pressed
-                            }
-                          },
-                          child: TextField(
-                            autofocus: false,
-                            textAlign: TextAlign.center,
-                            controller: dialogController,
-                            keyboardType: TextInputType.number,
-                            inputFormatters: [
-                              _amountFormatter
-                            ], // Apply the formatter
-                            onSubmitted: (value) {
-                              final amount = int.tryParse(value) ?? 0;
-                              // Limit the input to a range of 0 to 500
-                              final limitedAmount = amount.clamp(0, 500);
-                              currentAmountCubit
-                                  .setCurrentAmount(limitedAmount);
-                            },
-                            decoration: InputDecoration(
-                              hintText: currentAmountCubit.state == 0
-                                  ? 'USD'
-                                  : currentAmountCubit.state.toString(),
-                            ),
-                          ),
-                        ),
+                  return AlertDialog(
+                    alignment: Alignment.center,
+                    content: TextField(
+                      autofocus: true,
+                      textAlign: TextAlign.center,
+                      controller: _controller,
+                      keyboardType: TextInputType.number,
+                      inputFormatters: [
+                        _amountFormatter
+                      ], // Apply the formatter
+                      onSubmitted: (value) {
+                        final amount = int.tryParse(value) ?? 0;
+                        // Limit the input to a range of 0 to 500
+                        final limitedAmount = amount.clamp(0, 500);
+                        currentAmountCubit.setCurrentAmount(limitedAmount);
+                      },
+                      onChanged: (value) {
+                        currentAmount = double.parse(value);
+                      },
+                      decoration: InputDecoration(
+                        hintText: currentAmountCubit.state == 0
+                            ? 'USD'
+                            : currentAmountCubit.state.toString(),
+                      ),
+                    ),
+                    actions: <Widget>[
+                      TextButton(
+                        child: const Text('OK'),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
                       ),
                     ],
                   );

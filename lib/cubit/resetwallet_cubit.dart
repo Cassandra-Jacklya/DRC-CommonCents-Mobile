@@ -33,10 +33,17 @@ class ResetWalletBloc extends Cubit<ResetWallet> {
       FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
       User? user = FirebaseAuth.instance.currentUser;
 
+      final batch = firebaseFirestore.batch();
       if (user != null) {
         CollectionReference collectionReference =
             firebaseFirestore.collection('users');
         DocumentReference userDocument = collectionReference.doc(user.uid);
+        CollectionReference tradeHistory = userDocument.collection("tradeHistory");
+        var snapshots = await tradeHistory.get();
+        for (var doc in snapshots.docs) {
+          batch.delete(doc.reference);
+        }
+        await batch.commit();
 
         double updatedBalance = 100000.00; // Set the updated balance value
 
