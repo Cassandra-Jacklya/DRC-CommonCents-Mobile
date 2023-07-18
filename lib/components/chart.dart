@@ -75,9 +75,9 @@ class _CandleStickChartState extends State<CandleStickChart> {
                       zoomPanBehavior: ZoomPanBehavior(
                         enablePinching: true,
                         enablePanning: true,
-                        zoomMode: ZoomMode.xy,
+                        zoomMode: ZoomMode.x,
                         enableSelectionZooming: true,
-                        maximumZoomLevel: 0.1,
+                        // maximumZoomLevel: 0.1,
                       ),
                       series: <CandleSeries>[
                         CandleSeries<ChartData, DateTime>(

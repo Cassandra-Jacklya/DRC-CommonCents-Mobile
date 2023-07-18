@@ -60,7 +60,7 @@ class _LineChartState extends State<MyLineChart> {
     stockDataCubit = StockDataCubit();
     _tooltipBehavior = TooltipBehavior(
       enable: true,
-      header: '',
+      header: 'Spot price',
       format: 'point.y',
     );
   }
