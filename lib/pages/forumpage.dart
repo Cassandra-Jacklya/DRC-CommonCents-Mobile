@@ -27,6 +27,7 @@ class _ForumPageState extends State<ForumPage> {
       setState(() {
         postsList = [];
         postsList = result;
+        print("wow");
       });
     });
   }

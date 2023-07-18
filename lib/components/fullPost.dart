@@ -33,6 +33,8 @@ class _PostModalState extends State<PostModal> {
     setState(() {
       _comment.clear();
       widget.post['comments'] = updatedComments;
+      print("HOHO ${widget.post}");
+      print("lol");
     });
   }
 
@@ -54,6 +56,7 @@ class _PostModalState extends State<PostModal> {
       final updatedComments =
           updatedCommentsSnapshot.docs.map((doc) => doc.data()).toList();
       refreshModal(updatedComments);
+      widget.refreshForumPage?.call();
     } catch (error) {
       print('Failed to delete comment: $error');
     }
@@ -94,16 +97,26 @@ class _PostModalState extends State<PostModal> {
       });
     }
 
-    // Call the refreshForumPage callback to refresh the forum page
-    widget.refreshForumPage?.call();
     final updatedCommentsSnapshot = await postRef.collection('comments').get();
-    final updatedComments =
-        updatedCommentsSnapshot.docs.map((doc) => doc.data()).toList();
+    final updatedComments = updatedCommentsSnapshot.docs.map((doc) {
+      final commentData = doc.data();
+      final comment = {
+        'id': doc.id, // Include the document ID in the comment data
+        'author': commentData['author'],
+        'authorImage': commentData['authorImage'],
+        'content': commentData['content'],
+        'postId': commentData['postId'],
+        'timestamp': commentData['timestamp'],
+      };
+      return comment;
+    }).toList();
 
     // Call the refreshForumPage callback to refresh the forum page
     widget.refreshForumPage?.call();
 
     // Call the refreshModal callback to refresh the modal with the updated comments
+    print("HEHE ${updatedComments.length}");
+    print(updatedComments);
     refreshModal(updatedComments);
 
     // Call the refreshModal callback to refresh the modal
@@ -361,11 +374,12 @@ class _PostModalState extends State<PostModal> {
                                               child: const Text("Cancel"),
                                             ),
                                             TextButton(
-                                              onPressed: () async {
-                                                print(comments[index]['id']);
-                                                await deleteComment(
+                                              onPressed: () {
+                                                print(
+                                                    "WOI ${comments[index]['id']}");
+                                                deleteComment(
                                                     comments[index]['id']);
-                                                    
+
                                                 Navigator.of(context)
                                                     .pop(); // Close the dialog
                                               },
