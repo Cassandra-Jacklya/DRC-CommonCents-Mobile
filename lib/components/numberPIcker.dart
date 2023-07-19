@@ -56,10 +56,10 @@ class _IntegerExampleState extends State<IntegerExample> {
             axis: Axis.vertical,
             itemCount: 1, // Customize the height of each item in the picker
             // highlightSelectedValue: true,
-            textStyle: TextStyle(fontSize: 20), // Customize the font size
+            textStyle: TextStyle(fontSize: 15), // Customize the font size
             decoration: BoxDecoration(
               border: Border.all(color:  const Color(0XFF5F5F5F), width: 2),
-              borderRadius: BorderRadius.circular(16),
+              borderRadius: BorderRadius.circular(5),
             ),
           ),
         ),

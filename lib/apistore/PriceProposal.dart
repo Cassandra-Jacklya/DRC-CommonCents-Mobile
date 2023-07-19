@@ -42,12 +42,12 @@ Future<void> handleBuy(BuildContext context, int ticks, String stakePayout,
   Map<String, dynamic>? userData = userSnapshot.data() as Map<String, dynamic>?;
 
   if (userData != null) {
-    double balance = userData['balance'].toDouble() ?? 0;
+    double balance = userData['balance'].toDouble() ?? 0.00;
     double updatedBalance = balance - currentAmount;
     await collectionReference.doc(user.uid).update({'balance': updatedBalance});
     context
         .read<LoginStateBloc>()
-        .updateBalance(userData['email'], updatedBalance.toString());
+        .updateBalance(userData['email'], updatedBalance.toStringAsFixed(2));
   }
 }
 
@@ -63,7 +63,7 @@ Future<double> getUpdatedBalance(String userId, double capital) async {
   Map<String, dynamic>? userData = userSnapshot.data() as Map<String, dynamic>?;
 
   if (userData != null) {
-    double currentBalance = userData['balance'].toDouble() ?? 0;
+    double currentBalance = userData['balance'].toDouble() ?? 0.00;
     double updatedBalance = currentBalance - capital;
     await collectionReference.doc(user.uid).update({'balance': updatedBalance});
     return updatedBalance;
@@ -93,7 +93,7 @@ void handleBuyResponse(
       await collectionReference.doc(user!.uid).get();
   Map<String, dynamic>? userData = userSnapshot.data() as Map<String, dynamic>?;
 
-  double balance = userData!['balance'].toDouble() ?? 0;
+  double balance = userData!['balance'].toDouble() ?? 0.00;
 
   buyingPrice = ticks.last['close'];
   await Future.delayed(Duration(seconds: duration));
@@ -108,7 +108,7 @@ void handleBuyResponse(
           context as BuildContext,
           listen: false);
       loginStateBloc.updateBalance(
-          userData['email'], updatedBalance.toString());
+          userData['email'], updatedBalance.toStringAsFixed(2));
       tradeStatus = "Won";
       showDialog(
         context: context,
@@ -158,7 +158,7 @@ void handleBuyResponse(
           context as BuildContext,
           listen: false);
       loginStateBloc.updateBalance(
-          userData['email'], updatedBalance.toString());
+          userData['email'], updatedBalance.toStringAsFixed(2));
       tradeStatus = "Won";
       showDialog(
         context: context,

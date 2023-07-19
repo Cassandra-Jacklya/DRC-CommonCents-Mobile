@@ -918,10 +918,8 @@ class ResetBalance extends StatelessWidget {
                       ),
                       Row(
                         children: [
-                          Text(
-                            state.balance.toString(),
-                            style: const TextStyle(
-                                fontSize: 15, fontWeight: FontWeight.bold),
+                          Text(state.balance.toStringAsFixed(2),
+                            style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
                           ),
                           const Text(
                             "USD",
@@ -980,10 +978,8 @@ class ResetBalance extends StatelessWidget {
                       ),
                       Row(
                         children: [
-                          Text(
-                            state.balance.toString(),
-                            style: const TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 15),
+                          Text(state.balance.toStringAsFixed(2),
+                            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
                           ),
                           const Text(
                             " USD",

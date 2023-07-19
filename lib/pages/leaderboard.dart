@@ -20,7 +20,7 @@ class _LeaderboardState extends State<Leaderboard> {
     await Future.forEach(querySnapshot.docs, (userDoc) async {
       Map<String, dynamic> userData = userDoc.data() as Map<String, dynamic>;
       String userId = userData['displayName'] ?? userData['email'];
-      double netWorth = 0;
+      double netWorth = 0.00;
 
       // Retrieve the trade summary document for the user
       DocumentSnapshot tradeSummarySnapshot = await userDoc.reference
@@ -32,7 +32,7 @@ class _LeaderboardState extends State<Leaderboard> {
         Map<String, dynamic>? tradeSummaryData =
             tradeSummarySnapshot.data() as Map<String, dynamic>?;
 
-        netWorth = tradeSummaryData!['netWorth']?.toDouble() ?? 0;
+        netWorth = tradeSummaryData!['netWorth']?.toDouble() ?? 0.00;
       }
 
       String? photo = userData['photoURL'] ?? 'https://www.seekpng.com/png/detail/966-9665493_my-profile-icon-blank-profile-image-circle.png';
@@ -117,10 +117,10 @@ class _LeaderboardState extends State<Leaderboard> {
                       )),
                       Positioned(
                         top: 215,
-                        left: 170,
+                        left: 145,
                         child: Container(
                           width: 100,
-                          child: Text(ranking[0]['userId'], overflow: TextOverflow.ellipsis))),
+                          child: Center(child: Text(ranking[0]['userId'], overflow: TextOverflow.ellipsis)))),
                       Positioned(
                         top: 95,
                         right: 28,
@@ -144,8 +144,10 @@ class _LeaderboardState extends State<Leaderboard> {
                       
                       Positioned(
                         top: 260,
-                        left: 60,
-                        child: Text(ranking[1]['userId'], overflow: TextOverflow.ellipsis)
+                        left: 23,
+                        child: Container(
+                          width: 100,
+                          child: Center(child: Text(ranking[1]['userId'], overflow: TextOverflow.ellipsis)))
                       ),
                       
                       Positioned(
@@ -178,8 +180,10 @@ class _LeaderboardState extends State<Leaderboard> {
                       )),
                       Positioned(
                         top: 260,
-                        right: 45,
-                        child: Text(ranking[2]['userId'], overflow: TextOverflow.ellipsis,)
+                        right: 20,
+                        child: Container(
+                          width: 100,
+                          child: Center(child: Text(ranking[2]['userId'], overflow: TextOverflow.ellipsis,)))
                       ),
                       Positioned(
                         top: 170,
@@ -193,11 +197,14 @@ class _LeaderboardState extends State<Leaderboard> {
                         right: 128,
                         child: Container(
                           width: 100,
-                          child: Row(
-                            children: [
-                              Text(ranking[0]['netWorth'].toStringAsFixed(2), style: TextStyle(fontSize: 14),),
-                              const Text(" USD", style: TextStyle(fontSize: 14),)
-                            ],
+                          child: Container(
+                            width: 100,
+                            child: Row(
+                              children: [
+                                Text(ranking[0]['netWorth'].toStringAsFixed(2), style: TextStyle(fontSize: 14),),
+                                const Text(" USD", style: TextStyle(fontSize: 14),)
+                              ],
+                            ),
                           ),
                         )
                       ),
@@ -216,7 +223,7 @@ class _LeaderboardState extends State<Leaderboard> {
                       ),
                       Positioned(
                         top: 280,
-                        right: 5,
+                        right: 10,
                         child: Container(
                           width: 100,
                           child: Row(
@@ -306,11 +313,13 @@ class _LeaderboardState extends State<Leaderboard> {
                         Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Row(
-                              children: [
-                                Text(ranking[number]['netWorth'].toString()),
-                                const Text(" USD", style: TextStyle(fontSize: 14),)
-                              ],
+                            Container(
+                              child: Row(
+                                children: [
+                                  Text(ranking[number]['netWorth'].toStringAsFixed(2)),
+                                  const Text(" USD", style: TextStyle(fontSize: 14),)
+                                ],
+                              ),
                             ),
                           ],
                         ),

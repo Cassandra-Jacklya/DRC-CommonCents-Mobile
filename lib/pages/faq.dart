@@ -43,6 +43,7 @@ class _FAQState extends State<FAQ> {
             child: SingleChildScrollView(
               scrollDirection: Axis.vertical,
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   GestureDetector(
                       onTap: () {
@@ -65,7 +66,7 @@ class _FAQState extends State<FAQ> {
                                 padding: const EdgeInsets.all(0),
                                 // height: MediaQuery.of(context).size.height * 0.23,
                                 child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
                                     Container(
                                       //not expanded
@@ -81,45 +82,35 @@ class _FAQState extends State<FAQ> {
                                       padding: const EdgeInsets.all(10),
                                       // color: Colors.green,
                                       child: Row(
-                                        children: [
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: const [
-                                              Icon(FontAwesomeIcons.dollarSign),
-                                              Padding(
-                                                padding: EdgeInsets.symmetric(
-                                                    horizontal: 16),
-                                                child: Text(
-                                                    "Do I need to pay to use the application?"),
-                                              ),
-                                            ],
+                                        children: const [
+                                        Icon(FontAwesomeIcons.dollarSign),
+                                          SizedBox(
+                                            width: 260,
+                                            child: Padding(
+                                              padding: EdgeInsets.only(left: 16),
+                                              child: Text(
+                                                  "Do I need to pay to use the application?", maxLines: 2,),
+                                            ),
                                           ),
-                                          const Icon(Icons.expand_more),
+                                          Icon(Icons.expand_more),
                                         ],
                                       ),
                                     ),
+                                    
                                     Container(
                                       decoration: const BoxDecoration(
                                           border: Border(
                                               top: BorderSide(
                                                   color: Colors.grey))),
-                                      height:
-                                          MediaQuery.of(context).size.height *
-                                              0.1,
                                       width: MediaQuery.of(context).size.width *
                                           0.8,
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: const [
-                                          Padding(
-                                            padding: EdgeInsets.symmetric(
-                                                horizontal: 10),
-                                            child: Text(
-                                                "Absolutely not! The application is free-of-charge!"),
-                                          ),
-                                        ],
+                                      child: SizedBox(
+                                        width: 300,
+                                        child: Padding(
+                                          padding: EdgeInsets.only(left: 30, top: 10, bottom: 10),
+                                          child: Text(
+                                              "Absolutely not! The feature provides demo funds for you to use and does not require any deposit of real money.", maxLines: 3,),
+                                        ),
                                       ),
                                     ),
                                   ],
@@ -127,6 +118,7 @@ class _FAQState extends State<FAQ> {
                               ),
                             )
                           : Container(
+                            
                               //not expanded
                               decoration: BoxDecoration(
                                   // color: Colors.red,
@@ -136,22 +128,21 @@ class _FAQState extends State<FAQ> {
                               width: MediaQuery.of(context).size.width * 0.9,
                               padding: const EdgeInsets.all(10),
                               // color: Colors.green,
-                              child: Row(
-                                children: [
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: const [
-                                      Icon(FontAwesomeIcons.dollarSign),
-                                      Padding(
-                                        padding: EdgeInsets.symmetric(
-                                            horizontal: 16),
+                              child: Expanded(
+                                child: Row(
+                                  children: const [
+                                   Icon(FontAwesomeIcons.dollarSign),
+                                    SizedBox(
+                                      width: 260,
+                                      child: Padding(
+                                        padding: EdgeInsets.only(left: 16),
                                         child: Text(
-                                            "Do I need to pay to use the application?"),
+                                            "Do I need to pay to use the application?", maxLines: 2,),
                                       ),
-                                    ],
-                                  ),
-                                  const Icon(Icons.expand_more),
-                                ],
+                                    ),
+                                    Icon(Icons.expand_more),
+                                  ],
+                                ),
                               ),
                             )),
                   const SizedBox(height: 20),
@@ -193,26 +184,14 @@ class _FAQState extends State<FAQ> {
                                       // color: Colors.green,
                                       child: Row(
                                         children: [
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              const Icon(
-                                                  FontAwesomeIcons.question),
-                                              Padding(
-                                                  padding: const EdgeInsets
-                                                          .symmetric(
-                                                      horizontal: 16),
-                                                  child: Container(
-                                                    width:
-                                                        MediaQuery.of(context)
-                                                                .size
-                                                                .width *
-                                                            0.6,
-                                                    child: Text(
-                                                        "I'm not familiar with trading, how can I get started with CommonCents?"),
-                                                  )),
-                                            ],
+                                          const Icon(
+                                              FontAwesomeIcons.question),
+                                          SizedBox(
+                                            width: 260,
+                                            child: Padding(
+                                                padding: EdgeInsets.only(left: 16),
+                                                child: Text(
+                                                    "I'm not familiar with trading, how can I get started with CommonCents?")),
                                           ),
                                           const Icon(Icons.expand_more),
                                         ],
@@ -223,22 +202,15 @@ class _FAQState extends State<FAQ> {
                                           border: Border(
                                               top: BorderSide(
                                                   color: Colors.grey))),
-                                      height:
-                                          MediaQuery.of(context).size.height *
-                                              0.1,
                                       width: MediaQuery.of(context).size.width *
                                           0.8,
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: const [
-                                          Padding(
-                                            padding: EdgeInsets.symmetric(
-                                                horizontal: 10),
-                                            child: Text(
-                                                "Definitely! CommonCents was designed to cater \nfor absolute beginners."),
-                                          ),
-                                        ],
+                                      child: SizedBox(
+                                        width: 300,
+                                        child: Padding(
+                                          padding: EdgeInsets.only(top: 10, bottom: 10, left: 30),
+                                          child: Text(
+                                              "Definitely! CommonCents was designed to cater for absolute beginners.", maxLines: 3,),
+                                        ),
                                       ),
                                     ),
                                   ],
@@ -323,29 +295,15 @@ class _FAQState extends State<FAQ> {
                                       // color: Colors.green,
                                       child: Row(
                                         children: [
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              Icon(FontAwesomeIcons
-                                                  .arrowPointer),
-                                              Padding(
-                                                padding: EdgeInsets.symmetric(
-                                                    horizontal: 16),
-                                                child: Container(
-                                                  width: MediaQuery.of(context)
-                                                          .size
-                                                          .width *
-                                                      0.6,
-                                                  child: Text(
-                                                    "What trading market is CommonCents \nfocused on?",
-                                                    style: TextStyle(
-                                                        overflow: TextOverflow
-                                                            .visible),
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
+                                          Icon(FontAwesomeIcons
+                                              .arrowPointer),
+                                          SizedBox(
+                                            width: 260,
+                                            child: Padding(
+                                              padding: EdgeInsets.only(left: 16),
+                                              child: Text(
+                                                "What trading market is CommonCents \nfocused on?",),
+                                            ),
                                           ),
                                           const Icon(Icons.expand_more),
                                         ],
@@ -360,20 +318,13 @@ class _FAQState extends State<FAQ> {
                                                   color: Colors.grey))),
                                       width: MediaQuery.of(context).size.width *
                                           0.8,
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Padding(
-                                            padding: EdgeInsets.symmetric(
-                                                horizontal: 5),
-                                            child: Container(
-                                              margin: const EdgeInsets.all(5),
-                                              child: Text(
-                                                  "CommonCents only focuses on synthetic trading\nas it is one of the markets that people are afraid\n of getting into due to the risks. CommonCents\n exists to educate the concepts of those who\nhave the desire to leap into synthetic trading."),
-                                            ),
-                                          ),
-                                        ],
+                                      child: SizedBox(
+                                        width: 300,
+                                        child: Padding(
+                                          padding: EdgeInsets.only(left: 30, top: 10, bottom: 10),
+                                          child: Text(
+                                              "CommonCents only focuses on synthetic trading as it is one of the markets that people are afraid\n of getting into due to the risks.", maxLines: 5),
+                                        ),
                                       ),
                                     ),
                                   ],
@@ -455,24 +406,15 @@ class _FAQState extends State<FAQ> {
                                       // color: Colors.green,
                                       child: Row(
                                         children: [
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: const [
-                                              Icon(FontAwesomeIcons.headset),
-                                              Padding(
-                                                padding: EdgeInsets.symmetric(
-                                                    horizontal: 16),
-                                                child: Text(
-                                                    "How can I get help and support?"),
-                                              ),
-                                            ],
-                                          ),
+                                          Icon(FontAwesomeIcons.headset),
                                           SizedBox(
-                                              width: MediaQuery.of(context)
-                                                      .size
-                                                      .width *
-                                                  0.1),
+                                            width: 260,
+                                            child: Padding(
+                                              padding: EdgeInsets.only(left: 16),
+                                              child: Text(
+                                                  "How can I get help and support?"),
+                                            ),
+                                          ),
                                           const Icon(Icons.expand_more),
                                         ],
                                       ),
@@ -482,22 +424,15 @@ class _FAQState extends State<FAQ> {
                                           border: Border(
                                               top: BorderSide(
                                                   color: Colors.grey))),
-                                      height:
-                                          MediaQuery.of(context).size.height *
-                                              0.1,
                                       width: MediaQuery.of(context).size.width *
                                           0.8,
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: const [
-                                          Padding(
-                                            padding: EdgeInsets.symmetric(
-                                                horizontal: 8),
-                                            child: Text(
-                                                "You can submit an enquiry by going to Help and\n Support. Once your enquiry has been sent, \nwe will get in touch with you within 12 hours."),
-                                          ),
-                                        ],
+                                      child: SizedBox(
+                                        width: 300,
+                                        child: Padding(
+                                          padding: EdgeInsets.only(left: 30, top: 10, bottom: 10),
+                                          child: Text(
+                                              "You can submit an enquiry by going to Help and Support. Once your enquiry has been sent, we will get in touch with you within 12 hours.", maxLines: 6,),
+                                        ),
                                       ),
                                     ),
                                   ],
@@ -516,19 +451,15 @@ class _FAQState extends State<FAQ> {
                               // color: Colors.green,
                               child: Row(
                                 children: [
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: const [
-                                      Icon(FontAwesomeIcons.headset),
-                                      Padding(
-                                        padding: EdgeInsets.symmetric(
-                                            horizontal: 16),
-                                        child: Text(
-                                            "How can I get help and support?"),
-                                      ),
-                                    ],
+                                  Icon(FontAwesomeIcons.headset),
+                                  SizedBox(
+                                    width: 260,
+                                    child: Padding(
+                                      padding: EdgeInsets.only(left: 16),
+                                      child: Text(
+                                          "How can I get help and support?"),
+                                    ),
                                   ),
-                                  SizedBox(width: MediaQuery.of(context).size.width*0.1),
                                   const Icon(Icons.expand_more),
                                 ],
                               ),
@@ -574,18 +505,14 @@ class _FAQState extends State<FAQ> {
                                       // color: Colors.green,
                                       child: Row(
                                         children: [
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: const [
-                                              Icon(FontAwesomeIcons.userSecret),
-                                              Padding(
-                                                padding: EdgeInsets.symmetric(
-                                                    horizontal: 5),
-                                                child: Text(
-                                                    "I forgot my password, what should I do now?"),
-                                              ),
-                                            ],
+                                          Icon(FontAwesomeIcons.userSecret),
+                                          SizedBox(
+                                            width: 260,
+                                            child: Padding(
+                                              padding: EdgeInsets.only(left: 16),
+                                              child: Text(
+                                                  "I forgot my password, what should I do now?", maxLines: 2,),
+                                            ),
                                           ),
                                           const Icon(Icons.expand_more),
                                         ],
@@ -596,20 +523,17 @@ class _FAQState extends State<FAQ> {
                                           border: Border(
                                               top: BorderSide(
                                                   color: Colors.grey))),
-                                      height:
-                                          MediaQuery.of(context).size.height *
-                                              0.1,
                                       width: MediaQuery.of(context).size.width *
                                           0.8,
                                       child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
                                         children: const [
-                                          Padding(
-                                            padding: EdgeInsets.symmetric(
-                                                horizontal: 10),
-                                            child: Text(
-                                                "Click on Forgot Password and provide your\n email to receive the change the change\n password link. You should receive the email\n within a minute."),
+                                          SizedBox(
+                                            width: 300,
+                                            child: Padding(
+                                              padding: EdgeInsets.only(top: 10, bottom: 10, left: 30),
+                                              child: Text(
+                                                  "Click on Forgot Password and provide your email to receive the change the change password link. You should receive the email within a minute.", maxLines: 5,),
+                                            ),
                                           ),
                                         ],
                                       ),
@@ -628,28 +552,24 @@ class _FAQState extends State<FAQ> {
                               width: MediaQuery.of(context).size.width * 0.9,
                               padding: const EdgeInsets.all(10),
                               // color: Colors.green,
-                              child: Container(
-                                child: Row(
-                                  children: [
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: const [
-                                        Icon(FontAwesomeIcons.userSecret),
-                                        Padding(
-                                          padding: EdgeInsets.symmetric(
-                                              horizontal: 5),
-                                          child: Text(
-                                              "I forgot my password, what should I do now?"),
-                                        ),
-                                      ],
+                              child: Row(
+                                children: [
+                                  Icon(FontAwesomeIcons.userSecret),
+                                  SizedBox(
+                                    width: 260,
+                                    child: Padding(
+                                      padding: EdgeInsets.only(left: 16),
+                                      child: Text(
+                                          "I forgot my password, what should I do now?"),
                                     ),
-                                    const Icon(Icons.expand_more),
-                                  ],
-                                ),
+                                  ),
+                                  const Icon(Icons.expand_more),
+                                ],
                               ),
                             )),
+                            const SizedBox(height: 40,)
                 ],
+                
               ),
             ),
           ),
