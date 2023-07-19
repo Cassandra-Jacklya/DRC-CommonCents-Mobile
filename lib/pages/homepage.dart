@@ -59,11 +59,11 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    _newsFuture =getNews();
+    _newsFuture = getNews();
   }
 
   @override
-  void dispose(){
+  void dispose() {
     closeMiniWebSocket();
     super.dispose();
   }
@@ -74,189 +74,201 @@ class _HomePageState extends State<HomePage> {
         providers: [
           BlocProvider<LoginStateBloc>(
             create: (context) => LoginStateBloc(),
-        ),
-        BlocProvider<MiniChartCubit>(create: (context) => MiniChartCubit(),),
-        BlocProvider<ResetWalletBloc>(create: (context) => ResetWalletBloc(),)
-      ], 
-      child: Scaffold(
-      appBar: const CustomAppBar(
-        title: "CommonCents",
-        logo: "assets/images/commoncents-logo.png",
-        isTradingPage: false,
-      ),
-      body: FutureBuilder(
-        future:  Firebase.initializeApp(
-      options: DefaultFirebaseOptions.currentPlatform,),
-        builder: (context, snapshot) {
-          switch (snapshot.connectionState) {
-            case ConnectionState.done:
-              final User? user = FirebaseAuth.instance.currentUser;
-            if (user == null) {
-              return HomePageGuest(newsFuture: _newsFuture,);
-
-            }
-            else {
-              BlocProvider.of<LoginStateBloc>(context).initFirebase('','');
-              return SingleChildScrollView(
-                child: Column(
-                  children: [
-                    const SizedBox(height: 30),
-                    Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 10),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Row(
-                            children: [
-                              const Text(
-                              "SYNTHETIC INDICES",
-                              style: TextStyle(
-                                fontSize: 15, 
-                                fontFamily: 'Roboto',
-                                fontWeight: FontWeight.bold
-                                ),
-                              ),
-                              GestureDetector(
-                                onTap: () {
-                                  showDialog(
-                                    context: context,
-                                    builder: (BuildContext syntheticContext) {
-                                      return const SyntheticDetails();
-                                    },
-                                  );
-                                },
-                                child: const Padding(
-                                  padding: EdgeInsets.fromLTRB(5, 0, 0, 0),
-                                  child: Icon(Iconsax.info_circle,
-                                  color: Color(0xFFCCCCCC),
-                                  size: 17,
+          ),
+          BlocProvider<MiniChartCubit>(
+            create: (context) => MiniChartCubit(),
+          ),
+          BlocProvider<ResetWalletBloc>(
+            create: (context) => ResetWalletBloc(),
+          )
+        ],
+        child: Scaffold(
+          appBar: const CustomAppBar(
+            title: "CommonCents",
+            logo: "assets/images/commoncents-logo.png",
+            isTradingPage: false,
+          ),
+          body: FutureBuilder(
+              future: Firebase.initializeApp(
+                options: DefaultFirebaseOptions.currentPlatform,
+              ),
+              builder: (context, snapshot) {
+                switch (snapshot.connectionState) {
+                  case ConnectionState.done:
+                    final User? user = FirebaseAuth.instance.currentUser;
+                    if (user == null) {
+                      return HomePageGuest(
+                        newsFuture: _newsFuture,
+                      );
+                    } else {
+                      BlocProvider.of<LoginStateBloc>(context)
+                          .initFirebase('', '');
+                      return SingleChildScrollView(
+                        child: Column(
+                          children: [
+                            const SizedBox(height: 30),
+                            Container(
+                              margin:
+                                  const EdgeInsets.symmetric(horizontal: 10),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Row(
+                                    children: [
+                                      const Text(
+                                        "SYNTHETIC INDICES",
+                                        style: TextStyle(
+                                            fontSize: 15,
+                                            fontFamily: 'Roboto',
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      GestureDetector(
+                                        onTap: () {
+                                          showDialog(
+                                            context: context,
+                                            builder: (BuildContext
+                                                syntheticContext) {
+                                              return const SyntheticDetails();
+                                            },
+                                          );
+                                        },
+                                        child: const Padding(
+                                          padding:
+                                              EdgeInsets.fromLTRB(5, 0, 0, 0),
+                                          child: Icon(
+                                            Iconsax.info_circle,
+                                            color: Color(0xFFCCCCCC),
+                                            size: 17,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
                                   ),
+                                  WalletButton(),
+                                ],
+                              ),
+                            ),
+                            const SizedBox(height: 20),
+                            Container(
+                              width: double.infinity, height: 180, //220
+                              // padding: const EdgeInsets.all(10),
+                              color: Colors.white,
+                              child: const CarouselChart(),
+                            ),
+                            Container(
+                              padding: const EdgeInsets.all(10),
+                              color: Colors.white,
+                              height: 200,
+                              child: ListView.builder(
+                                scrollDirection: Axis.horizontal,
+                                itemCount: 6,
+                                itemBuilder: (context, index) {
+                                  return MarketCard(
+                                      image: images[index],
+                                      title: title[index],
+                                      content: content[index]);
+                                },
+                              ),
+                            ),
+                            const SizedBox(height: 12),
+                            Container(
+                              width: double.infinity,
+                              margin:
+                                  const EdgeInsets.symmetric(horizontal: 15),
+                              child: const Text(
+                                "NEWS HEADLINE",
+                                textAlign: TextAlign.left,
+                                style: TextStyle(
+                                  fontSize: 15,
+                                  fontFamily: 'Roboto',
+                                  fontWeight: FontWeight.bold,
                                 ),
                               ),
-                            ],
+                            ),
+                            const SizedBox(height: 10),
+                            FutureBuilder<List<dynamic>>(
+                              future: _newsFuture,
+                              builder: (context, snapshot) {
+                                if (snapshot.connectionState ==
+                                    ConnectionState.waiting) {
+                                  return const CircularProgressIndicator();
+                                } else if (snapshot.hasError) {
+                                  return Text('Error: ${snapshot.error}');
+                                } else if (snapshot.hasData) {
+                                  final newsList = snapshot.data;
+                                  return NewsContainer(
+                                    feeds: newsList,
+                                    scrollable: false,
+                                    scrollController: null,
+                                  );
+                                } else {
+                                  return const Text('No news available.');
+                                }
+                              },
+                            ),
+                          ],
+                        ),
+                      );
+                    }
+                  default:
+                    return SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          const SizedBox(height: 30),
+                          Container(
+                            margin: const EdgeInsets.symmetric(horizontal: 10),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: const [
+                                Text(
+                                  "MARKET OVERVIEW",
+                                  style: TextStyle(
+                                      fontSize: 15,
+                                      fontFamily: 'Roboto',
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ],
+                            ),
                           ),
-                          WalletButton(),
+                          const Center(child: CircularProgressIndicator()),
+                          Container(
+                            padding: const EdgeInsets.all(10),
+                            color: Colors.white,
+                            height: 400,
+                            child: ListView.builder(
+                              scrollDirection: Axis.horizontal,
+                              itemCount: 6,
+                              itemBuilder: (context, index) {
+                                return MarketCard(
+                                    image: images[index],
+                                    title: title[index],
+                                    content: content[index]);
+                              },
+                            ),
+                          ),
+                          const SizedBox(height: 30),
+                          Container(
+                            width: double.infinity,
+                            margin: const EdgeInsets.symmetric(horizontal: 15),
+                            child: const Text(
+                              "NEWS HEADLINE",
+                              textAlign: TextAlign.left,
+                              style: TextStyle(
+                                fontSize: 15,
+                                fontFamily: 'Roboto',
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
                         ],
                       ),
-                    ),
-                    const SizedBox(height: 20),
-                    Container(width: double.infinity, height: 180, //220
-                      // padding: const EdgeInsets.all(10),
-                      color: Colors.white,
-                      child: const CarouselChart(),
-                    ),
-                    Container(
-                      padding: const EdgeInsets.all(10),
-                      color: Colors.white,
-                      height: 200,
-                      child: ListView.builder(
-                        scrollDirection: Axis.horizontal,
-                        itemCount: 6,
-                        itemBuilder: (context, index) {
-                          return MarketCard(
-                            image: images[index],
-                            title: title[index],
-                            content: content[index]
-                          );
-                        },
-                      ),
-                    ),
-                    const SizedBox(height: 12),
-                    Container(
-                      width: double.infinity,
-                      margin: const EdgeInsets.symmetric(horizontal: 15),
-                      child: const Text(
-                      "NEWS HEADLINE",
-                      textAlign: TextAlign.left,
-                      style: TextStyle(
-                        fontSize: 15, 
-                        fontFamily: 'Roboto',
-                        fontWeight: FontWeight.bold,
-                    
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 10),
-                    FutureBuilder<List<dynamic>>(
-                      future: _newsFuture,
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState == ConnectionState.waiting) {
-                          return const CircularProgressIndicator();
-                        } else if (snapshot.hasError) {
-                          return Text('Error: ${snapshot.error}');
-                        } else if (snapshot.hasData) {
-                          final newsList = snapshot.data;
-                          return NewsContainer(feeds: newsList, scrollable: false,scrollController: null,);
-                        } else {
-                          return const Text('No news available.');
-                        }
-                      },
-                    ),
-                  ],
-                ),
-              );
-            }
-            default:
-            return SingleChildScrollView(
-              child: Column(
-                children: [
-                  const SizedBox(height: 30),
-                  Container(
-                    margin: const EdgeInsets.symmetric(horizontal: 10),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: const [
-                       Text(
-                        "MARKET OVERVIEW",
-                        style: TextStyle(
-                          fontSize: 15, 
-                          fontFamily: 'Roboto',
-                          fontWeight: FontWeight.bold
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const Center(child: CircularProgressIndicator()),
-                  Container(
-                    padding: const EdgeInsets.all(10),
-                    color: Colors.white,
-                    height: 400,
-                    child: ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      itemCount: 6,
-                      itemBuilder: (context, index) {
-                        return MarketCard(
-                          image: images[index],
-                          title: title[index],
-                          content: content[index]
-                        );
-                      },
-                    ),
-                  ),
-                  const SizedBox(height: 30),
-                  Container(
-                    width: double.infinity,
-                    margin: const EdgeInsets.symmetric(horizontal: 15),
-                    child: const Text(
-                    "NEWS HEADLINE",
-                    textAlign: TextAlign.left,
-                    style: TextStyle(
-                      fontSize: 15, 
-                      fontFamily: 'Roboto',
-                      fontWeight: FontWeight.bold,
-                  
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            );
-          }
-        }
-      ),
-      bottomNavigationBar: const BottomNavBar(index: 0,),
-    )
-    );
+                    );
+                }
+              }),
+          bottomNavigationBar: const BottomNavBar(
+            index: 0,
+          ),
+        ));
   }
 }

@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:commoncents/components/contractSnackbar.dart';
 import 'package:commoncents/components/forgotPassword.dart';
 import 'package:commoncents/cubit/login_cubit.dart';
 import 'package:commoncents/firebase_options.dart';
@@ -65,14 +66,18 @@ class _LoginViewState extends State<LoginView>
         ),
       ],
       child: GestureDetector(
-        onTap:() {
+        onTap: () {
           FocusScopeNode currentFocus = FocusScope.of(context);
           if (!currentFocus.hasPrimaryFocus) {
             currentFocus.unfocus();
           }
         },
         child: Scaffold(
-          appBar: const CustomAppBar(title: "Log In", logo: "", isTradingPage: false,),
+          appBar: const CustomAppBar(
+            title: "Log In",
+            logo: "",
+            isTradingPage: false,
+          ),
           body: FutureBuilder(
               future: _firebaseInitialization,
               builder: (context, snapshot) {
@@ -203,11 +208,9 @@ class _LoginViewState extends State<LoginView>
                                 Navigator.pushReplacement(
                                   context,
                                   PageRouteBuilder(
-                                      pageBuilder: (context,
-                                              anim1, anim2) =>
+                                      pageBuilder: (context, anim1, anim2) =>
                                           const HomePage(),
-                                      transitionDuration:
-                                          Duration.zero),
+                                      transitionDuration: Duration.zero),
                                 );
                               } else {
                                 const Text("not working");
@@ -237,6 +240,10 @@ class _LoginViewState extends State<LoginView>
                                       final password = _password.text;
                                       BlocProvider.of<LoginStateBloc>(context)
                                           .initFirebase(email, password);
+                                      showAlertDialog(
+                                          context,
+                                          "Logged in successfully as ${email.toString()}",
+                                          3);
                                     },
                                     child: const Text(
                                       "Login",
