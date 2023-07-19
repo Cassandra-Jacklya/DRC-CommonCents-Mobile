@@ -107,7 +107,7 @@ class LogOut extends StatelessWidget {
       title: Container(
         height: 60,
         decoration: BoxDecoration(
-            color: Colors.grey[400],
+            color: Color(0xFF3366FF),
             borderRadius: const BorderRadius.only(
                 topLeft: Radius.circular(10), topRight: Radius.circular(10))),
         padding: const EdgeInsets.all(10),
@@ -120,7 +120,7 @@ class LogOut extends StatelessWidget {
               style: Theme.of(context).textTheme.displayLarge!.merge(
                     const TextStyle(
                       fontSize: 18,
-                      color: Colors.black,
+                      color: Colors.white,
                     ),
                   ),
             ),
@@ -146,8 +146,8 @@ class LogOut extends StatelessWidget {
               Navigator.of(context).pop();
             },
             child: Container(
-              height: 50,
-              width: 120,
+              height: 40 ,
+              width: 100,
               decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(10),
@@ -171,8 +171,8 @@ class LogOut extends StatelessWidget {
               }
             },
             child: Container(
-              height: 50,
-              width: 120,
+              height: 40,
+              width: 100,
               decoration: BoxDecoration(
                 color: Color(0XFF3366FF),
                 borderRadius: BorderRadius.circular(10),
@@ -244,7 +244,7 @@ class _PasswordState extends State<Password> {
             title: Container(
               height: 60,
               decoration: BoxDecoration(
-                color: Colors.grey[400],
+                color: Color(0xFF3366FF),
                 borderRadius: const BorderRadius.only(
                   topLeft: Radius.circular(10),
                   topRight: Radius.circular(10),
@@ -264,8 +264,8 @@ class _PasswordState extends State<Password> {
                         textAlign: TextAlign.center,
                         style: Theme.of(context).textTheme.displayLarge!.merge(
                               const TextStyle(
-                                fontSize: 18,
-                                color: Colors.black,
+                                fontSize: 17,
+                                color: Colors.white,
                               ),
                             ),
                       ),
@@ -304,12 +304,12 @@ class _PasswordState extends State<Password> {
                     Navigator.of(context).pop();
                   },
                   child: Container(
-                    height: 50,
-                    width: 120,
+                    height: 40,
+                    width: 100,
                     decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(10),
-                        border: Border.all(color: Colors.black)),
+                        border: Border.all(color: Color(0xFFD9D9D9))),
                     child: const Center(child: Text("Cancel")),
                   ),
                 ),
@@ -321,8 +321,8 @@ class _PasswordState extends State<Password> {
                     checkPassword(context);
                   },
                   child: Container(
-                    height: 50,
-                    width: 120,
+                    height: 40,
+                    width: 100,
                     decoration: BoxDecoration(
                       color: Color(0XFF3366FF),
                       borderRadius: BorderRadius.circular(10),

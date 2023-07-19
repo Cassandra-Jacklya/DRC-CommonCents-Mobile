@@ -194,7 +194,7 @@ class _MyAccountState extends State<MyAccount> {
                       borderRadius: BorderRadius.circular(10),
                       borderSide: const BorderSide(color: Color(0xFF5F5F5F)),
                     ),
-                    hintText: user?.displayName ?? user!.email!,
+                    labelText: user?.displayName ?? user!.email!,
                     suffixIcon: const Icon(Icons.edit),
                   ),
                 ),
