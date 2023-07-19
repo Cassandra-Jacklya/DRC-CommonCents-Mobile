@@ -29,7 +29,9 @@ class _ChangePasswordState extends State<ChangePassword> {
           context: context,
           builder: (BuildContext passwordDialog) {
             return AlertDialog(
-              title: const Text("Cannot use existing password as new password"),
+              title: const Text("Cannot use existing password as new password",
+                style: TextStyle(fontSize: 18),
+              ),
               actions: [
                 TextButton(
                   onPressed: () {
@@ -85,96 +87,104 @@ class _ChangePasswordState extends State<ChangePassword> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          shadowColor: Colors.transparent,
-          toolbarHeight: 60,
-          backgroundColor: Color(0XFF3366FF),
-          title: const Text("Change Password"),
-          foregroundColor: Colors.black,
-        ),
-        body: Column(
-          children: [
-            Container(
-              // width: MediaQuery.of(context).size.width * 0.9,
-              width: 300,
-              margin: const EdgeInsets.only(top: 40, bottom: 30),
-              child: TextFormField(
-                controller: textEditingController,
-                obscureText: viewPass ? false : true,
-                decoration: InputDecoration(
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                        borderSide: const BorderSide(color: Color(0xFF5F5F5F))),
-                    labelText: 'New Password',
-                    suffixIcon: viewPass
-                        ? const Icon(Iconsax.eye)
-                        : const Icon(Iconsax.eye_slash)),
-                onTap: () {
-                  setState(() {
-                    viewPass = !viewPass;
-                  });
-                },
+    return GestureDetector(
+      onTap: () {
+        FocusScopeNode currentFocus = FocusScope.of(context);
+        if (!currentFocus.hasPrimaryFocus) {
+          currentFocus.unfocus();
+        }
+      },
+      child: Scaffold(
+          appBar: AppBar(
+            shadowColor: Colors.transparent,
+            toolbarHeight: 60,
+            backgroundColor: Color(0XFF3366FF),
+            title: const Text("Change Password"),
+            foregroundColor: Colors.white,
+          ),
+          body: Column(
+            children: [
+              Container(
+                // width: MediaQuery.of(context).size.width * 0.9,
+                width: 300,
+                margin: const EdgeInsets.only(top: 40, bottom: 30),
+                child: TextFormField(
+                  controller: textEditingController,
+                  obscureText: viewPass ? false : true,
+                  decoration: InputDecoration(
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: const BorderSide(color: Color(0xFF5F5F5F))),
+                      labelText: 'New Password',
+                      suffixIcon: viewPass
+                          ? const Icon(Iconsax.eye)
+                          : const Icon(Iconsax.eye_slash)),
+                  onTap: () {
+                    setState(() {
+                      viewPass = !viewPass;
+                    });
+                  },
+                ),
               ),
-            ),
-            Container(
-              // width: MediaQuery.of(context).size.width * 0.9,
-              width: 300,
-              margin: const EdgeInsets.only(bottom: 30),
-              child: TextFormField(
-                controller: textEditingController2,
-                obscureText: viewPass2 ? false : true,
-                decoration: InputDecoration(
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                        borderSide: const BorderSide(color: Color(0xFF5F5F5F))),
-                    labelText: 'Confirm Password',
-                    // hintText: 'ben',
-                    suffixIcon: viewPass2
-                        ? const Icon(Iconsax.eye)
-                        : const Icon(Iconsax.eye_slash)),
-                onTap: () {
-                  setState(() {
-                    viewPass2 = !viewPass2;
-                  });
-                },
+              Container(
+                // width: MediaQuery.of(context).size.width * 0.9,
+                width: 300,
+                margin: const EdgeInsets.only(bottom: 30),
+                child: TextFormField(
+                  controller: textEditingController2,
+                  obscureText: viewPass2 ? false : true,
+                  decoration: InputDecoration(
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: const BorderSide(color: Color(0xFF5F5F5F))),
+                      labelText: 'Confirm Password',
+                      // hintText: 'ben',
+                      suffixIcon: viewPass2
+                          ? const Icon(Iconsax.eye)
+                          : const Icon(Iconsax.eye_slash)),
+                  onTap: () {
+                    setState(() {
+                      viewPass2 = !viewPass2;
+                    });
+                  },
+                ),
               ),
-            ),
-            Align(
-              alignment: Alignment.bottomRight,
-              child: GestureDetector(
-                onTap: () {
-                  textEditingController.text != "" &&
-                          textEditingController2.text != "" &&
-                          textEditingController.text ==
-                              textEditingController2.text
-                      ? changePassword()
-                      : {};
-                },
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: textEditingController.text ==
-                                textEditingController2.text &&
-                            textEditingController.text != "" &&
-                            textEditingController2.text != ""
-                        ? const Color(0XFF3366FF)
-                        : Colors.grey[400],
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  margin: const EdgeInsets.only(top: 10, right: 30),
-                  height: 50,
-                  width: 300,
-                  child: const Center(
-                    child: Text(
-                      "Save",
-                      style: TextStyle(color: Colors.white),
+              Align(
+                alignment: Alignment.bottomRight,
+                child: GestureDetector(
+                  onTap: () {
+                    textEditingController.text != "" &&
+                            textEditingController2.text != "" &&
+                            textEditingController.text ==
+                                textEditingController2.text
+                        ? changePassword()
+                        : {};
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: textEditingController.text ==
+                                  textEditingController2.text &&
+                              textEditingController.text != "" &&
+                              textEditingController2.text != ""
+                          ? const Color(0XFF3366FF)
+                          : Colors.grey[400],
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    margin: const EdgeInsets.only(top: 10, right: 40),
+                    height: 40,
+                    width: 100,
+                    child: const Center(
+                      child: Text(
+                        "Save",
+                        style: TextStyle(color: Colors.white),
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
-          ],
-        ));
+            ],
+          )),
+    );
   }
 }
 

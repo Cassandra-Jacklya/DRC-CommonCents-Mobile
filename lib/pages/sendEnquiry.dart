@@ -15,10 +15,12 @@ class SendEnquiry extends StatelessWidget {
           children: [
             const SizedBox(height: 25),
             Container(
-              margin: const EdgeInsets.all(10),
-              child: const Text(
-                  style: TextStyle(fontSize: 20),
-                  'Thank you for contacting us. We have received your enquiry and will get back to you within 12 hours'),
+              child: Padding(
+                padding: const EdgeInsets.only(top: 15, left: 20, right: 10),
+                child: const Text(
+                    style: TextStyle(fontSize: 18),
+                    'Thank you for contacting us. We have received your enquiry and will get back to you within 12 hours'),
+              ),
             )
           ],
         ));

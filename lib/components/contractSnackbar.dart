@@ -13,7 +13,7 @@ class CustomAlertDialog extends StatefulWidget {
       required this.duration,
       required this.market,
       required this.amount,
-      required this.strategy});
+      required this.strategy,});
 
   @override
   _CustomAlertDialogState createState() => _CustomAlertDialogState();
@@ -76,7 +76,7 @@ class _CustomAlertDialogState extends State<CustomAlertDialog>
             child: Column(
               children: [
                 Center(
-                    child: Row(mainAxisAlignment: MainAxisAlignment.center,
+                    child: Row(mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Text(
                       "${widget.strategy}",
@@ -106,7 +106,8 @@ class _CustomAlertDialogState extends State<CustomAlertDialog>
                       Row(
                         children: [
                           Text("Amount: "),
-                          Text(widget.amount.toString())
+                          Text(widget.amount.toString()),
+                          const Text(" USD")
                         ],
                       ),
                     ],
