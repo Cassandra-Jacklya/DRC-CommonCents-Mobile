@@ -703,6 +703,7 @@ class _PostSomethingState extends State<PostSomething> {
         'details': details,
         'timestamp': timestamp,
         'title': title,
+        'email' : email
       });
       print('Post created successfully!');
     } catch (e) {

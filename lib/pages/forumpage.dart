@@ -472,6 +472,7 @@ class _ForumPageState extends State<ForumPage> {
                                 ..sort((a, b) =>
                                     b['timestamp'].compareTo(a['timestamp']));
                               final post = sortedPosts[index];
+                              print("HERE $post");
                               final bool isFavorite = favouritePosts.any(
                                   (favoritePost) =>
                                       favoritePost['title'] == post['title'] &&
@@ -639,8 +640,8 @@ class _ForumPageState extends State<ForumPage> {
                                             children: [
                                               Container(
                                                   child:
-                                                      user!.displayName ==
-                                                              post['author']
+                                                      user!.email ==
+                                                              post['email']
                                                           ? IconButton(
                                                               icon: const Icon(
                                                                   Icons.delete),
