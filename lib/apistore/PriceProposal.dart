@@ -80,8 +80,6 @@ void handleBuyResponse(
   late double updatedBalance;
   late String tradeStatus;
   late int duration;
-
-  // print("yo");
   final Map<String, dynamic> proposal = decodedData['proposal'];
   capital = decodedData['echo_req']['amount'].toDouble();
   duration = decodedData['echo_req']['duration'];
@@ -112,11 +110,44 @@ void handleBuyResponse(
       loginStateBloc.updateBalance(
           userData['email'], updatedBalance.toString());
       tradeStatus = "Won";
-      showAlertDialog(context,
-          "Spot is higher! You won USD ${proposal['payout'].toString()}", 3);
+      showDialog(
+        context: context,
+        barrierDismissible: true,
+        builder: (BuildContext context) {
+          return AlertDialog(backgroundColor: Color.fromARGB(255, 218, 255, 178),
+            title: Text("Hooray!"),
+            content: Text("You have won the trade!\nProfit: ${proposal['payout'].toStringAsFixed(2)} USD"),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop(); // Close the dialog
+                },
+                child: Text("OK"),
+              ),
+            ],
+          );
+        },
+      );
     } else {
       tradeStatus = "Lost";
-      showAlertDialog(context, 'Spot is not higher. You lost', 3);
+      showDialog(
+        context: context,
+        barrierDismissible: true,
+        builder: (BuildContext context) {
+          return AlertDialog(backgroundColor: Color.fromARGB(255, 255, 201, 197),
+            title: Text("Oh No!"),
+            content: Text("You have lost the trade!\nLost: ${capital.toStringAsFixed(2)} USD"),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop(); // Close the dialog
+                },
+                child: Text("OK"),
+              ),
+            ],
+          );
+        },
+      );
     }
   } else {
     if (buyingPrice > sellingPrice) {
@@ -129,11 +160,44 @@ void handleBuyResponse(
       loginStateBloc.updateBalance(
           userData['email'], updatedBalance.toString());
       tradeStatus = "Won";
-      showAlertDialog(context,
-          'Spot is lower! You won USD ${proposal['payout'].toString()}', 3);
+      showDialog(
+        context: context,
+        barrierDismissible: true,
+        builder: (BuildContext context) {
+          return AlertDialog(backgroundColor: Color.fromARGB(255, 218, 255, 178),
+            title: Text("Hooray!"),
+            content: Text("You have won the trade!\nProfit: ${proposal['payout'].toStringAsFixed(2)} USD"),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop(); // Close the dialog
+                },
+                child: Text("OK"),
+              ),
+            ],
+          );
+        },
+      );
     } else {
       tradeStatus = "Lost";
-      showAlertDialog(context, 'Spot is not lower. You lost', 3);
+      showDialog(
+        context: context,
+        barrierDismissible: true,
+        builder: (BuildContext context) {
+          return AlertDialog(backgroundColor: Color.fromARGB(255, 255, 201, 197),
+            title: Text("Oh No!"),
+            content: Text("You have lost the trade!\nLost: ${capital.toStringAsFixed(2)} USD"),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop(); // Close the dialog
+                },
+                child: Text("OK"),
+              ),
+            ],
+          );
+        },
+      );
     }
   }
 

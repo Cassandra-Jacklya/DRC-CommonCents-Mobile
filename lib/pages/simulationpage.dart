@@ -458,11 +458,7 @@ class _SimulationPageState extends State<SimulationPage> {
                                             showAlertDialog(
                                                 context,
                                                 'Higher contract bought for USD ${currentAmount.toString()}',
-                                                ticks.toInt());
-
-                                            // showSnackbar(
-                                            //     'Contract bought: Higher',
-                                            //     ticks.toInt());
+                                                ticks.toInt(), markettype, currentAmount, "Higher");
                                             isSnackbarVisible = false;
                                           } else {}
                                         },
@@ -519,7 +515,7 @@ class _SimulationPageState extends State<SimulationPage> {
                                             showAlertDialog(
                                                 context,
                                                 'Lower contract bought for USD ${currentAmount.toString()}',
-                                                ticks.toInt());
+                                                ticks.toInt(), markettype, currentAmount, "Lower");
                                             isSnackbarVisible = false;
                                           } else {}
                                         },

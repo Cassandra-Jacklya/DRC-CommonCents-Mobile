@@ -125,7 +125,7 @@ class _LineChartState extends State<MyLineChart> {
                           // enableSelectionZooming: true,
                           enablePinching: true,
                           enablePanning: true,
-                          zoomMode: ZoomMode.xy,
+                          zoomMode: ZoomMode.x,
                         ),
                         trackballBehavior: TrackballBehavior(
                           enable: true,

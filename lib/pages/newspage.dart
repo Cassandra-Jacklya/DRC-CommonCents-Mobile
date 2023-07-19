@@ -157,10 +157,25 @@ class _NewsPageState extends State<NewsPage> {
                         );
                       } else if (snapshot.data!.contains(
                           "Thank you for using Alpha Vantage! Our standard API call frequency is 5 calls per minute and 500 calls per day.")) {
-                        showAlertDialog(
-                            context,
-                            "API Limit Reached. Please try again in a minute.",
-                            3);
+                        showDialog(
+                          context: context,
+                          barrierDismissible: true,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              content: const Text(
+                                  "API Limit Reached. Please try again in a minute"),
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context)
+                                        .pop(); 
+                                  },
+                                  child: Text("OK"),
+                                ),
+                              ],
+                            );
+                          },
+                        );
                       } else if (snapshot.hasError) {
                         return Text('Error: ${snapshot.error}');
                       } else if (snapshot.hasData) {
@@ -207,25 +222,3 @@ class _NewsPageState extends State<NewsPage> {
     );
   }
 }
-
-
-
-                    // bool once = true;
-                    // if (once) {
-                    //   final int originalNewsListLength =
-                    //       _OriginalNewsList.length;
-                    //   const int takeCount = 8;
-                    //   _OriginalNewsList.addAll(
-                    //       _NewsData.skip(originalNewsListLength)
-                    //           .take(takeCount));
-                    //   once = !once;
-                    // }
-                    // print(_OriginalNewsList.length);
-
-                        // scrollController.addListener(() {
-    //   if (scrollController.position.maxScrollExtent ==
-    //       scrollController.offset) {
-    //     print("yes");
-    //     fetch();
-    //   }
-    // });

@@ -723,15 +723,29 @@ class _ForumPageState extends State<ForumPage> {
                                                 onPressed: () {
                                                   savePost(post);
                                                   if (isFavorite) {
-                                                    showAlertDialog(
-                                                        context,
-                                                        "Post removed from favourites",
-                                                        1);
+                                                    showDialog(
+                                                      context: context,
+                                                      barrierDismissible: true,
+                                                      builder: (BuildContext
+                                                          context) {
+                                                        return const AlertDialog(
+                                                          content: Text(
+                                                              "Post removed from favourites!"),
+                                                        );
+                                                      },
+                                                    );
                                                   } else {
-                                                    showAlertDialog(
-                                                        context,
-                                                        "Post added to favourites",
-                                                        1);
+                                                   showDialog(
+                                                      context: context,
+                                                      barrierDismissible: true,
+                                                      builder: (BuildContext
+                                                          context) {
+                                                        return const AlertDialog(
+                                                          content: Text(
+                                                              "Post added to favourites!"),
+                                                        );
+                                                      },
+                                                    );
                                                   }
                                                 },
                                               ),

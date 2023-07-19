@@ -268,7 +268,7 @@ class _ChartPriceState extends State<ChartPrice> {
             ),
           );
         } else {
-          return Container();
+          return const Center(child: CircularProgressIndicator(),);
         }
       },
     );
