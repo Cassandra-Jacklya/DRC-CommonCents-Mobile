@@ -96,6 +96,8 @@ class _MyAccountState extends State<MyAccount> {
   @override
   Widget build(BuildContext context) {
     final User? user = FirebaseAuth.instance.currentUser;
+    final isGoogleSignIn = user != null &&
+        user.providerData.any((info) => info.providerId == 'google.com');
     return GestureDetector(
       onTap: () {
         FocusScopeNode currentFocus = FocusScope.of(context);
@@ -138,7 +140,7 @@ class _MyAccountState extends State<MyAccount> {
                               image: widget.photoUrl.isNotEmpty
                                   ? NetworkImage(widget.photoUrl)
                                   : const NetworkImage(
-                                        'https://www.seekpng.com/png/detail/966-9665493_my-profile-icon-blank-profile-image-circle.png',
+                                      'https://www.seekpng.com/png/detail/966-9665493_my-profile-icon-blank-profile-image-circle.png',
                                     ),
                               fit: BoxFit.cover,
                             ),
@@ -192,8 +194,7 @@ class _MyAccountState extends State<MyAccount> {
                       borderRadius: BorderRadius.circular(10),
                       borderSide: const BorderSide(color: Color(0xFF5F5F5F)),
                     ),
-                    hintText:
-                        user?.displayName ?? user!.email!,
+                    hintText: user?.displayName ?? user!.email!,
                     suffixIcon: const Icon(Icons.edit),
                   ),
                 ),
@@ -224,8 +225,7 @@ class _MyAccountState extends State<MyAccount> {
                     enabled: false,
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
-                      borderSide: const BorderSide(
-                          color: Colors.black), 
+                      borderSide: const BorderSide(color: Colors.black),
                     ),
                     labelText: widget.email,
                     labelStyle: const TextStyle(color: Color(0xFFCCCCCC)),
@@ -241,41 +241,55 @@ class _MyAccountState extends State<MyAccount> {
                     children: [
                       Row(
                         children: const [
-                          Text("Click ", style: TextStyle(fontSize: 14),),
+                          Text(
+                            "Click ",
+                            style: TextStyle(fontSize: 14),
+                          ),
                           Text(
                             "Change Password ",
-                            style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                            style: TextStyle(
+                                fontSize: 14, fontWeight: FontWeight.bold),
                           ),
-                          Text("to change your ", style: TextStyle(fontSize: 14),),
-                          
+                          Text(
+                            "to change your ",
+                            style: TextStyle(fontSize: 14),
+                          ),
                         ],
                       ),
-                      const Text("CommonCents password.", style: TextStyle(fontSize: 14), textAlign: TextAlign.left,), 
+                      const Text(
+                        "CommonCents password.",
+                        style: TextStyle(fontSize: 14),
+                        textAlign: TextAlign.left,
+                      ),
                     ],
-                  )
-                ),
-              Align(
-                alignment: Alignment.bottomLeft,
-                child: GestureDetector(
-                  onTap: () {
-                    showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return Password();
-                      },
-                    );
-                  },
-                  child: Container(
-                    margin: const EdgeInsets.only(left: 33, top: 14),
-                    height: 31,
-                    width: 142,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(5),
-                      color: const Color(0xFF3366FF),
-                    ),
-                    child: const Center(
-                      child: Text("Change Password",
-                          style: TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.bold)),
+                  )),
+              Container(
+                child: isGoogleSignIn ? Container() : Align(
+                  alignment: Alignment.bottomLeft,
+                  child: GestureDetector(
+                    onTap: () {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return Password();
+                        },
+                      );
+                    },
+                    child: Container(
+                      margin: const EdgeInsets.only(left: 33, top: 14),
+                      height: 31,
+                      width: 142,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5),
+                        color: const Color(0xFF3366FF),
+                      ),
+                      child: const Center(
+                        child: Text("Change Password",
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold)),
+                      ),
                     ),
                   ),
                 ),

@@ -333,8 +333,13 @@ class _FavouritesPageState extends State<FavouritesPage> {
                 },
               );
             } else {
-              return const Center(
-                child: Text("No favourites yet!"),
+              return Center(
+                child: Column(
+                  children: [
+                    Image.asset('assets/images/no-profile.jpg'),
+                    Text("No favourites yet!"),
+                  ],
+                ),
               );
             }
           }
