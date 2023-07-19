@@ -102,7 +102,9 @@ class _HomePageState extends State<HomePage> {
                       );
                     } else {
                       BlocProvider.of<LoginStateBloc>(context)
-                          .initFirebase('', '');
+                          .initFirebase(context,'', '');
+                          print("Name ${user.displayName}");
+                          print("Email ${user.email}");
                       return SingleChildScrollView(
                         child: Column(
                           children: [

@@ -16,7 +16,7 @@ class WalletButton extends StatelessWidget {
       ],
       child: BlocConsumer<LoginStateBloc, LoginState>(
         builder: (context, state) {
-          BlocProvider.of<LoginStateBloc>(context).initFirebase('','');
+          BlocProvider.of<LoginStateBloc>(context).initFirebase(context,'','');
           if (state is AppStateInitial) {
           } else if (state is AppStateLoggedIn) {
             return Stack(

@@ -239,11 +239,11 @@ class _LoginViewState extends State<LoginView>
                                       final email = _email.text;
                                       final password = _password.text;
                                       BlocProvider.of<LoginStateBloc>(context)
-                                          .initFirebase(email, password);
-                                      showAlertDialog(
-                                          context,
-                                          "Logged in successfully as ${email.toString()}",
-                                          3);
+                                          .initFirebase(context,email, password);
+                                      // showAlertDialog(
+                                      //     context,
+                                      //     "Logged in successfully as ${email.toString()}",
+                                      //     3);
                                     },
                                     child: const Text(
                                       "Login",

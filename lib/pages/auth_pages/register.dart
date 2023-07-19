@@ -63,12 +63,16 @@ class _RegisterViewState extends State<RegisterView>
       CollectionReference tradeHistoryCollection =
           userDocument.collection('tradeHistory');
 
+      late String defaultDN = user.email as String;
+      print("Default: ${defaultDN}");
+
       await userDocument.set({
         'balance': 100000,
-        'displayName': user.email,
+        'displayName': defaultDN,
         'email': user.email,
         'photoUrl': '',
       });
+
 
       // Create a new trade summary document within the 'tradeHistory' collection
       DocumentReference tradeSummaryDoc =

@@ -691,11 +691,12 @@ class _PostSomethingState extends State<PostSomething> {
   TextEditingController _titleController = TextEditingController();
   late bool canPost = false;
 
-  final user = FirebaseAuth.instance.currentUser;
+  User? user = FirebaseAuth.instance.currentUser;
 
   Future<void> createPost(String? author, String? authorImage, String? details,
-      int? timestamp, String? title) async {
+      String? email, int? timestamp, String? title) async {
     try {
+      author ??= email;
       await FirebaseFirestore.instance.collection('posts').add({
         'author': author,
         'authorImage': authorImage,
@@ -725,6 +726,7 @@ class _PostSomethingState extends State<PostSomething> {
 
   @override
   Widget build(BuildContext context) {
+    print("EYYO ${user!.displayName}");
     return GestureDetector(
       onTap: () {
         FocusScopeNode currentFocus = FocusScope.of(context);
@@ -800,10 +802,12 @@ class _PostSomethingState extends State<PostSomething> {
                 if (_postController.text.isEmpty ||
                     _titleController.text.isEmpty) {
                 } else {
+                  print(user!.displayName);
                   createPost(
                     user!.displayName,
                     user!.photoURL,
                     _postController.text,
+                    user!.email,
                     DateTime.now().millisecondsSinceEpoch,
                     _titleController.text,
                   );
@@ -817,8 +821,9 @@ class _PostSomethingState extends State<PostSomething> {
                   Container(
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10),
-                        color:
-                            canPost ? const Color(0XFF3366FF) : Colors.grey[400]),
+                        color: canPost
+                            ? const Color(0XFF3366FF)
+                            : Colors.grey[400]),
                     // width: MediaQuery.of(context).size.width * 0.4,
                     // height: MediaQuery.of(context).size.height * 0.05,
                     width: 100,
@@ -887,9 +892,7 @@ class ResetBalance extends StatelessWidget {
         )
       ],
       child: Dialog(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10)
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         child: Container(
           height: 140,
           width: 120,
@@ -914,11 +917,15 @@ class ResetBalance extends StatelessWidget {
                       ),
                       Row(
                         children: [
-                          Text(state.balance.toString(),
-                            style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                          Text(
+                            state.balance.toString(),
+                            style: const TextStyle(
+                                fontSize: 15, fontWeight: FontWeight.bold),
                           ),
-                          const Text("USD",
-                            style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                          const Text(
+                            "USD",
+                            style: TextStyle(
+                                fontSize: 15, fontWeight: FontWeight.bold),
                           )
                         ],
                       ),
@@ -957,7 +964,8 @@ class ResetBalance extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Text("Current demo funds:",
+                      const Text(
+                        "Current demo funds:",
                         style: TextStyle(fontSize: 15),
                       ),
                       const Flexible(
@@ -971,11 +979,15 @@ class ResetBalance extends StatelessWidget {
                       ),
                       Row(
                         children: [
-                          Text(state.balance.toString(),
-                            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                          Text(
+                            state.balance.toString(),
+                            style: const TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 15),
                           ),
-                          const Text(" USD",
-                            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                          const Text(
+                            " USD",
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 15),
                           )
                         ],
                       ),
