@@ -67,8 +67,8 @@ class _RegisterViewState extends State<RegisterView>
       print("Default: ${defaultDN}");
 
       await userDocument.set({
-        'balance': 100000,
-        'displayName': defaultDN,
+        'balance': 100000.00,
+        'displayName': user.email,
         'email': user.email,
         'photoUrl': '',
       });

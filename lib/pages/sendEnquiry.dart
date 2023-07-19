@@ -18,7 +18,7 @@ class SendEnquiry extends StatelessWidget {
               margin: const EdgeInsets.all(10),
               child: const Text(
                   style: TextStyle(fontSize: 20),
-                  'Thank you for contacting us. We have received your enquiry and will get back to you within 6 hours'),
+                  'Thank you for contacting us. We have received your enquiry and will get back to you within 12 hours'),
             )
           ],
         ));

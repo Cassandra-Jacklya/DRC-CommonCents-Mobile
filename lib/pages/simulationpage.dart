@@ -155,8 +155,8 @@ class _SimulationPageState extends State<SimulationPage> {
                                                   market: widget.market)));
                                     },
                                     child: Container(
-                                      padding: const EdgeInsets.only(left: 15),
-                                      margin: const EdgeInsets.all(10),
+                                      padding: const EdgeInsets.only(left: 10),
+                                      margin: const EdgeInsets.only(left: 10, right: 5),
                                       height: 44,
                                       decoration: BoxDecoration(
                                           border: Border.all(
@@ -183,12 +183,14 @@ class _SimulationPageState extends State<SimulationPage> {
                                 GestureDetector(
                                   child: Container(
                                     height: 44,
+                                    width: 40,
                                     decoration: BoxDecoration(
                                         border: Border.all(
                                           color: const Color(0xFF5F5F5F),
                                         ),
                                         borderRadius: BorderRadius.circular(5)),
                                     child: IconButton(
+                                        iconSize: 18,
                                         onPressed: () {
                                           setState(() {
                                             unsubscribe();
@@ -206,7 +208,7 @@ class _SimulationPageState extends State<SimulationPage> {
                               ],
                             ),
                             Padding(
-                              padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
+                              padding: const EdgeInsets.fromLTRB(0, 0, 5, 0),
                               child: WalletButton(),
                             ),
                           ],
@@ -237,10 +239,10 @@ class _SimulationPageState extends State<SimulationPage> {
                                                       .updateLineTime(unit);
                                                 },
                                                 child: Container(
+                                                  padding: const EdgeInsets.only(left: 5, right: 5),
                                                   //candle time
-                                                  margin: EdgeInsets.symmetric(
+                                                  margin: const EdgeInsets.symmetric(
                                                       horizontal: 8),
-                                                  width: 70,
                                                   height: 31,
                                                   decoration: BoxDecoration(
                                                     color: isSelected
@@ -283,7 +285,6 @@ class _SimulationPageState extends State<SimulationPage> {
                                                 child: Container(
                                                   margin: const EdgeInsets
                                                       .symmetric(horizontal: 8),
-                                                  width: 70,
                                                   height: 31,
                                                   decoration: BoxDecoration(
                                                     color: isSelected
@@ -530,7 +531,7 @@ class _SimulationPageState extends State<SimulationPage> {
                                               color: Colors.red,
                                               borderRadius:
                                                   BorderRadius.circular(10)),
-                                          height: 45,
+                                          height: 30,
                                           width: 128,
                                           child: Row(
                                               mainAxisAlignment:

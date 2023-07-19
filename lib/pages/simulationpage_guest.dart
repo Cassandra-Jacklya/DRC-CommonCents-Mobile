@@ -1,8 +1,5 @@
 import 'package:commoncents/apistore/stockdata.dart';
 import 'package:commoncents/components/chart.dart';
-import 'package:commoncents/components/chartTime.dart';
-import 'package:commoncents/components/contractSnackbar.dart';
-import 'package:commoncents/components/liveLinePrice.dart';
 import 'package:commoncents/cubit/candlePrice_cubit.dart';
 import 'package:commoncents/cubit/chartTime_cubit.dart';
 import 'package:commoncents/cubit/isCandle_cubit.dart';
@@ -11,29 +8,15 @@ import 'package:commoncents/cubit/livelinePrice_cubit.dart';
 import 'package:commoncents/cubit/markets_cubit.dart';
 import 'package:commoncents/cubit/numberpicker_cubit.dart';
 import 'package:commoncents/cubit/stake_payout_cubit.dart';
-import 'package:commoncents/pages/simulationpage_guest.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:toggle_switch/toggle_switch.dart';
-import '../components/appbar.dart';
-import '../components/chartPrice.dart';
-import '../components/formatMarkets.dart';
-import '../components/lineTime.dart';
-import '../components/navbar.dart';
-import '../components/numberPIcker.dart';
 import '../components/linechart.dart';
-import '../components/ticks_gauge.dart';
-import '../components/walletbutton.dart';
 import '../cubit/candlestick_cubit.dart';
 import '../cubit/login_cubit.dart';
 import '../cubit/navbar_cubit.dart';
 import '../cubit/news_tabbar_cubit.dart';
 import '../cubit/stock_data_cubit.dart';
 import '../cubit/ticks_cubit.dart';
-import '../apistore/PriceProposal.dart';
-import '../firebase_options.dart';
 import '../pages/marketspage.dart';
 import 'auth_pages/login.dart';
 
@@ -157,6 +140,7 @@ class _SimulationPageGuestState extends State<SimulationPageGuest> {
                       borderRadius: BorderRadius.circular(5)
                     ),
                     child: IconButton(
+                      iconSize: 12,
                       onPressed: () {
                         setState(() {
                           unsubscribe();
@@ -196,9 +180,9 @@ class _SimulationPageGuestState extends State<SimulationPageGuest> {
                                 },
                                 child: Container(
                                   //candle time
+                                  padding: const EdgeInsets.only(left: 5, right: 5),
                                   margin: const EdgeInsets.symmetric(
                                       horizontal: 8),
-                                  width: 70,
                                   height: 31,
                                   decoration: BoxDecoration(
                                     color: isSelected

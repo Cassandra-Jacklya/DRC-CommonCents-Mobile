@@ -27,7 +27,7 @@ class _GoogleSignInButtonState extends State<GoogleSignInButton> {
           userDocument.collection('tradeHistory');
 
       await userDocument.set({
-        'balance': 100000,
+        'balance': 100000.00,
         'displayName': user.email,
         'email': user.email,
         'photoUrl': user.photoURL,
