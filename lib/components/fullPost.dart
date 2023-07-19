@@ -33,8 +33,6 @@ class _PostModalState extends State<PostModal> {
     setState(() {
       _comment.clear();
       widget.post['comments'] = updatedComments;
-      print("HOHO ${widget.post}");
-      print("lol");
     });
   }
 
@@ -87,7 +85,7 @@ class _PostModalState extends State<PostModal> {
         'content': content,
         'postId': postId,
         'timestamp': DateTime.now().millisecondsSinceEpoch,
-        'email' : email
+        'email': email
       });
     } else {
       await postRef.collection('comments').doc().set({
@@ -96,7 +94,7 @@ class _PostModalState extends State<PostModal> {
         'content': content,
         'postId': postId,
         'timestamp': DateTime.now().millisecondsSinceEpoch,
-        'email' : email
+        'email': email
       });
     }
 
@@ -110,6 +108,7 @@ class _PostModalState extends State<PostModal> {
         'content': commentData['content'],
         'postId': commentData['postId'],
         'timestamp': commentData['timestamp'],
+        'email' : email
       };
       return comment;
     }).toList();
@@ -118,8 +117,7 @@ class _PostModalState extends State<PostModal> {
     widget.refreshForumPage?.call();
 
     // Call the refreshModal callback to refresh the modal with the updated comments
-    print("HEHE ${updatedComments.length}");
-    print(updatedComments);
+    print("HOLA $updatedComments");
     refreshModal(updatedComments);
 
     // Call the refreshModal callback to refresh the modal
@@ -360,8 +358,10 @@ class _PostModalState extends State<PostModal> {
 
                               return GestureDetector(
                                 onLongPress: () {
-                                  if (comments[index]['author'] ==
-                                      user!.displayName) {
+                                  if (comments[index]['email'] ==
+                                      user!.email) {
+                                    print(
+                                        "HUH ${comments[index]['content']}\n${comments[index]['email']}");
                                     showDialog(
                                       context: context,
                                       builder: (BuildContext context) {
