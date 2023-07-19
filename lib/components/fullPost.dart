@@ -305,7 +305,7 @@ class _PostModalState extends State<PostModal> {
                                       decoration: BoxDecoration(
                                           color: _comment.text == ""
                                               ? Colors.grey[300]
-                                              : Colors.greenAccent,
+                                              : Color(0xFF6699ff),
                                           borderRadius:
                                               BorderRadius.circular(5)),
                                       child: const Icon(Iconsax.send),
@@ -328,7 +328,7 @@ class _PostModalState extends State<PostModal> {
                     child: const Text(
                       "Comments",
                       style:
-                          TextStyle(fontSize: 30, fontWeight: FontWeight.w700),
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                     ),
                   ),
                 ],
@@ -345,7 +345,7 @@ class _PostModalState extends State<PostModal> {
                             child: const Center(
                                 child: Text(
                               "No comments yet!",
-                              style: TextStyle(fontSize: 25),
+                              style: TextStyle(fontSize: 20),
                             )),
                           )
                         : ListView.builder(
