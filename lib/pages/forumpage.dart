@@ -5,7 +5,7 @@ import 'package:commoncents/components/popup.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-
+import 'dart:async';
 import '../components/fullPost.dart';
 import '../components/navbar.dart';
 import 'auth_pages/login.dart';
@@ -18,6 +18,8 @@ class ForumPage extends StatefulWidget {
 
 class _ForumPageState extends State<ForumPage> {
   User? user = FirebaseAuth.instance.currentUser;
+  bool isLoading = true;
+  late Timer loadingTimer;
 
   Future<void> refreshPosts() async {
     setState(() {
@@ -164,7 +166,7 @@ class _ForumPageState extends State<ForumPage> {
 
         postsList.add(post);
       }
-
+      loadingTimer.cancel();
       return postsList;
     }
   }
@@ -177,6 +179,14 @@ class _ForumPageState extends State<ForumPage> {
       if (mounted) {
         setState(() {
           favouritePosts = result;
+        });
+      }
+    });
+
+    loadingTimer = Timer(const Duration(seconds: 3), () {
+      if (mounted) {
+        setState(() {
+          isLoading = false;
         });
       }
     });
@@ -207,8 +217,15 @@ class _ForumPageState extends State<ForumPage> {
             isTradingPage: false),
         body: Container(
           child: postsList.isEmpty
-              ? const Center(
-                  child: CircularProgressIndicator(),
+              ? Center(
+                  child: isLoading
+                      ? CircularProgressIndicator()
+                      : Column(
+                        children: [
+                          Image.asset('assets/images/no-profile.jpg'),
+                          const Text("No Posts For Now!")
+                        ],
+                      ),
                 )
               : SingleChildScrollView(
                   child: Column(
@@ -735,7 +752,7 @@ class _ForumPageState extends State<ForumPage> {
                                                       },
                                                     );
                                                   } else {
-                                                   showDialog(
+                                                    showDialog(
                                                       context: context,
                                                       barrierDismissible: true,
                                                       builder: (BuildContext
@@ -765,7 +782,16 @@ class _ForumPageState extends State<ForumPage> {
                   ),
                 ],
               )
-            : const Center(child: CircularProgressIndicator()),
+            : Center(
+                child: isLoading
+                    ? CircularProgressIndicator()
+                    : Column(
+                      children: [
+                        Image.asset('assets/images/no-profile.jpg'),
+                        const Text("No Posts For Now!")
+                      ],
+                    ),
+              ),
         floatingActionButton: Stack(
           children: [
             FloatingActionButton(
