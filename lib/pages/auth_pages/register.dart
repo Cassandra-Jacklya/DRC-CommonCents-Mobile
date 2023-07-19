@@ -310,7 +310,11 @@ class _RegisterViewState extends State<RegisterView>
                               style: ButtonStyle(
                                 backgroundColor:
                                     MaterialStateProperty.all<Color>(
-                                        const Color(0xFF3366FF)),
+                                        _confirmPassword.text != "" &&
+                                                _password.text ==
+                                                    _confirmPassword.text
+                                            ? const Color(0xFF3366FF)
+                                            : Color(0XFF5F5F5F)),
                                 shape: MaterialStateProperty.all<
                                     RoundedRectangleBorder>(
                                   RoundedRectangleBorder(
@@ -319,41 +323,15 @@ class _RegisterViewState extends State<RegisterView>
                                 ),
                               ),
                               onPressed: () async {
-                                final email = _email.text;
-                                final password = _password.text;
+                                if (_confirmPassword.text != "" &&
+                                    _password.text == _confirmPassword.text) {
+                                  final email = _email.text;
+                                  final password = _password.text;
 
-                                bool emailExists =
-                                    await isEmailRegistered(email);
-
-                                if (emailExists) {
-                                  // Email already registered. Show an AlertDialog.
-                                  // ignore: use_build_context_synchronously
-                                  showDialog<String>(
-                                    barrierDismissible: false,
-                                    context: context,
-                                    builder: (BuildContext context) =>
-                                        AlertDialog(
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(20),
-                                      ),
-                                      title: Text('Email Already Registered'),
-                                      content: Text(
-                                          'The email $email is already registered.'),
-                                      actions: <Widget>[
-                                        TextButton(
-                                          onPressed: () =>
-                                              Navigator.pop(context, 'OK'),
-                                          child: const Text('OK'),
-                                        ),
-                                      ],
-                                    ),
-                                  );
-                                  return;
-                                }
-
-                                // Proceed with the sign-up process
-                                BlocProvider.of<SignUpStateBloc>(context)
-                                    .signUp(email, password);
+                                  // Proceed with the sign-up process
+                                  BlocProvider.of<SignUpStateBloc>(context)
+                                      .signUp(email, password);
+                                } else {}
                               },
                               child: const Text(
                                 'Sign Up',
