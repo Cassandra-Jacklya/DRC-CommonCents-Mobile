@@ -30,6 +30,7 @@ class _TradeHistoryState extends State<TradeHistory> {
     if (pickedDate != null && pickedDate != selectedDate) {
       setState(() {
         selectedDate = pickedDate;
+        print("hola");
       });
     }
   }
@@ -58,7 +59,7 @@ class _TradeHistoryState extends State<TradeHistory> {
         });
 
         tradeDataList = tradeHistoryDocs.map((doc) => doc.data()).toList();
-        
+
         if (showAllTradeHistories) {
           return tradeDataList;
         } else {
@@ -82,12 +83,12 @@ class _TradeHistoryState extends State<TradeHistory> {
   @override
   void initState() {
     super.initState();
-    _tradesFuture = loadTradeHistory();
     selectedDate = DateTime.now();
   }
 
   @override
   Widget build(BuildContext context) {
+    _tradesFuture = loadTradeHistory();
     User? user = FirebaseAuth.instance.currentUser;
     if (user != null) {
       return Scaffold(
@@ -300,7 +301,7 @@ class _TradeHistoryState extends State<TradeHistory> {
                                                         fontSize: 18),
                                                   ),
                                                   const SizedBox(height: 5),
-                                                  // var date = DateTime.fromMillisecondsSinceEpoch(timestamp * 1000);
+                                                  
                                                   Row(
                                                     children: [
                                                       Text(
