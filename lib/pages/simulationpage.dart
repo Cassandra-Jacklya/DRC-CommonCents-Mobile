@@ -284,6 +284,7 @@ class _SimulationPageState extends State<SimulationPage> {
                                                           chartunit);
                                                 },
                                                 child: Container(
+                                                  padding: const EdgeInsets.only(left: 5, right: 5),
                                                   margin: const EdgeInsets
                                                       .symmetric(horizontal: 8),
                                                   height: 31,
@@ -559,7 +560,7 @@ class _SimulationPageState extends State<SimulationPage> {
                                           decoration: BoxDecoration(
                                               color: Colors.green,
                                               borderRadius:
-                                                  BorderRadius.circular(10)),
+                                                  BorderRadius.circular(5)),
                                           height: 45,
                                           width: 128,
                                           child: Row(
@@ -616,7 +617,7 @@ class _SimulationPageState extends State<SimulationPage> {
                                           decoration: BoxDecoration(
                                               color: Colors.red,
                                               borderRadius:
-                                                  BorderRadius.circular(10)),
+                                                  BorderRadius.circular(5)),
                                           height: 45,
                                           width: 128,
                                           child: Row(

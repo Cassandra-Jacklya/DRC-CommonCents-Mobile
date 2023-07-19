@@ -48,14 +48,14 @@ class _TicksGaugeState extends State<TicksGauge> {
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   color:
-                      selectedValue >= value ? Colors.cyan : Colors.grey[300],
+                      selectedValue >= value ? Color(0xFF3366ff) : Colors.grey[300],
                 ),
                 child: Center(
                   child: value == selectedValue
                       ? Text(
                           value.toString(),
                           style: const TextStyle(
-                            color: Colors.black,
+                            color: Colors.white,
                             fontWeight: FontWeight.bold,
                           ),
                         )

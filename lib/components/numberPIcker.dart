@@ -63,6 +63,9 @@ class _IntegerExampleState extends State<IntegerExample> {
             ),
           ),
         ),
+        const Text(" USD",
+          style: TextStyle(color: Color(0xFF5f5f5f)),
+        ),
         IconButton(
           icon: const Icon(Icons.add),
           onPressed: () {

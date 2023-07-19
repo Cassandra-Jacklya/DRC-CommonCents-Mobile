@@ -870,7 +870,7 @@ class SyntheticDetails extends StatelessWidget {
                 ),
               ),
               Text(
-                "Synthetic indices in forex are financial instruments that mimic the behavior of real-world indices. They are created by synthesizing the price movements of various underlying assets such as stocks, currencies, and commodities, using a mathematical algorithm.",
+                "Synthetic indices are financial instruments that mimic the behavior of real-world indices. They are created by synthesizing the price movements of various underlying assets such as stocks, currencies, and commodities, using a mathematical algorithm.",
                 textAlign: TextAlign.justify,
               )
             ],
