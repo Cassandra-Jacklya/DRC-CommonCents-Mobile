@@ -1,4 +1,5 @@
 import 'package:commoncents/apistore/news_lazyLoading.dart';
+import 'package:commoncents/components/contractSnackbar.dart';
 import 'package:commoncents/components/navbar.dart';
 import 'package:commoncents/components/newscontainer.dart';
 import 'package:flutter/material.dart';
@@ -74,129 +75,135 @@ class _NewsPageState extends State<NewsPage> {
       providers: [
         BlocProvider<NewsTabBarCubit>(create: (context) => NewsTabBarCubit())
       ],
-      child: BlocBuilder<NewsTabBarCubit, String>(
-        builder: (context, state) {
-          _lazyFuture = getLazyNews(state);
-          return GestureDetector(
-            onTap: () {
-              // FocusScopeNode currentFocus = FocusScope.of(context);
-              // if (!currentFocus.hasPrimaryFocus) {
-              //   currentFocus.unfocus();
-              // }
-            },
-            child: Scaffold(
-              appBar: const CustomAppBar(
-                title: "News",
-                logo: "assets/images/commoncents-logo.png",
-                isTradingPage: false,
-              ),
-              body: Column(
-                children: [
-                  const SizedBox(height: 10),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(10),
-                            border: Border.all(color: Colors.black),
-                          ),
-                          padding: const EdgeInsets.only(left: 20),
-                          margin: const EdgeInsets.only(
-                            top: 24,
-                            left: 16,
-                            right: 16,
-                            bottom: 10,
-                          ),
-                          child: Row(
-                            children: [
-                              Expanded(
-                                child: TextField(
-                                  controller: _textEditingController,
-                                  onSubmitted: _handleFilterChanged,
-                                  decoration: const InputDecoration(
-                                    border: InputBorder.none,
-                                  ),
-                                  style: const TextStyle(
-                                    fontSize: 23,
-                                  ),
+      child: BlocBuilder<NewsTabBarCubit, String>(builder: (context, state) {
+        _lazyFuture = getLazyNews(state);
+        return GestureDetector(
+          onTap: () {
+            // FocusScopeNode currentFocus = FocusScope.of(context);
+            // if (!currentFocus.hasPrimaryFocus) {
+            //   currentFocus.unfocus();
+            // }
+          },
+          child: Scaffold(
+            appBar: const CustomAppBar(
+              title: "News",
+              logo: "assets/images/commoncents-logo.png",
+              isTradingPage: false,
+            ),
+            body: Column(
+              children: [
+                const SizedBox(height: 10),
+                Row(
+                  children: [
+                    Expanded(
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(color: Colors.black),
+                        ),
+                        padding: const EdgeInsets.only(left: 20),
+                        margin: const EdgeInsets.only(
+                          top: 24,
+                          left: 16,
+                          right: 16,
+                          bottom: 10,
+                        ),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: TextField(
+                                controller: _textEditingController,
+                                onSubmitted: _handleFilterChanged,
+                                decoration: const InputDecoration(
+                                  border: InputBorder.none,
+                                ),
+                                style: const TextStyle(
+                                  fontSize: 23,
                                 ),
                               ),
-                              Container(
-                                padding: const EdgeInsets.all(8),
-                                child: IconButton(
-                                  onPressed: () {},
-                                  icon: const Icon(Iconsax.search_normal_1),
-                                  iconSize: 20,
-                                ),
+                            ),
+                            Container(
+                              padding: const EdgeInsets.all(8),
+                              child: IconButton(
+                                onPressed: () {},
+                                icon: const Icon(Iconsax.search_normal_1),
+                                iconSize: 20,
                               ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
                       ),
-                    ],
-                  ),
-                  const SizedBox(height: 22,),
-                  NewsTabBar(onTopicChanged: _handleTopicChanged),
-                  const SizedBox(height: 20),
-                  Expanded(
-                    child: FutureBuilder<List<dynamic>>(
-                      future: _lazyFuture,
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState == ConnectionState.waiting) {
-                          return const Scaffold(
-                            body: Center(
-                              child: SizedBox(
+                    ),
+                  ],
+                ),
+                const SizedBox(
+                  height: 22,
+                ),
+                NewsTabBar(onTopicChanged: _handleTopicChanged),
+                const SizedBox(height: 20),
+                Expanded(
+                  child: FutureBuilder<List<dynamic>>(
+                    future: _lazyFuture,
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const Scaffold(
+                          body: Center(
+                            child: SizedBox(
                                 height: 20,
                                 width: 20,
                                 child: CircularProgressIndicator()),
-                            ),
+                          ),
+                        );
+                      } else if (snapshot.data!.contains(
+                          "Thank you for using Alpha Vantage! Our standard API call frequency is 5 calls per minute and 500 calls per day.")) {
+                        showAlertDialog(
+                            context,
+                            "API Limit Reached. Please try again in a minute.",
+                            3);
+                      } else if (snapshot.hasError) {
+                        return Text('Error: ${snapshot.error}');
+                      } else if (snapshot.hasData) {
+                        _NewsData = snapshot.data as List<dynamic>;
+                        if (_textEditingController.text.isNotEmpty) {
+                          final filteredList = _applyFilter(
+                              _NewsData, _textEditingController.text);
+                          return NewsContainer(
+                            feeds: filteredList,
+                            scrollable: true,
+                            scrollController: _scrollController,
                           );
-                        } else if (snapshot.hasError) {
-                          return Text('Error: ${snapshot.error}');
-                        } else if (snapshot.hasData) {
-                          _NewsData = snapshot.data as List<dynamic>;
-                          if (_textEditingController.text.isNotEmpty) {
-                            final filteredList =
-                                _applyFilter(_NewsData, _textEditingController.text);
-                            return NewsContainer(
-                              feeds: filteredList,
-                              scrollable: true,
-                              scrollController: _scrollController,
-                            );
-                          } else if (_textEditingController.text.isEmpty) {
-                            return NewsContainer(
-                              feeds: _NewsData,
-                              scrollable: true,
-                              scrollController: _scrollController,
-                            );
-                          }
+                        } else if (_textEditingController.text.isEmpty) {
+                          return NewsContainer(
+                            feeds: _NewsData,
+                            scrollable: true,
+                            scrollController: _scrollController,
+                          );
                         }
-                        return const Text('No News Available');
-                      },
-                    ),
+                      }
+                      return const Text('No News Available');
+                    },
                   ),
-                ],
-              ),
-              floatingActionButton: FloatingActionButton(
-                onPressed: () {
-                  // Scroll to top when the button is pressed
-                  _scrollController.animateTo(
-                    0,
-                    duration: const Duration(milliseconds: 500),
-                    curve: Curves.easeInOut,
-                  );
-                },
-                child: const Icon(Icons.arrow_upward),
-              ),
-              bottomNavigationBar: const BottomNavBar(
-                index: 1,
-              ),
+                ),
+              ],
             ),
-          );
-        }
-      ),
+            floatingActionButton: FloatingActionButton(
+              onPressed: () {
+                // Scroll to top when the button is pressed
+                _scrollController.animateTo(
+                  0,
+                  duration: const Duration(milliseconds: 500),
+                  curve: Curves.easeInOut,
+                );
+              },
+              child: const Icon(Icons.arrow_upward),
+            ),
+            bottomNavigationBar: const BottomNavBar(
+              index: 1,
+            ),
+          ),
+        );
+      }),
     );
   }
 }

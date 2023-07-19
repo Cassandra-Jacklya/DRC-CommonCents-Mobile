@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:commoncents/components/appbar.dart';
+import 'package:commoncents/components/contractSnackbar.dart';
 import 'package:commoncents/components/popup.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -720,6 +721,17 @@ class _ForumPageState extends State<ForumPage> {
                                                 ),
                                                 onPressed: () {
                                                   savePost(post);
+                                                  if (isFavorite) {
+                                                    showAlertDialog(
+                                                        context,
+                                                        "Post removed from favourites",
+                                                        1);
+                                                  } else {
+                                                    showAlertDialog(
+                                                        context,
+                                                        "Post added to favourites",
+                                                        1);
+                                                  }
                                                 },
                                               ),
                                             ],

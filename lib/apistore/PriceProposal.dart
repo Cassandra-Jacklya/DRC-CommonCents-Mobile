@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:commoncents/components/contractSnackbar.dart';
 import 'package:commoncents/cubit/login_cubit.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -70,7 +71,8 @@ Future<double> getUpdatedBalance(String userId, double capital) async {
   return 0;
 }
 
-void handleBuyResponse(BuildContext context, Map<String, dynamic> decodedData) async {
+void handleBuyResponse(
+    BuildContext context, Map<String, dynamic> decodedData) async {
   late double buyingPrice;
   late double sellingPrice;
   late double capital;
@@ -110,8 +112,11 @@ void handleBuyResponse(BuildContext context, Map<String, dynamic> decodedData) a
       loginStateBloc.updateBalance(
           userData['email'], updatedBalance.toString());
       tradeStatus = "Won";
+      showAlertDialog(context,
+          "Spot is higher! You won USD ${proposal['payout'].toString()}", 3);
     } else {
       tradeStatus = "Lost";
+      showAlertDialog(context, 'Spot is not higher. You lost', 3);
     }
   } else {
     if (buyingPrice > sellingPrice) {
@@ -124,8 +129,11 @@ void handleBuyResponse(BuildContext context, Map<String, dynamic> decodedData) a
       loginStateBloc.updateBalance(
           userData['email'], updatedBalance.toString());
       tradeStatus = "Won";
+      showAlertDialog(context,
+          'Spot is lower! You won USD ${proposal['payout'].toString()}', 3);
     } else {
       tradeStatus = "Lost";
+      showAlertDialog(context, 'Spot is not lower. You lost', 3);
     }
   }
 

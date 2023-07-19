@@ -32,7 +32,7 @@ void showAlertDialog(BuildContext context, String message, int duration) {
   showDialog(
     context: context,
     barrierColor: Colors.black12,
-    barrierDismissible: false, // Prevent dismissing on tap outside the dialog
+    // barrierDismissible: false, // Prevent dismissing on tap outside the dialog
     builder: (BuildContext context) {
       return CustomAlertDialog(message: message, duration: duration);
     },

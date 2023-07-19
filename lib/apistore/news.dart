@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'package:commoncents/components/contractSnackbar.dart';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 const apiKey = '2W7M76O2TLJVJQCQ';
@@ -13,6 +15,7 @@ Future<List<dynamic>> getNews() async {
 
   if (response.statusCode == 200) {
     data = jsonDecode(response.body);
+
     final feed = data['feed'];
     if (feed != null) {
       news = feed.sublist(0, 8);
