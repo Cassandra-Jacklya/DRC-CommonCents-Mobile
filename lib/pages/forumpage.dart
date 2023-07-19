@@ -129,7 +129,7 @@ class _ForumPageState extends State<ForumPage> {
         await FirebaseFirestore.instance.collection('posts').get();
 
     if (docSnapshot.docs.isEmpty) {
-      print("No Posts yet");
+      postsList = [];
       return postsList;
     } else {
       final postsDocs = docSnapshot.docs;

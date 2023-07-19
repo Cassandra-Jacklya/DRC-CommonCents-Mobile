@@ -67,6 +67,7 @@ class _PostModalState extends State<PostModal> {
     String author,
     String authorImage,
     String content,
+    String? email,
   ) async {
     final CollectionReference postsCollection =
         FirebaseFirestore.instance.collection('posts');
@@ -86,6 +87,7 @@ class _PostModalState extends State<PostModal> {
         'content': content,
         'postId': postId,
         'timestamp': DateTime.now().millisecondsSinceEpoch,
+        'email' : email
       });
     } else {
       await postRef.collection('comments').doc().set({
@@ -94,6 +96,7 @@ class _PostModalState extends State<PostModal> {
         'content': content,
         'postId': postId,
         'timestamp': DateTime.now().millisecondsSinceEpoch,
+        'email' : email
       });
     }
 
@@ -293,7 +296,8 @@ class _PostModalState extends State<PostModal> {
                                             user!.displayName ?? user!.email!,
                                             user!.photoURL ??
                                                 "https://www.seekpng.com/png/detail/966-9665493_my-profile-icon-blank-profile-image-circle.png",
-                                            _comment.text);
+                                            _comment.text,
+                                            user!.email);
                                       }
                                     },
                                     child: Container(

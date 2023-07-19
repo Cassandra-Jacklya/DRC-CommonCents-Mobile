@@ -67,6 +67,7 @@ class _SimulationPageState extends State<SimulationPage> {
     'Days',
   ];
 
+
   @override
   void initState() {
     super.initState();
@@ -342,6 +343,95 @@ class _SimulationPageState extends State<SimulationPage> {
                                     ),
                                   ),
                                 ),
+                                // Padding(
+                                //   padding: const EdgeInsets.only(left: 20),
+                                //   child: SizedBox(
+                                //       height: 40,
+                                //       child: !isCandle
+                                //           ? ListView.builder(
+                                //               //line time
+                                //               scrollDirection: Axis.horizontal,
+                                //               itemCount: timeUnit.length,
+                                //               itemBuilder: (context, index) {
+                                //                 final unit = timeUnit[index];
+                                //                 final isSelected =
+                                //                     (unit == state);
+                                //                 return GestureDetector(
+                                //                   onTap: () {
+                                //                     unsubscribe();
+                                //                     BlocProvider.of<
+                                //                                 LineTimeCubit>(
+                                //                             context)
+                                //                         .updateLineTime(unit);
+                                //                   },
+                                //                   child: Container(
+                                //                     //candle time
+                                //                     margin:
+                                //                         EdgeInsets.symmetric(
+                                //                             horizontal: 8),
+                                //                     width: 70,
+                                //                     height: 31,
+                                //                     decoration: BoxDecoration(
+                                //                       color: isSelected
+                                //                           ? const Color(
+                                //                               0xFF5F5F5F)
+                                //                           : Colors.white,
+                                //                       borderRadius:
+                                //                           BorderRadius.circular(
+                                //                               5),
+                                //                     ),
+                                //                     child: Center(
+                                //                         child: Text(
+                                //                       timeUnit[index],
+                                //                       style: TextStyle(
+                                //                           color: isSelected
+                                //                               ? Colors.white
+                                //                               : Colors.black),
+                                //                     )),
+                                //                   ),
+                                //                 );
+                                //               },
+                                //             )
+                                //           : ListView.builder(
+                                //               scrollDirection: Axis.horizontal,
+                                //               itemCount: candleTimeUnit.length,
+                                //               itemBuilder: (context, index) {
+                                //                 final chartunit =
+                                //                     candleTimeUnit[index];
+                                //                 final isSelected =
+                                //                     (chartunit == charttime);
+                                //                 return GestureDetector(
+                                //                   onTap: () {
+                                //                     unsubscribeCandle();
+                                //                     BlocProvider.of<
+                                //                                 ChartTimeCubit>(
+                                //                             context)
+                                //                         .updateChartTime(
+                                //                             chartunit);
+                                //                   },
+                                //                   child: Container(
+                                //                     margin: const EdgeInsets
+                                //                             .symmetric(
+                                //                         horizontal: 8),
+                                //                     width: 80,
+                                //                     height: 50,
+                                //                     decoration: BoxDecoration(
+                                //                       color: isSelected
+                                //                           ? Colors.blue
+                                //                           : Colors.white,
+                                //                       borderRadius:
+                                //                           BorderRadius.circular(
+                                //                               10),
+                                //                     ),
+                                //                     child: Center(
+                                //                         child: Text(
+                                //                             candleTimeUnit[
+                                //                                 index])),
+                                //                   ),
+                                //                 );
+                                //               },
+                                //             )),
+                                // ),
                               ],
                             );
                           });
@@ -527,7 +617,7 @@ class _SimulationPageState extends State<SimulationPage> {
                                               color: Colors.red,
                                               borderRadius:
                                                   BorderRadius.circular(10)),
-                                          height: 30,
+                                          height: 45,
                                           width: 128,
                                           child: Row(
                                               mainAxisAlignment:

@@ -1,41 +1,34 @@
 {
   "project_info": {
-    "project_number": "402359730833",
-    "project_id": "commoncents-7b521",
-    "storage_bucket": "commoncents-7b521.appspot.com"
+    "project_number": "671959239574",
+    "project_id": "commoncents2-56999",
+    "storage_bucket": "commoncents2-56999.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:402359730833:android:184aeaba3a7df78668f530",
+        "mobilesdk_app_id": "1:671959239574:android:a08cd286d20f9b606e2bb7",
         "android_client_info": {
           "package_name": "com.example.commoncents"
         }
       },
       "oauth_client": [
         {
-          "client_id": "402359730833-tuhucehgfkoerhfjhe4463g625seu5v2.apps.googleusercontent.com",
+          "client_id": "671959239574-agmlmmfv3nqh3ru8mqse7d5vk5ib4jos.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyB-KSqF7HFuvqApCYi5a-ZNXx0Vfu2es4Y"
+          "current_key": "AIzaSyDY-_ONgmmPzcq3f2jJ9xxutlRvn0j5c7s"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "402359730833-tuhucehgfkoerhfjhe4463g625seu5v2.apps.googleusercontent.com",
+              "client_id": "671959239574-agmlmmfv3nqh3ru8mqse7d5vk5ib4jos.apps.googleusercontent.com",
               "client_type": 3
-            },
-            {
-              "client_id": "402359730833-ca340bhra5lhrn2a19i64j51ebucrjpq.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "com.example.commoncents"
-              }
             }
           ]
         }

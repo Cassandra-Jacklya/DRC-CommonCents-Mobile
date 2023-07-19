@@ -73,7 +73,6 @@ class _RegisterViewState extends State<RegisterView>
         'photoUrl': '',
       });
 
-
       // Create a new trade summary document within the 'tradeHistory' collection
       DocumentReference tradeSummaryDoc =
           tradeHistoryCollection.doc('tradeSummary');
@@ -314,11 +313,7 @@ class _RegisterViewState extends State<RegisterView>
                               style: ButtonStyle(
                                 backgroundColor:
                                     MaterialStateProperty.all<Color>(
-                                        _confirmPassword.text != "" &&
-                                                _password.text ==
-                                                    _confirmPassword.text
-                                            ? const Color(0xFF3366FF)
-                                            : Color(0XFF5F5F5F)),
+                                        const Color(0xFF3366FF)),
                                 shape: MaterialStateProperty.all<
                                     RoundedRectangleBorder>(
                                   RoundedRectangleBorder(
